@@ -1,13 +1,10 @@
 #include<Windows.h>
 #include"EasyWindow.h"
 
-
-
 #define WIDTH 930
 #define HEIGHT 570
 
 EZWND MainWnd;
-
 EZWNDPROC MainProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int iCmdShow)
