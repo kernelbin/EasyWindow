@@ -4702,4 +4702,11 @@ EZWNDPROC EZStyle_WndCloseProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM l
 
 	case EZWM_DESTROY:
 		pInfo = ezWnd->Extend;
-		DeleteObject(pInfo->hBrus
+		DeleteObject(pInfo->hBrush);
+		DeleteMemDC(pInfo->hMemDC);
+		free(ezWnd->Extend);
+		return 0;
+	}
+
+
+}
