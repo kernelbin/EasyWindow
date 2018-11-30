@@ -410,6 +410,10 @@ BOOL DestroyEZWindow(EZWND ezWnd)
 	{
 		ezWnd->ezRootParent->TopWndExtend->CptMouseWindow = NULL;
 	}
+	if (ezWnd->ezRootParent->TopWndExtend->CptKbdWindow == ezWnd)
+	{
+		ezWnd->ezRootParent->TopWndExtend->CptKbdWindow = NULL;
+	}
 
 
 	if (ezWnd->IsTopWindow)
@@ -1168,6 +1172,7 @@ int SetEZTimer(EZWND ezWnd, int iTimeSpace)
 BOOL KillEZTimer(EZWND ezWnd, int TimerID)
 {
 	//É¾³ýÐÅÏ¢
+	if (ezWnd->ezRootParent->TopWndExtend->Timer[TimerID].WinTimerID == -1)return -1;
 	if (ezWnd->ezRootParent->TopWndExtend->Timer[TimerID].ezWnd != NULL)
 	{
 		KillTimer(ezWnd->hParent, ezWnd->ezRootParent->TopWndExtend->Timer[TimerID].WinTimerID);
@@ -1912,10 +1917,10 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 				return 0;
 			}
 		}
-		
+
 
 	}
-		return 0;
+	return 0;
 
 	}
 
@@ -4697,11 +4702,4 @@ EZWNDPROC EZStyle_WndCloseProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM l
 
 	case EZWM_DESTROY:
 		pInfo = ezWnd->Extend;
-		DeleteObject(pInfo->hBrush);
-		DeleteMemDC(pInfo->hMemDC);
-		free(ezWnd->Extend);
-		return 0;
-	}
-
-
-}
+		DeleteObject(pInfo->hBrus

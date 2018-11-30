@@ -538,7 +538,7 @@ BOOL EZAddChild(EZWND ezParent, EZWND ezChild);
 EZWND CreateEZStyleWindow(EZWND ezParent, TCHAR Title[], DWORD EZStyle, int x, int y, int Width, int Height);
 EZWND CreateEZStyleParentWindow(TCHAR Title[], DWORD EZStyle, int x, int y, int Width, int Height, BOOL bAdjust, EZWNDPROC ezWndProc);
 int SetEZTimer(EZWND ezWnd, int iTimeSpace);
-BOOL KillEZTimer(EZWND ezWnd, int TimerID);BOOL EZCreateCaret(EZWND ezWnd, HBITMAP hBitmap, int nWidth, int nHeight);
+BOOL KillEZTimer(EZWND ezWnd, int TimerID); BOOL EZCreateCaret(EZWND ezWnd, HBITMAP hBitmap, int nWidth, int nHeight);
 BOOL EZSetCaretPos(EZWND ezWnd, int x, int y);
 BOOL EZShowCaret(EZWND ezWnd);
 BOOL EZHideCaret(EZWND ezWnd);
