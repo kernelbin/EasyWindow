@@ -33,6 +33,8 @@ BOOL InitEZWindow()
 //创建窗口函数
 EZWND CreateEZParentWindowEx(DWORD EZStyle, int x, int y, int Width, int Height, DWORD WinStyle, EZWNDPROC ezWndProc, HMENU hMenu, HWND hParent)
 {
+	//TODO: 改用memset函数以优化速度，下面的另一个创建窗口函数同。
+
 	HWND hwndParent;//这是Windows句柄的父窗口
 	EZWND ezwndParent;//这是和Win窗口等大的EZ窗口，返回给用户。该窗口摧毁时同时摧毁Win窗口
 
@@ -1230,6 +1232,7 @@ typedef struct tagDlgMaskHookExtend
 
 EZWND EZDialogBox(EZWND ezParent, int x, int y, int w, int h, DWORD Style, COLORREF MaskClr, EZWNDPROC ezWndProc)
 {
+	//TODO: 使用最新的消息 EZWM_COVERCHILD 来代替Mask窗口以提高性能
 	EZWND Mask;
 	EZWND Dialog;
 	BOOL bMask, bCenter;
