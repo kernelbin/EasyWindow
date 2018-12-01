@@ -1505,10 +1505,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		{
 			break;
 		}
-		else
-		{
-			return iRet - 1;
-		}
+		return iRet - 1;
 	}
 
 	case WM_ACTIVATE:
@@ -1671,7 +1668,6 @@ int ezInsideWndProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam)
 				//可以了，在这个窗口
 				if (ezInsideWndProc(ezChildLast, message, wParam, MAKELPARAM(GET_X_LPARAM(lParam) - ezChildLast->x - ezChildLast->ScrollX, GET_Y_LPARAM(lParam) - ezChildLast->y - ezChildLast->ScrollY)) != TRANSPARENT)
 				{
-
 					return 0;
 				}
 				//好吧，子窗口说他是透明的》。。。。。继续看会不会落在其他子窗口内
@@ -1779,8 +1775,6 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 
 	switch (Param)
 	{
-
-
 	case SEZWM_COPYDC:
 	{
 		EZSendMessage(ezWnd, EZWM_COVERCHILD, ezWnd->hdc, 0);
@@ -1899,16 +1893,6 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 
 	}
 }
-
-//int EZSendMessage(EZWND ezWnd, int message, WPARAM wP, LPARAM lP)
-//{
-//	//if (IsEZWindow(ezWnd)/* && IsEZWindow((EZWND)(ezWnd->ezWndProc))*/)
-//	{
-//		//IsEZWindow函数可以通用的检查句柄是否有效
-//		return ezWnd->ezWndProc(ezWnd, message, wP, lP);
-//
-//	}
-//}
 
 int EZWndMessageLoop()
 {
