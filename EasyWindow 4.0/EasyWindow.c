@@ -773,10 +773,6 @@ BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT Rec
 
 BOOL EZUpdate(EZWND ezWnd, HDC hdc)//将DC更新到窗体，不重绘。第二个参数是DC，如不提供，函数将自动获取。
 {
-	//找到你的“祖宗”、
-
-	EZWND WndNow = ezWnd;
-
 	if (!IsEZWindow(ezWnd))
 	{
 		return FALSE;
@@ -865,24 +861,12 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 	}
 	else//没DC
 	{
-		/*if (ezWnd->ezRootParent->DrawOnNC)
-		{
-		hdc = GetWindowDC(ezWnd->hParent);
-		}
-		else
-		{*/
+		
 		hdc = GetDC(ezWnd->hParent);
-		/*}
-		*/
-
-		//
-
-	//	if (EZSendMessage(ezWnd, EZWM_MAPDC, hdc, MAKELPARAM(ezWnd->px - ezWnd->ScrollX, ezWnd->py - ezWnd->ScrollY)) == 0)
-		{
-			//BitBlt(hdc, ezWnd->px, ezWnd->py, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
-			StretchBlt(hdc, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
-				ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, SRCCOPY);
-		}
+		
+		StretchBlt(hdc, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
+			ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, SRCCOPY);
+		
 
 		ReleaseDC(ezWnd->hParent, hdc);
 	}
@@ -900,199 +884,6 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 }
 
 
-
-
-
-
-
-////与窗口绘制有关的函数
-//BOOL EZRedraw(EZWND ezWnd)//重绘到内存dc,不更新。
-//{
-//	//这里，我们需要先确定需要重绘的范围
-//
-//	/*
-//	在整个大窗口体系下
-//	任何和该窗口有范围重复的窗口
-//	全！部！需！要！重绘！！！！
-//
-//	所以，我们要向所有窗口，包括子窗口广播消息。任何有重复的窗口，全部需要重绘到内存
-//	然后进行叠加处理。
-//
-//	不需要重绘到Windows父窗口。
-//
-//	*/
-//
-//	if (!IsEZWindow(ezWnd))
-//	{
-//		return FALSE;
-//	}
-//	RECT rect;
-//
-//	int Countx = 0, County = 0;
-//
-//	EZWND WndNow = ezWnd;
-//
-//
-//	//只需要把这个窗口（不需要全屏BitBlt）,得到相对父窗口的位置
-//	while (!WndNow->IsTopWindow)
-//	{
-//		//向上推，直到父窗口
-//		Countx += WndNow->x + WndNow->ScrollX;
-//		County += WndNow->y + WndNow->ScrollY;
-//		WndNow = WndNow->ezParent;
-//
-//	}
-//
-//	rect.left = Countx;
-//	rect.right = Countx + ezWnd->Width;
-//	rect.top = County;
-//	rect.bottom = County + ezWnd->Height;
-//
-//
-//	//BroadcastProc(ezWnd->ezRootParent, SEZWM_REDRAW, (WPARAM)NULL, (LPARAM)NULL);
-//	//RedrawBroadcast(ezWnd->ezRootParent, 0, 0, 0, 0, rect);
-//	BroadcastProc(ezWnd, SEZWM_REDRAW, (WPARAM)NULL, (LPARAM)NULL);
-//	RedrawBroadcast(ezWnd, 0, 0, 0, 0, rect);
-//
-//	/*BitBlt(ezWnd->ezRootParent->TopWndExtend->hdcTop,
-//		Countx,
-//		County,
-//		ezWnd->Width, ezWnd->Height,
-//		ezWnd->ezRootParent->hdc,
-//		Countx,
-//		County, SRCCOPY);*/
-//
-//
-//
-//	BitBlt(ezWnd->ezRootParent->TopWndExtend->hdcTop,
-//				Countx - ezWnd->ScrollX,
-//				County - ezWnd->ScrollY,
-//				ezWnd->Width, ezWnd->Height,
-//				ezWnd->hdc,
-//				0,
-//				0, SRCCOPY);
-//
-//	//	BroadcastProc(ezWnd->ezRootParent, SEZWM_COPYDC, (WPARAM)NULL, (LPARAM)NULL);
-//
-//
-//	return TRUE;
-//}
-//
-//BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT RectSrc)
-//{
-//
-//	if (!IsEZWindow(ezWnd))
-//	{
-//		return FALSE;
-//	}
-//
-//	if (IsEZWindow(ezWnd->FirstChild))
-//	{
-//
-//		EZWND LastChild;
-//
-//		LastChild = (ezWnd)->FirstChild;
-//
-//		while (1)
-//		{
-//			//正序，所以，先处理自己。
-//			RECT RectDst, RectAns;
-//
-//			{
-//				RectDst.left = cx + LastChild->x;
-//				RectDst.right = RectDst.left + LastChild->Width;
-//				RectDst.top = cy + LastChild->y;
-//				RectDst.bottom = RectDst.top + LastChild->Height;
-//			}
-//
-//			if ((IntersectRect(&RectAns, &RectSrc, &RectDst) != 0) && (LastChild->ShowState != 2))
-//			{
-//				BroadcastProc(LastChild, SEZWM_REDRAW, wp, lp);//处理自己
-//
-//				RedrawBroadcast(LastChild, wp, lp, cx + LastChild->x + LastChild->ScrollX, cy + LastChild->y + LastChild->ScrollY, RectSrc);//给自己的子窗口发送该消息
-//
-//				BroadcastProc(LastChild, SEZWM_COPYDC, wp, lp);//处理自己
-//			}
-//
-//			if (!IsEZWindow(LastChild->NextEZWnd))//没有下一个
-//			{
-//				break;//没有下一个了
-//			}
-//
-//			LastChild = LastChild->NextEZWnd;//向下滚
-//
-//		}
-//
-//	}
-//	return TRUE;
-//}
-//
-//BOOL EZUpdate(EZWND ezWnd, HDC hdc)//将DC更新到窗体，不重绘。第二个参数是DC，如不提供，函数将自动获取。
-//{
-//	//找到你的“祖宗”、
-//
-//	int Countx = 0, County = 0;
-//
-//	EZWND WndNow = ezWnd;
-//
-//	if (!IsEZWindow(ezWnd))
-//	{
-//		return FALSE;
-//	}
-//
-//	//只需要把这个窗口（不需要全屏BitBlt）,得到相对父窗口的位置
-//	while (!WndNow->IsTopWindow)
-//	{
-//		//向上推，直到父窗口
-//		Countx += WndNow->x + WndNow->ScrollX;
-//		County += WndNow->y + WndNow->ScrollY;
-//		WndNow = WndNow->ezParent;
-//	}
-//
-//	////EZBroadcastToAllChild(ezWnd, TRUE, SEZWM_COPYDC, (WPARAM)NULL, (LPARAM)NULL);
-//
-//	/*
-//	if (!hdc)//没DC
-//	{
-//	HDC hdcg;
-//	hdcg = GetDC(EZGetTopParentWindow(ezWnd)->hParent);
-//	//BitBlt(hdcg, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->hdc, Countx, County, SRCCOPY);
-//	BitBlt(hdcg, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->TopWndExtend->hdcTop, Countx, County, SRCCOPY);
-//	ReleaseDC(EZGetTopParentWindow(ezWnd)->hParent, hdcg);
-//	}
-//	else
-//	{
-//	//BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->hdc, Countx, County, SRCCOPY);
-//	BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->TopWndExtend->hdcTop, Countx, County, SRCCOPY);
-//	}
-//
-//	*/
-//
-//
-//	if (!hdc)//没DC
-//	{
-//
-//		hdc = GetDC(EZGetTopParentWindow(ezWnd)->hParent);
-//		//BitBlt(hdcg, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->hdc, Countx, County, SRCCOPY);
-//		BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
-//		ReleaseDC(EZGetTopParentWindow(ezWnd)->hParent, hdc);
-//		hdc = NULL;
-//	}
-//	else
-//	{
-//		//BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->hdc, Countx, County, SRCCOPY);
-//		BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
-//	}
-//
-//	//RECT rect;
-//	//rect.left = Countx;
-//	//rect.right = Countx + ezWnd->Width;
-//	//rect.top = County;
-//	//rect.bottom = County + ezWnd->Height;
-//
-//	//InvalidateRect(ezWnd->hParent, &rect, 0);
-//	return 0;
-//}
 
 
 //计时器函数
@@ -1445,8 +1236,6 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	TRACKMOUSEEVENT tme;
-
 	EZWND ezWnd = NULL;
 
 	if (message != WM_CREATE)
@@ -1599,6 +1388,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 			//刚刚进来
 
 			//可以进行监测了。
+			TRACKMOUSEEVENT tme;
 			tme.cbSize = sizeof(TRACKMOUSEEVENT);
 			tme.dwFlags = TME_LEAVE;
 			tme.dwHoverTime = 0;
