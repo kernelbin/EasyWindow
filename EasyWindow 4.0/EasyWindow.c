@@ -1247,8 +1247,10 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		}
 	}
 
+	Sleep(2000);
 	switch (message)
 	{
+	
 	case WM_CREATE:
 	{
 		ezWnd = (EZWND)(((LPCREATESTRUCT)lParam)->lpCreateParams);
@@ -1528,8 +1530,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 		int iRet = DefWindowProc(hwnd, message, wParam, lParam);
 		EZSendMessage(ezWnd, EZWM_WINNCACTIVATE, wParam, lParam);
-		return iRet;
-
+		return 1;
 	}
 
 	case WM_CLOSE:
@@ -3819,6 +3820,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 
 	case EZWM_WINNCDRAW:
 	case EZWM_WINNCACTIVATE:
+	case EZWM_KILLFOCUS:
 	{
 		HDC hdc = GetDC(ezWnd->hParent);
 		BitBlt(hdc, 0, 0, ezWnd->Width, ezWnd->Height, ezWnd->TopWndExtend->hdcTop, 0, 0, SRCCOPY);
