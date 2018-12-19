@@ -302,24 +302,11 @@ EZWND CreateEZStyleParentWindow(TCHAR Title[], DWORD EZStyle, int x, int y, int 
 	}
 	else
 	{
-		//主窗口
-		//子窗口
-		DWORD WinStyle = WS_VISIBLE | WS_DLGFRAME | WS_POPUP | WS_THICKFRAME;
-		switch (EZStyle & MKDW(00000000, 00000000, 00000000, 11111111))
-		{
+		
+		ezParent = CreateEZParentWindowEx(EZStyle, x, y, Width, bAdjust ? Height + EZWND_CAP_HEIGHT : Height,
+			WS_POPUP|WS_VISIBLE|WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX, EZStyle_OverlappedWndProc, 0, 0);
+		ezParent->Extend->hExtend[0] = ezWnd = CreateEZWindow(ezParent, 0, EZWND_CAP_HEIGHT, Width, bAdjust ? Height : Height - EZWND_CAP_HEIGHT, ezWndProc);
 
-
-		case EZS_OVERLAPPEDWINDOW:
-			WinStyle |= WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-		case EZS_OVERLAPPED:
-
-
-			ezParent = CreateEZParentWindowEx(EZStyle, x, y, Width, bAdjust ? Height + EZWND_CAP_HEIGHT : Height,
-				WinStyle, EZStyle_OverlappedWndProc, 0, 0);
-			ezParent->Extend->hExtend[0] = ezWnd = CreateEZWindow(ezParent, 0, EZWND_CAP_HEIGHT, Width, bAdjust ? Height : Height - EZWND_CAP_HEIGHT, ezWndProc);
-
-			break;
-		}
 
 	}
 
@@ -1247,7 +1234,6 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		}
 	}
 
-	Sleep(2000);
 	switch (message)
 	{
 	
@@ -3818,23 +3804,26 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 	}
 
 
-	case EZWM_WINNCDRAW:
-	case EZWM_WINNCACTIVATE:
-	case EZWM_KILLFOCUS:
-	{
-		HDC hdc = GetDC(ezWnd->hParent);
-		BitBlt(hdc, 0, 0, ezWnd->Width, ezWnd->Height, ezWnd->TopWndExtend->hdcTop, 0, 0, SRCCOPY);
-		ReleaseDC(ezWnd->hParent, hdc);
-		//这是我能想出来的最快的操作了
+
+
+	case EZWM_SIZE:
+
+		if (ezWnd->Extend->hExtend[0])
+		{
+			MoveEZWindow(ezWnd->Extend->hExtend[0], 0, EZWND_CAP_HEIGHT, ezWnd->Width, ezWnd->Height - EZWND_CAP_HEIGHT, 0);
+		}
+
+		if ((ezWnd->EZStyle & MKDW(00000000, 00000000, 00000000, 11111111)) == EZS_OVERLAPPEDWINDOW)
+		{
+			int BtnLen = floor(EZWND_CAP_HEIGHT * 1.618);
+
+			MoveEZWindow(ezWnd->Extend->hExtend[1], ezWnd->Width - BtnLen, 0, BtnLen, EZWND_CAP_HEIGHT, 0);
+			MoveEZWindow(ezWnd->Extend->hExtend[2], ezWnd->Width - (BtnLen << 1), 0, BtnLen, EZWND_CAP_HEIGHT, 0);
+			MoveEZWindow(ezWnd->Extend->hExtend[3], ezWnd->Width - BtnLen * 3, 0, BtnLen, EZWND_CAP_HEIGHT, 0);
+
+		}
 		return 0;
-	}
-	//
-	//case EZWM_LBUTTONDOWN:
-	//	SendMessage(ezWnd->hParent, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);//拖动窗口。
-	////	这里开始！！！改成处理EZWM_NCHITTEST，添加EZWM_NCHITTEST的递归？
-	//	return 0;
-
-
+	
 	case EZWM_WINNCHITTEST:
 	{
 		////检测范围。先问问默认的意见，如果默认说是客户区我们再看是不是标题栏
@@ -3882,49 +3871,6 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 		return 0;
 	}
 
-	case EZWM_SIZE:
-
-		if (ezWnd->Extend->hExtend[0])
-		{
-			MoveEZWindow(ezWnd->Extend->hExtend[0], 0, EZWND_CAP_HEIGHT, ezWnd->Width, ezWnd->Height - EZWND_CAP_HEIGHT, 0);
-		}
-
-		if ((ezWnd->EZStyle & MKDW(00000000, 00000000, 00000000, 11111111)) == EZS_OVERLAPPEDWINDOW)
-		{
-			int BtnLen = floor(EZWND_CAP_HEIGHT * 1.618);
-
-			MoveEZWindow(ezWnd->Extend->hExtend[1], ezWnd->Width - BtnLen, 0, BtnLen, EZWND_CAP_HEIGHT, 0);
-			MoveEZWindow(ezWnd->Extend->hExtend[2], ezWnd->Width - (BtnLen << 1), 0, BtnLen, EZWND_CAP_HEIGHT, 0);
-			MoveEZWindow(ezWnd->Extend->hExtend[3], ezWnd->Width - BtnLen * 3, 0, BtnLen, EZWND_CAP_HEIGHT, 0);
-
-		}
-		return 0;
-	case EZWM_GETMINMAXINFO:
-	{
-		PMINMAXINFO pMMInfo;
-		RECT rect;
-		SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
-
-		pMMInfo = lParam;
-
-
-		AdjustWindowRect(&rect, GetWindowLong(ezWnd->hParent, GWL_STYLE), 0);
-
-		pMMInfo->ptMaxPosition.x = rect.left;// -(xborder << 1);
-		pMMInfo->ptMaxPosition.y = rect.top;// -(yborder << 1);
-		pMMInfo->ptMaxSize.x = rect.right - rect.left;// +(xborder << 2);
-		pMMInfo->ptMaxSize.y = rect.bottom - rect.top;// +(yborder << 2);
-		return 1;
-	}
-
-	//case EZWM_SETFOCUS:
-	//case EZWM_KILLFOCUS:
-	//	EZRepaint(ezWnd, 0);
-	//这里！！！如果，是子窗口收到了呢？这样肯定不行。修改这里的EZWM_SETFOCUS  EZWM_KILLFOCUS
-
-	//return 0;
-
-
 	case EZWM_WINNCCALCSIZE:
 	{
 		if (wParam)
@@ -3944,11 +3890,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 
 				AdjustWindowRect(&(NCCSParam->rgrc[0]), GetWindowLong(ezWnd->hParent, GWL_STYLE), 0);
 
-				NCCSParam->rgrc[0].left += 4;
-				NCCSParam->rgrc[0].top += 1;//在标题栏上面留出一些，这里先少加一些
-				NCCSParam->rgrc[0].right -= 4;
-				NCCSParam->rgrc[0].bottom -= 4;
-
+				
 				return 0;
 			}
 
@@ -3956,6 +3898,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 		//	InvalidateRect(hwnd, 0, 0);
 		return 1;
 	}
+
 
 	case EZWM_CLOSE:
 		return EZSendMessage(ezWnd->Extend->hExtend[0], EZWM_CLOSE, wParam, lParam);
