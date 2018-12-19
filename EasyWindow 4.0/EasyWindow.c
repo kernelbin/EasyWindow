@@ -302,11 +302,19 @@ EZWND CreateEZStyleParentWindow(TCHAR Title[], DWORD EZStyle, int x, int y, int 
 	}
 	else
 	{
-		
-		ezParent = CreateEZParentWindowEx(EZStyle, x, y, Width, bAdjust ? Height + EZWND_CAP_HEIGHT : Height,
-			WS_POPUP|WS_VISIBLE|WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX, EZStyle_OverlappedWndProc, 0, 0);
-		ezParent->Extend->hExtend[0] = ezWnd = CreateEZWindow(ezParent, 0, EZWND_CAP_HEIGHT, Width, bAdjust ? Height : Height - EZWND_CAP_HEIGHT, ezWndProc);
+		DWORD WinStyle = NULL;
+		switch (EZStyle & MKDW(00000000, 00000000, 00000000, 11111111))
+		{
+		case EZS_OVERLAPPEDWINDOW:
+			WinStyle |= WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+		case EZS_OVERLAPPED:
+			WinStyle |= WS_THICKFRAME | WS_VISIBLE | WS_POPUP | WS_VISIBLE;
+			ezParent = CreateEZParentWindowEx(EZStyle, x, y, Width, bAdjust ? Height + EZWND_CAP_HEIGHT : Height,
+				WinStyle, EZStyle_OverlappedWndProc, 0, 0);
+			ezParent->Extend->hExtend[0] = ezWnd = CreateEZWindow(ezParent, 0, EZWND_CAP_HEIGHT, Width, bAdjust ? Height : Height - EZWND_CAP_HEIGHT, ezWndProc);
 
+		}
+		
 
 	}
 
@@ -1514,9 +1522,11 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		//MSDN - The DefWindowProc function draws the title bar or icon title in its active colors when the wParam parameter is TRUE and in its inactive colors when wParam is FALSE.
 		//绘制总归让人家绘制吧。。。返回值我也不想处理了于是就写成了这样
 
-		int iRet = DefWindowProc(hwnd, message, wParam, lParam);
-		EZSendMessage(ezWnd, EZWM_WINNCACTIVATE, wParam, lParam);
-		return 1;
+		if (EZSendMessage(ezWnd, EZWM_WINNCACTIVATE, wParam, lParam) == 1)
+			return 1;
+		
+
+		return DefWindowProc(hwnd, message, wParam, lParam);
 	}
 
 	case WM_CLOSE:
@@ -3803,9 +3813,6 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 		return 0;
 	}
 
-
-
-
 	case EZWM_SIZE:
 
 		if (ezWnd->Extend->hExtend[0])
@@ -3850,23 +3857,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 		ScreenToClient(ezWnd->hParent, &pt);
 		if (PtInRect(&rect, pt))
 		{
-			if (!IsZoomed(ezWnd->hParent))
-			{
-				if (pt.y <= 3)
-				{
-					if (pt.x <= 3)
-					{
-						return EZHTTOPLEFT;
-					}
-					return EZHTTOP;
-				}
-			}
-
 			return EZHTCAPTION;
-		}
-		if ((ezWnd->EZStyle & 0xff) == EZS_OVERLAPPED)
-		{
-			return EZHTCLIENT;
 		}
 		return 0;
 	}
@@ -3899,6 +3890,10 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 		return 1;
 	}
 
+	case EZWM_WINNCACTIVATE:
+	{
+		return 1;
+	}
 
 	case EZWM_CLOSE:
 		return EZSendMessage(ezWnd->Extend->hExtend[0], EZWM_CLOSE, wParam, lParam);

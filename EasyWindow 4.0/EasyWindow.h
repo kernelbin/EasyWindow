@@ -52,7 +52,7 @@
 
 #define EZWM_ACTIVATE 9
 #define EZWM_ACTIVATEAPP 10
-#define EZWM_WINNCACTIVATE 11//啊。。这个返回值啥用都没，被忽视了。只不过是个通知。注意，在收到这条消息之前已经调用过DefWndProc了
+#define EZWM_WINNCACTIVATE 11//返回1以阻止调用DefWindowProc（DefWindowProc会以默认颜色在窗口上绘制NC）
 
 #define EZWM_CLOSE 12
 
