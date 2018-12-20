@@ -291,6 +291,7 @@
 #pragma region EasyWindowClassName
 
 #define EZWindowClass TEXT("EasyWindowClass")
+#define EZWindowShadowClass TEXT("EasyWindowShadowClass")
 
 #pragma endregion
 
@@ -349,6 +350,11 @@ typedef struct tagezTopWindowExtend
 	HDC hdcTop;//顶层窗口申请内存使用，其他窗口而言，这只是一个空的句柄。
 
 			   //	int TimerNum;//当前使用了的计时器数量
+	HWND ShadowWindow;
+
+	BOOL bTobShadow;//顶层窗口阴影是否开启
+	int TopShadowTransparent;//顶层窗口自己的阴影透明度。想指定子窗口的请看EZWINDOW结构体
+	COLORREF TopShadowColor;//顶层窗口自己的阴影颜色
 
 	struct ezTimer
 	{
@@ -379,6 +385,16 @@ typedef struct tagEZWND
 
 	int px;//x坐标（相对于主窗口）
 	int py;//y坐标（相对于主窗口）
+
+	
+	float ShadowStrength;//阴影强度
+
+	BOOL bShadow;//阴影是否开启。这是针对子窗口而不是本窗口的
+	COLORREF ShadowColor;//阴影颜色。这是针对子窗口而不是本窗口的
+	BYTE ShadowTransparent;//阴影透明度。这是针对子窗口而不是本窗口的
+	HDC ShadowDC;//阴影用DC。
+	//TODO: 仅在有子窗口启用阴影时才开。
+
 	RECT VisibleRect;//可见的矩形（相对于主窗口）
 	BOOL IsVsbRectNull;
 	//有关绘制状态****************************
@@ -531,6 +547,10 @@ BOOL EZCaptureKeyboard(EZWND ezWnd);
 BOOL EZReleaseKeyboard(EZWND ezWnd);
 BOOL SetMouseMsgRecvMode(EZWND ezWnd, int Mode);
 BOOL SetShowState(EZWND ezWnd, int State);
+BOOL EnableShadow(EZWND ezWnd, BOOL bEnable);
+BOOL SetShadowStrength(EZWND ezWnd, float Strength);
+BOOL SetShadowColor(EZWND ezWnd, COLORREF Color);
+BOOL SetShadowTransparent(EZWND ezWnd, int Trans);
 BOOL EZRedraw(EZWND ezWnd);
 BOOL EZUpdate(EZWND ezWnd, HDC hdc);
 BOOL EZRepaint(EZWND ezWnd, HDC hdc);
@@ -548,6 +568,7 @@ BOOL EZEndDialog(EZWND ezWnd);
 EZWNDPROC EZDlgHookProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
 EZWNDPROC EZDialogBoxMask(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK EZShadowWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 VOID CALLBACK ezInsideTimerProc(HWND hwnd, UINT message, UINT iTimerID, DWORD dwTime);
 int ezInsideWndProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
 BOOL PtInEZWnd(EZWND ezWnd, int x, int y);
@@ -561,6 +582,8 @@ BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT Rec
 int EZWndMessageLoop();
 
 
+
+void GaussianBlurFilter(unsigned char * input, unsigned char * output, int Width, int Height, int Stride, float GaussianSigma);
 
 //外部样式
 EZWNDPROC EZStyle_ButtonProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);

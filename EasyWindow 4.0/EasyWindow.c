@@ -19,6 +19,17 @@ BOOL InitEZWindow()
 	wndclass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wndclass.lpszMenuName = NULL;
 	wndclass.lpszClassName = EZWindowClass;
+
+	if (!RegisterClass(&wndclass))
+	{
+		return  FALSE;
+	}
+
+	//´´½¨ÒõÓ°´°¿ÚµÄ´°¿ÚÀà
+	wndclass.lpfnWndProc = EZShadowWndProc;
+	wndclass.cbWndExtra = sizeof(EZWND);//Ö¸Ïò¶ÔÓ¦µÄEZ´°¿Ú
+	wndclass.lpszClassName = EZWindowShadowClass;
+
 	if (!RegisterClass(&wndclass))
 	{
 		return  FALSE;
@@ -544,7 +555,7 @@ BOOL MoveEZWindow(EZWND ezWnd, int x, int y, int Width, int Height, BOOL repaint
 	fhdc = GetDC(ezWnd->hParent);
 	AdjustMemDC(ezWnd->hdc, fhdc, Width, Height);
 	// AdjustMemDC(ezWnd->hdcCopy, fhdc, Width, Height);
-
+	AdjustMemDC(ezWnd->ShadowDC, fhdc, Width, Height);
 	ReleaseDC(ezWnd->hParent, fhdc);
 	//ReleaseDC(ezWnd->hParent, fhdc);
 
@@ -581,6 +592,7 @@ BOOL ScrollEZWindow(EZWND ezWnd, int x, int y, BOOL bAdd)//bAddÎªTRUE£¬ÔòÀÛ¼Ó¡£·
 	EZRepaint(ezWnd, 0);
 	return 0;
 }
+
 BOOL EZResetChildPxPy(EZWND ezWnd)
 {
 	if (IsEZWindow(ezWnd->FirstChild))
@@ -628,7 +640,6 @@ BOOL EZReleaseMouse(EZWND ezWnd)
 	return TRUE;
 }
 
-
 BOOL EZCaptureKeyboard(EZWND ezWnd)
 {
 	ezWnd->ezRootParent->TopWndExtend->CptKbdWindow = ezWnd;
@@ -640,8 +651,6 @@ BOOL EZReleaseKeyboard(EZWND ezWnd)
 	ezWnd->ezRootParent->TopWndExtend->CptKbdWindow = NULL;
 	return 0;
 }
-
-
 
 BOOL SetMouseMsgRecvMode(EZWND ezWnd, int Mode)
 {
@@ -655,7 +664,36 @@ BOOL SetShowState(EZWND ezWnd, int State)
 	return TRUE;
 }
 
+BOOL EnableShadow(EZWND ezWnd, BOOL bEnable)
+{
+	if (bEnable && ezWnd->bShadow == FALSE)
+	{
+		ezWnd->ShadowDC = GetMemDC(ezWnd->hdc, ezWnd->Width, ezWnd->Height);
+	}
+	else if (bEnable == FALSE && ezWnd->bShadow)
+	{
+		DeleteMemDC(ezWnd->ShadowDC);
+		ezWnd->ShadowDC = NULL;
+	}
+	ezWnd->bShadow = bEnable;
+	
+	//TODO: Ë¢ÐÂÉÏ²ã´°¿Ú£¨×¢Òâ´¦Àí¶¥²ã´°¿Ú£©
+}
 
+BOOL SetShadowStrength(EZWND ezWnd, float Strength)
+{
+	ezWnd->ShadowStrength = Strength;
+}
+
+BOOL SetShadowColor(EZWND ezWnd,COLORREF Color)
+{
+	ezWnd->ShadowColor = Color;
+}
+
+BOOL SetShadowTransparent(EZWND ezWnd,int Trans)
+{
+	ezWnd->ShadowTransparent = Trans;
+}
 
 
 
@@ -749,7 +787,17 @@ BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT Rec
 															   /*OldRgn = SelectObject(LastChild->hdc, hRgn);*/
 
 
-
+				//ÁÙÊ±²Ù×÷
+				
+				if (ezWnd->bShadow)
+				{
+					RepaintShadow(ezWnd);
+					BLENDFUNCTION bf = { 0 };
+					bf.AlphaFormat = AC_SRC_ALPHA;
+					bf.SourceConstantAlpha = ezWnd->ShadowTransparent;
+					AlphaBlend(ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, ezWnd->ShadowDC, 0, 0, ezWnd->Width, ezWnd->Height, bf);
+				}
+				
 				RedrawBroadcast(LastChild, wp, lp, cx + LastChild->x + LastChild->ezParent->ScrollX, cy + LastChild->y + LastChild->ezParent->ScrollY, RectAns);//¸ø×Ô¼ºµÄ×Ó´°¿Ú·¢ËÍ¸ÃÏûÏ¢																															 /*	DeleteObject(SelectObject(LastChild->hdc, OldRgn));*/
 
 
@@ -878,7 +926,50 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 	return 0;
 }
 
+BOOL RepaintShadow(EZWND ezWnd)
+{
+	if (!ezWnd->bShadow)
+		return 0;
 
+	//´¿É«Ìî³ä
+	HBRUSH OldBrush = SelectObject(ezWnd->ShadowDC, CreateSolidBrush(ezWnd->ShadowColor));
+	PatBlt(ezWnd->ShadowDC, 0, 0, ezWnd->Width, ezWnd->Height, PATCOPY);
+	DeleteObject(SelectObject(ezWnd->ShadowDC, OldBrush));
+
+	RECT ParentRect = { 0,0,ezWnd->Width,ezWnd->Height };
+	HBITMAP hBitmap = SelectObject(ezWnd->ShadowDC,CreateCompatibleBitmap(ezWnd->hdc, 1, 1));
+	BITMAP bmp;
+	GetObject(hBitmap, sizeof(bmp), &bmp);
+
+	PBYTE pByte = malloc(bmp.bmWidthBytes * bmp.bmHeight);
+	GetBitmapBits(hBitmap, bmp.bmWidthBytes * bmp.bmHeight, pByte);
+	for (int i = 3;i < bmp.bmWidthBytes * bmp.bmHeight; i += 4)
+	{
+		pByte[i] = 0;
+	}
+	for (EZWND ChildWnd = ezWnd->FirstChild; ChildWnd; ChildWnd = ChildWnd->NextEZWnd)
+	{
+		//Ã¶¾ÙËùÓÐ×Ó´°¿Ú£¬Ìî³äÍ¸Ã÷²ã
+		RECT ChildRect = { ChildWnd->x,ChildWnd->y,ChildWnd->x +ChildWnd->Width,ChildWnd->y+ChildWnd->Height };
+		RECT ResultRect;
+		IntersectRect(&ResultRect, &ParentRect, &ChildRect);
+		
+		for (int y = ResultRect.top; y < ResultRect.bottom; y++)
+		{
+			PBYTE Base = pByte + y*bmp.bmWidthBytes + ResultRect.left * 4 +3;
+			for (int x = 0; x < ResultRect.right - ResultRect.left; x++)
+			{
+				*Base = 255;
+				Base += 4;
+			}
+		}
+	}
+
+	GaussianBlurFilter(pByte, pByte, bmp.bmWidth, bmp.bmHeight, bmp.bmWidthBytes, ezWnd->ShadowStrength);
+	SetBitmapBits(hBitmap, bmp.bmWidthBytes * bmp.bmHeight, pByte);
+	free(pByte);
+	DeleteObject(SelectObject(ezWnd->ShadowDC, hBitmap));
+}
 
 
 //¼ÆÊ±Æ÷º¯Êý
@@ -1306,8 +1397,14 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		//ReleaseDC(hwnd, hdc);
 		hdc = GetDC(hwnd);
 		AdjustMemDC(ezWnd->hdc, hdc, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		// AdjustMemDC(ezWnd->hdcCopy, hdc, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		if(ezWnd->bShadow)
+		{
+			AdjustMemDC(ezWnd->ShadowDC, hdc, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			//TODO:Ã²ËÆÐèÒªÖØ»æ
+		}
 		AdjustMemDC(ezWnd->TopWndExtend->hdcTop, hdc, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+
+
 		ReleaseDC(hwnd, hdc);
 		EZSendMessage(ezWnd, EZWM_SIZE, wParam, lParam);
 
@@ -1548,7 +1645,10 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		//°ÑÄã×Ô¼ºÇåÀíÁË
 		EZSendMessage(ezWnd, EZWM_DESTROY, (WPARAM)NULL, (LPARAM)NULL);//·¢ËÍÏú»ÙÐÅÏ¢
 		DeleteMemDC(ezWnd->hdc);//ÇåÀíDC
-	   // DeleteMemDC(ezWnd->hdcCopy);//ÇåÀíDC
+		if (ezWnd->bShadow)
+		{
+			DeleteMemDC(ezWnd->ShadowDC);//ÇåÀíDC
+		}
 		DeleteMemDC(ezWnd->TopWndExtend->hdcTop);
 
 		free(ezWnd->TopWndExtend);
@@ -1615,6 +1715,16 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 	return DefWindowProc(hwnd, message, wParam, lParam);
 
+}
+
+LRESULT CALLBACK EZShadowWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case EZWM_CREATE:
+		return 0;
+	}
+	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
 VOID CALLBACK ezInsideTimerProc(HWND hwnd, UINT message, UINT iTimerID, DWORD dwTime)
@@ -1925,7 +2035,7 @@ HDC GetMemDC(HDC hdc, int cx, int cy)
 	HBITMAP hBitmap = CreateCompatibleBitmap(hdc, cx, cy);
 	HDC hdcMem = CreateCompatibleDC(hdc);
 	SelectObject(hdcMem, hBitmap);
-	DeleteObject(hBitmap);
+	//DeleteObject(hBitmap);
 	return hdcMem;
 }
 
@@ -1943,6 +2053,298 @@ BOOL AdjustMemDC(HDC hdc, HDC hdcCpb, int cx, int cy)
 {
 	DeleteObject(SelectObject(hdc, CreateCompatibleBitmap(hdcCpb, cx, cy)));
 }
+
+void __inline CalGaussianCoeff(float sigma, float * a0, float * a1, float * a2, float * a3, float * b1, float * b2, float * cprev, float * cnext) {
+	float alpha, lamma, k;
+
+	if (sigma < 0.5f)
+		sigma = 0.5f;
+	alpha = (float)exp((0.726) * (0.726)) / sigma;
+	lamma = (float)exp(-alpha);
+	*b2 = (float)exp(-2 * alpha);
+	k = (1 - lamma) * (1 - lamma) / (1 + 2 * alpha * lamma - (*b2));
+	*a0 = k; *a1 = k * (alpha - 1) * lamma;
+	*a2 = k * (alpha + 1) * lamma;
+	*a3 = -k * (*b2);
+	*b1 = -2 * lamma;
+	*cprev = (*a0 + *a1) / (1 + *b1 + *b2);
+	*cnext = (*a2 + *a3) / (1 + *b1 + *b2);
+}
+
+void __inline gaussianHorizontal(unsigned char * bufferPerLine, unsigned char * lpRowInitial, unsigned char  * lpColumn, int width, int height, int Channels, int Nwidth, float a0a1, float a2a3, float b1b2, float  cprev, float cnext)
+{
+	int HeightStep = Channels * height;
+	int WidthSubOne = width - 1;
+	if (Channels == 3)
+	{
+		float prevOut[3];
+		prevOut[0] = (lpRowInitial[0] * cprev);
+		prevOut[1] = (lpRowInitial[1] * cprev);
+		prevOut[2] = (lpRowInitial[2] * cprev);
+		for (int x = 0; x < width; ++x) {
+			prevOut[0] = ((lpRowInitial[0] * (a0a1)) - (prevOut[0] * (b1b2)));
+			prevOut[1] = ((lpRowInitial[1] * (a0a1)) - (prevOut[1] * (b1b2)));
+			prevOut[2] = ((lpRowInitial[2] * (a0a1)) - (prevOut[2] * (b1b2)));
+			bufferPerLine[0] = prevOut[0];
+			bufferPerLine[1] = prevOut[1];
+			bufferPerLine[2] = prevOut[2];
+			bufferPerLine += Channels;
+			lpRowInitial += Channels;
+		}
+		lpRowInitial -= Channels;
+		lpColumn += HeightStep * WidthSubOne;
+		bufferPerLine -= Channels;
+		prevOut[0] = (lpRowInitial[0] * cnext);
+		prevOut[1] = (lpRowInitial[1] * cnext);
+		prevOut[2] = (lpRowInitial[2] * cnext);
+
+		for (int x = WidthSubOne; x >= 0; --x) {
+			prevOut[0] = ((lpRowInitial[0] * (a2a3)) - (prevOut[0] * (b1b2)));
+			prevOut[1] = ((lpRowInitial[1] * (a2a3)) - (prevOut[1] * (b1b2)));
+			prevOut[2] = ((lpRowInitial[2] * (a2a3)) - (prevOut[2] * (b1b2)));
+			bufferPerLine[0] += prevOut[0];
+			bufferPerLine[1] += prevOut[1];
+			bufferPerLine[2] += prevOut[2];
+			lpColumn[0] = bufferPerLine[0];
+			lpColumn[1] = bufferPerLine[1];
+			lpColumn[2] = bufferPerLine[2];
+			lpRowInitial -= Channels;
+			lpColumn -= HeightStep;
+			bufferPerLine -= Channels;
+		}
+	}
+	else if (Channels == 4)
+	{
+		float prevOut[4];
+
+		prevOut[0] = (lpRowInitial[0] * cprev);
+		prevOut[1] = (lpRowInitial[1] * cprev);
+		prevOut[2] = (lpRowInitial[2] * cprev);
+		prevOut[3] = (lpRowInitial[3] * cprev);
+		for (register int x = 0; x < width; ++x) {
+			prevOut[0] = ((lpRowInitial[0] * (a0a1)) - (prevOut[0] * (b1b2)));
+			prevOut[1] = ((lpRowInitial[1] * (a0a1)) - (prevOut[1] * (b1b2)));
+			prevOut[2] = ((lpRowInitial[2] * (a0a1)) - (prevOut[2] * (b1b2)));
+			prevOut[3] = ((lpRowInitial[3] * (a0a1)) - (prevOut[3] * (b1b2)));
+
+			bufferPerLine[0] = prevOut[0];
+			bufferPerLine[1] = prevOut[1];
+			bufferPerLine[2] = prevOut[2];
+			bufferPerLine[3] = prevOut[3];
+			bufferPerLine += Channels;
+			lpRowInitial += Channels;
+		}
+		lpRowInitial -= Channels;
+		lpColumn += HeightStep * WidthSubOne;
+		bufferPerLine -= Channels;
+
+		prevOut[0] = (lpRowInitial[0] * cnext);
+		prevOut[1] = (lpRowInitial[1] * cnext);
+		prevOut[2] = (lpRowInitial[2] * cnext);
+		prevOut[3] = (lpRowInitial[3] * cnext);
+
+		for (register int x = WidthSubOne; x >= 0; --x) {
+			prevOut[0] = ((lpRowInitial[0] * a2a3) - (prevOut[0] * b1b2));
+			prevOut[1] = ((lpRowInitial[1] * a2a3) - (prevOut[1] * b1b2));
+			prevOut[2] = ((lpRowInitial[2] * a2a3) - (prevOut[2] * b1b2));
+			prevOut[3] = ((lpRowInitial[3] * a2a3) - (prevOut[3] * b1b2));
+			bufferPerLine[0] += prevOut[0];
+			bufferPerLine[1] += prevOut[1];
+			bufferPerLine[2] += prevOut[2];
+			bufferPerLine[3] += prevOut[3];
+			lpColumn[0] = bufferPerLine[0];
+			lpColumn[1] = bufferPerLine[1];
+			lpColumn[2] = bufferPerLine[2];
+			lpColumn[3] = bufferPerLine[3];
+			lpRowInitial -= Channels;
+			lpColumn -= HeightStep;
+			bufferPerLine -= Channels;
+		}
+	}
+	else if (Channels == 1)
+	{
+		float prevOut = (lpRowInitial[0] * cprev);
+
+		for (int x = 0; x < width; ++x) {
+			prevOut = ((lpRowInitial[0] * (a0a1)) - (prevOut  * (b1b2)));
+			bufferPerLine[0] = prevOut;
+			bufferPerLine += Channels;
+			lpRowInitial += Channels;
+		}
+		lpRowInitial -= Channels;
+		lpColumn += HeightStep * WidthSubOne;
+		bufferPerLine -= Channels;
+
+		prevOut = (lpRowInitial[0] * cnext);
+
+		for (int x = WidthSubOne; x >= 0; --x) {
+			prevOut = ((lpRowInitial[0] * a2a3) - (prevOut  * b1b2));
+			bufferPerLine[0] += prevOut;
+			lpColumn[0] = bufferPerLine[0];
+			lpRowInitial -= Channels;
+			lpColumn -= HeightStep;
+			bufferPerLine -= Channels;
+		}
+	}
+
+}
+
+void __inline gaussianVertical(unsigned char * bufferPerLine, unsigned char * lpRowInitial, unsigned char * lpColInitial, int height, int width, int Channels, float a0a1, float a2a3, float b1b2, float  cprev, float  cnext)
+{
+
+	int WidthStep = Channels * width;
+	int HeightSubOne = height - 1;
+	if (Channels == 3)
+	{
+		float prevOut[3];
+		prevOut[0] = (lpRowInitial[0] * cprev);
+		prevOut[1] = (lpRowInitial[1] * cprev);
+		prevOut[2] = (lpRowInitial[2] * cprev);
+
+		for (int y = 0; y < height; y++) {
+			prevOut[0] = ((lpRowInitial[0] * a0a1) - (prevOut[0] * b1b2));
+			prevOut[1] = ((lpRowInitial[1] * a0a1) - (prevOut[1] * b1b2));
+			prevOut[2] = ((lpRowInitial[2] * a0a1) - (prevOut[2] * b1b2));
+			bufferPerLine[0] = prevOut[0];
+			bufferPerLine[1] = prevOut[1];
+			bufferPerLine[2] = prevOut[2];
+			bufferPerLine += Channels;
+			lpRowInitial += Channels;
+		}
+		lpRowInitial -= Channels;
+		bufferPerLine -= Channels;
+		lpColInitial += WidthStep * HeightSubOne;
+		prevOut[0] = (lpRowInitial[0] * cnext);
+		prevOut[1] = (lpRowInitial[1] * cnext);
+		prevOut[2] = (lpRowInitial[2] * cnext);
+		for (int y = HeightSubOne; y >= 0; y--) {
+			prevOut[0] = ((lpRowInitial[0] * a2a3) - (prevOut[0] * b1b2));
+			prevOut[1] = ((lpRowInitial[1] * a2a3) - (prevOut[1] * b1b2));
+			prevOut[2] = ((lpRowInitial[2] * a2a3) - (prevOut[2] * b1b2));
+			bufferPerLine[0] += prevOut[0];
+			bufferPerLine[1] += prevOut[1];
+			bufferPerLine[2] += prevOut[2];
+			lpColInitial[0] = bufferPerLine[0];
+			lpColInitial[1] = bufferPerLine[1];
+			lpColInitial[2] = bufferPerLine[2];
+			lpRowInitial -= Channels;
+			lpColInitial -= WidthStep;
+			bufferPerLine -= Channels;
+		}
+	}
+	else if (Channels == 4)
+	{
+		float prevOut[4];
+
+		prevOut[0] = (lpRowInitial[0] * cprev);
+		prevOut[1] = (lpRowInitial[1] * cprev);
+		prevOut[2] = (lpRowInitial[2] * cprev);
+		prevOut[3] = (lpRowInitial[3] * cprev);
+
+		for (register int y = 0; y < height; y++) {
+			prevOut[0] = ((lpRowInitial[0] * a0a1) - (prevOut[0] * b1b2));
+			prevOut[1] = ((lpRowInitial[1] * a0a1) - (prevOut[1] * b1b2));
+			prevOut[2] = ((lpRowInitial[2] * a0a1) - (prevOut[2] * b1b2));
+			prevOut[3] = ((lpRowInitial[3] * a0a1) - (prevOut[3] * b1b2));
+			bufferPerLine[0] = prevOut[0];
+			bufferPerLine[1] = prevOut[1];
+			bufferPerLine[2] = prevOut[2];
+			bufferPerLine[3] = prevOut[3];
+			bufferPerLine += Channels;
+			lpRowInitial += Channels;
+		}
+		lpRowInitial -= Channels;
+		bufferPerLine -= Channels;
+		lpColInitial += WidthStep * HeightSubOne;
+		prevOut[0] = (lpRowInitial[0] * cnext);
+		prevOut[1] = (lpRowInitial[1] * cnext);
+		prevOut[2] = (lpRowInitial[2] * cnext);
+		prevOut[3] = (lpRowInitial[3] * cnext);
+		for (register int y = HeightSubOne; y >= 0; y--) {
+			prevOut[0] = ((lpRowInitial[0] * a2a3) - (prevOut[0] * b1b2));
+			prevOut[1] = ((lpRowInitial[1] * a2a3) - (prevOut[1] * b1b2));
+			prevOut[2] = ((lpRowInitial[2] * a2a3) - (prevOut[2] * b1b2));
+			prevOut[3] = ((lpRowInitial[3] * a2a3) - (prevOut[3] * b1b2));
+			bufferPerLine[0] += prevOut[0];
+			bufferPerLine[1] += prevOut[1];
+			bufferPerLine[2] += prevOut[2];
+			bufferPerLine[3] += prevOut[3];
+			lpColInitial[0] = bufferPerLine[0];
+			lpColInitial[1] = bufferPerLine[1];
+			lpColInitial[2] = bufferPerLine[2];
+			lpColInitial[3] = bufferPerLine[3];
+			lpRowInitial -= Channels;
+			lpColInitial -= WidthStep;
+			bufferPerLine -= Channels;
+		}
+	}
+	else if (Channels == 1)
+	{
+		float prevOut = 0;
+		prevOut = (lpRowInitial[0] * cprev);
+		for (int y = 0; y < height; y++) {
+			prevOut = ((lpRowInitial[0] * a0a1) - (prevOut * b1b2));
+			bufferPerLine[0] = prevOut;
+			bufferPerLine += Channels;
+			lpRowInitial += Channels;
+		}
+		lpRowInitial -= Channels;
+		bufferPerLine -= Channels;
+		lpColInitial += WidthStep * HeightSubOne;
+		prevOut = (lpRowInitial[0] * cnext);
+		for (int y = HeightSubOne; y >= 0; y--) {
+			prevOut = ((lpRowInitial[0] * a2a3) - (prevOut * b1b2));
+			bufferPerLine[0] += prevOut;
+			lpColInitial[0] = bufferPerLine[0];
+			lpRowInitial -= Channels;
+			lpColInitial -= WidthStep;
+			bufferPerLine -= Channels;
+		}
+	}
+}
+
+void  GaussianBlurFilter(unsigned char * input, unsigned char * output, int Width, int Height, int Stride, float GaussianSigma) {
+
+	int Channels = Stride / Width;
+	float a0, a1, a2, a3, b1, b2, cprev, cnext;
+
+	CalGaussianCoeff(GaussianSigma, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
+
+	float a0a1 = (a0 + a1);
+	float a2a3 = (a2 + a3);
+	float b1b2 = (b1 + b2);
+
+	int bufferSizePerThread = (Width > Height ? Width : Height) * Channels;
+	unsigned char * bufferPerLine = (unsigned char*)malloc(bufferSizePerThread);
+	unsigned char * tempData = (unsigned char*)malloc(Height * Stride);
+	if (bufferPerLine == NULL || tempData == NULL)
+	{
+		if (tempData)
+		{
+			free(tempData);
+		}
+		if (bufferPerLine)
+		{
+			free(bufferPerLine);
+		}
+		return;
+	}
+	for (register int y = 0; y < Height; ++y) {
+		unsigned char * lpRowInitial = input + Stride * y;
+		unsigned char * lpColInitial = tempData + y * Channels;
+		gaussianHorizontal(bufferPerLine, lpRowInitial, lpColInitial, Width, Height, Channels, Width, a0a1, a2a3, b1b2, cprev, cnext);
+	}
+	int HeightStep = Height * Channels;
+	for (register int x = 0; x < Width; ++x) {
+		unsigned char * lpColInitial = output + x * Channels;
+		unsigned char * lpRowInitial = tempData + HeightStep * x;
+		gaussianVertical(bufferPerLine, lpRowInitial, lpColInitial, Height, Width, Channels, a0a1, a2a3, b1b2, cprev, cnext);
+	}
+
+	free(bufferPerLine);
+	free(tempData);
+}
+
 
 //*********************************************************************************************************
 //                EZWindow·ç¸ñÀ©Õ¹Í·ÎÄ¼þ ÒÔ¼°ºê¶¨Òå
