@@ -930,7 +930,7 @@ BOOL RepaintShadow(EZWND ezWnd)
 {
 	if (!ezWnd->bShadow)
 		return 0;
-
+	这里！！修改，各个子窗口分开单独绘制。
 	//纯色填充
 	HBRUSH OldBrush = SelectObject(ezWnd->ShadowDC, CreateSolidBrush(ezWnd->ShadowColor));
 	PatBlt(ezWnd->ShadowDC, 0, 0, ezWnd->Width, ezWnd->Height, PATCOPY);
