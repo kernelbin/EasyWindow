@@ -1,14 +1,14 @@
 #include"EasyWindow.h"
 
 //*******************************************************************************************
-//                º¯ÊıÊµÌå
+//                å‡½æ•°å®ä½“
 //*******************************************************************************************
 
-//³õÊ¼»¯º¯Êı
+//åˆå§‹åŒ–å‡½æ•°
 BOOL InitEZWindow()
 {
 	WNDCLASS wndclass;
-	//×¢²á´°¿ÚÀà
+	//æ³¨å†Œçª—å£ç±»
 	wndclass.style = CS_HREDRAW | CS_VREDRAW;
 	wndclass.lpfnWndProc = EZParentWndProc;
 	wndclass.cbClsExtra = 0;
@@ -30,14 +30,14 @@ BOOL InitEZWindow()
 
 
 
-//´´½¨´°¿Úº¯Êı
+//åˆ›å»ºçª—å£å‡½æ•°
 EZWND CreateEZParentWindowEx(DWORD EZStyle, int x, int y, int Width, int Height, DWORD WinStyle, EZWNDPROC ezWndProc, HMENU hMenu, HWND hParent)
 {
-	HWND hwndParent;//ÕâÊÇWindows¾ä±úµÄ¸¸´°¿Ú
-	EZWND ezwndParent;//ÕâÊÇºÍWin´°¿ÚµÈ´óµÄEZ´°¿Ú£¬·µ»Ø¸øÓÃ»§¡£¸Ã´°¿Ú´İ»ÙÊ±Í¬Ê±´İ»ÙWin´°¿Ú
+	HWND hwndParent;//è¿™æ˜¯Windowså¥æŸ„çš„çˆ¶çª—å£
+	EZWND ezwndParent;//è¿™æ˜¯å’ŒWinçª—å£ç­‰å¤§çš„EZçª—å£ï¼Œè¿”å›ç»™ç”¨æˆ·ã€‚è¯¥çª—å£æ‘§æ¯æ—¶åŒæ—¶æ‘§æ¯Winçª—å£
 
 
-	if (!(ezwndParent = (EZWND)malloc(sizeof(EZWINDOW))))//ÉêÇëÄÚ´æ²¢¼ì²é
+	if (!(ezwndParent = (EZWND)malloc(sizeof(EZWINDOW))))//ç”³è¯·å†…å­˜å¹¶æ£€æŸ¥
 	{
 		return (EZWND)0;
 	}
@@ -60,7 +60,7 @@ EZWND CreateEZParentWindowEx(DWORD EZStyle, int x, int y, int Width, int Height,
 		ZeroMemory(ezwndParent->Extend, sizeof(EZSE));
 	}
 
-	//ÎÒ½«ÏÂÃæËùÓĞ¸³ÖµÎª0µÄÓï¾äÈ«²¿×¢ÊÍµôÁË£¬ÒòÎªÕâÊÇ¶àÓàµÄ²Ù×÷
+	//æˆ‘å°†ä¸‹é¢æ‰€æœ‰èµ‹å€¼ä¸º0çš„è¯­å¥å…¨éƒ¨æ³¨é‡Šæ‰äº†ï¼Œå› ä¸ºè¿™æ˜¯å¤šä½™çš„æ“ä½œ
 
 
 	ezwndParent->x = x;
@@ -79,16 +79,16 @@ EZWND CreateEZParentWindowEx(DWORD EZStyle, int x, int y, int Width, int Height,
 	//ezwndParent->FirstChild = NULL;
 	//ezwndParent->LastEZWnd = NULL;
 	//ezwndParent->NextEZWnd = NULL;
-	//ezwndParent->ezParent = NULL;//Ã»ÓĞ£¬¿Õ¡£
-	ezwndParent->ezRootParent = ezwndParent;//Äã×Ô¼º
+	//ezwndParent->ezParent = NULL;//æ²¡æœ‰ï¼Œç©ºã€‚
+	ezwndParent->ezRootParent = ezwndParent;//ä½ è‡ªå·±
 
-	//ezwndParent->TopWndExtend->CptMouseWindow = NULL;//Ã»ÓĞµÄ£¬2333
+	//ezwndParent->TopWndExtend->CptMouseWindow = NULL;//æ²¡æœ‰çš„ï¼Œ2333
 	//ezwndParent->TopWndExtend->FocusWindow = NULL;
 	//ezwndParent->TopWndExtend->MouseOnWnd = NULL;
 	//ezwndParent->TopWndExtend->CptKbdWindow = NULL;
 
 
-	ezwndParent->IsTopWindow = TRUE;//ÊÇµÄ£¬ÊÇ¶¥²ã´°¿Ú¡£
+	ezwndParent->IsTopWindow = TRUE;//æ˜¯çš„ï¼Œæ˜¯é¡¶å±‚çª—å£ã€‚
 
 	//ezwndParent->FocusState = FALSE;
 
@@ -98,9 +98,9 @@ EZWND CreateEZParentWindowEx(DWORD EZStyle, int x, int y, int Width, int Height,
 
 	//ezwndParent->MouseOn = FALSE;
 
-	//ezwndParent->Update = FALSE;//¸Õ¿ªÊ¼£¬¿Ï¶¨Ã»ÓĞ¸üĞÂ¹ı¡£
+	//ezwndParent->Update = FALSE;//åˆšå¼€å§‹ï¼Œè‚¯å®šæ²¡æœ‰æ›´æ–°è¿‡ã€‚
 
-	ezwndParent->Transparent = 255;//²»Í¸Ã÷
+	ezwndParent->Transparent = 255;//ä¸é€æ˜
 
 	ezwndParent->ezWndProc = ezWndProc;
 
@@ -115,7 +115,7 @@ EZWND CreateEZParentWindowEx(DWORD EZStyle, int x, int y, int Width, int Height,
 
 	//ezwndParent->ezID = 0;
 
-	//´ó²¿·ÖÄÚÈİ¶¼³õÊ¼»¯Íê±ÏÁË¡£ezwndParent±»×÷Îª²ÎÊıÌá½»¸øWM_CREATEÏûÏ¢£¬²¢ÔÚÆÚ¼ä½«Õâ¸öÖ¸ÕëÉèÖÃÎª´°¿ÚÀ©Õ¹
+	//å¤§éƒ¨åˆ†å†…å®¹éƒ½åˆå§‹åŒ–å®Œæ¯•äº†ã€‚ezwndParentè¢«ä½œä¸ºå‚æ•°æäº¤ç»™WM_CREATEæ¶ˆæ¯ï¼Œå¹¶åœ¨æœŸé—´å°†è¿™ä¸ªæŒ‡é’ˆè®¾ç½®ä¸ºçª—å£æ‰©å±•
 	hwndParent = CreateWindow(EZWindowClass, TEXT(""), WinStyle, x, y, Width, Height, hParent, hMenu, GetModuleHandle(NULL), ezwndParent);
 
 	//	EZRepaint(ezwndParent, NULL);
@@ -133,7 +133,7 @@ EZWND CreateEZWindowEx(EZWND ezParent, DWORD EZStyle, int x, int y, int Width, i
 		return (EZWND)0;
 	}
 
-	if (!(ezWnd = (EZWND)malloc(sizeof(EZWINDOW))))//´´½¨²¢¼ì²éÄÚ´æ
+	if (!(ezWnd = (EZWND)malloc(sizeof(EZWINDOW))))//åˆ›å»ºå¹¶æ£€æŸ¥å†…å­˜
 	{
 		return (EZWND)0;
 	}
@@ -146,7 +146,7 @@ EZWND CreateEZWindowEx(EZWND ezParent, DWORD EZStyle, int x, int y, int Width, i
 		ZeroMemory(ezWnd->Extend, sizeof(EZSE));
 	}
 
-	//ÎÒ½«ÏÂÃæËùÓĞ¸³ÖµÎª0µÄÓï¾äÈ«²¿×¢ÊÍµôÁË£¬ÒòÎªÕâÊÇ¶àÓàµÄ²Ù×÷
+	//æˆ‘å°†ä¸‹é¢æ‰€æœ‰èµ‹å€¼ä¸º0çš„è¯­å¥å…¨éƒ¨æ³¨é‡Šæ‰äº†ï¼Œå› ä¸ºè¿™æ˜¯å¤šä½™çš„æ“ä½œ
 
 	//ezWnd->TopWndExtend = NULL;
 
@@ -166,7 +166,7 @@ EZWND CreateEZWindowEx(EZWND ezParent, DWORD EZStyle, int x, int y, int Width, i
 	//ezWnd->NextEZWnd = NULL;
 
 	ezWnd->hParent = ezParent->hParent;
-	//ezWnd->IsTopWindow = FALSE;//²¢²»ÊÇ
+	//ezWnd->IsTopWindow = FALSE;//å¹¶ä¸æ˜¯
 
 
 	//ezWnd->FocusState = 0;
@@ -175,15 +175,15 @@ EZWND CreateEZWindowEx(EZWND ezParent, DWORD EZStyle, int x, int y, int Width, i
 
 	//ezWnd->MouseOn = FALSE;
 
-	ezWnd->Update = 1;//¸Õ¿ªÊ¼£¬¿Ï¶¨Ã»ÓĞ¸üĞÂ¹ı¡£
+	ezWnd->Update = 1;//åˆšå¼€å§‹ï¼Œè‚¯å®šæ²¡æœ‰æ›´æ–°è¿‡ã€‚
 
-	ezWnd->Transparent = 255;//²»Í¸Ã÷
+	ezWnd->Transparent = 255;//ä¸é€æ˜
 
 	ezWnd->ezParent = ezParent;
 	ezWnd->ezRootParent = ezParent->ezRootParent;
 	ezWnd->ezWndProc = ezWndProc;
 
-	//ÔÚEZ¸¸´°¿Ú×îºó×·¼ÓÕâ¸öĞÂµÄ×Ó´°¿Ú¡£
+	//åœ¨EZçˆ¶çª—å£æœ€åè¿½åŠ è¿™ä¸ªæ–°çš„å­çª—å£ã€‚
 	EZAddChild(ezParent, ezWnd);
 
 	fhdc = GetDC(hParent = ezParent->hParent);
@@ -200,9 +200,9 @@ EZWND CreateEZWindowEx(EZWND ezParent, DWORD EZStyle, int x, int y, int Width, i
 
 	//ezWnd->ezID = 0;
 
-	EZSendMessage(ezWnd, EZWM_CREATE, 0, 0);//·¢ËÍ´´½¨ÏûÏ¢
+	EZSendMessage(ezWnd, EZWM_CREATE, 0, 0);//å‘é€åˆ›å»ºæ¶ˆæ¯
 
-											//Ö»·¢ËÍÒ»¸öÒÆ¶¯ÏûÏ¢
+											//åªå‘é€ä¸€ä¸ªç§»åŠ¨æ¶ˆæ¯
 	EZSendMessage(ezWnd, EZWM_SIZE, (WPARAM)NULL, (LPARAM)MAKELPARAM(Width, Height));
 	return ezWnd;
 
@@ -211,17 +211,17 @@ EZWND CreateEZWindowEx(EZWND ezParent, DWORD EZStyle, int x, int y, int Width, i
 BOOL EZAddChild(EZWND ezParent, EZWND ezChild)
 {
 	EZWND ezChildLast;
-	//½«×Ó´°¿Ú×·¼ÓÔÚezParentµÄ×Ó´°¿ÚÁ´±í×îºó
+	//å°†å­çª—å£è¿½åŠ åœ¨ezParentçš„å­çª—å£é“¾è¡¨æœ€å
 	if (!IsEZWindow(ezParent->FirstChild))
 	{
 		ezParent->FirstChild = ezChild;
 		return TRUE;
 	}
 
-	//×Ó´°¿ÚÁ´±íµÚÒ»¸ö²»Îª¿Õ
+	//å­çª—å£é“¾è¡¨ç¬¬ä¸€ä¸ªä¸ä¸ºç©º
 	ezChildLast = ezParent->FirstChild;
 
-	while (1)//Ñ­»·µ½Á´±í×îºó
+	while (1)//å¾ªç¯åˆ°é“¾è¡¨æœ€å
 	{
 		if (!IsEZWindow(ezChildLast->NextEZWnd))
 		{
@@ -229,7 +229,7 @@ BOOL EZAddChild(EZWND ezParent, EZWND ezChild)
 			ezChildLast->NextEZWnd = ezChild;
 			return TRUE;
 		}
-		ezChildLast = ezChildLast->NextEZWnd;//ÏòÏÂÒÆ¶¯
+		ezChildLast = ezChildLast->NextEZWnd;//å‘ä¸‹ç§»åŠ¨
 	}
 
 }
@@ -239,10 +239,10 @@ EZWND CreateEZStyleWindow(EZWND ezParent, TCHAR Title[], DWORD EZStyle, int x, i
 {
 	EZWND ezWnd;
 	ezWnd = 0;
-	//½âÎöÊôĞÔ£¬¼ì²âÊÇ·ñ³åÍ»£¬È»ºó´´½¨´°¿Ú¡£
+	//è§£æå±æ€§ï¼Œæ£€æµ‹æ˜¯å¦å†²çªï¼Œç„¶ååˆ›å»ºçª—å£ã€‚
 	if (CHK_ALT_STYLE(EZStyle, EZS_CHILD))
 	{
-		//×Ó´°¿Ú
+		//å­çª—å£
 		switch (EZStyle & MKDW(00000000, 00000000, 00000000, 11111111))
 		{
 		case EZS_STATIC:
@@ -264,7 +264,7 @@ EZWND CreateEZStyleWindow(EZWND ezParent, TCHAR Title[], DWORD EZStyle, int x, i
 	}
 	else
 	{
-		//Ö÷´°¿Ú
+		//ä¸»çª—å£
 
 	}
 
@@ -284,7 +284,7 @@ EZWND CreateEZStyleWindow(EZWND ezParent, TCHAR Title[], DWORD EZStyle, int x, i
 	((pEZSE)ezWnd->Extend)->IsFontUserControl = -1;
 
 
-	//×îºóÔÙÉèÖÃÒ»±é£¬·ÀÖ¹Ö®Ç°±»·ÀÒ°Êı¾İ»úÖÆÇåÁã¡£
+	//æœ€åå†è®¾ç½®ä¸€éï¼Œé˜²æ­¢ä¹‹å‰è¢«é˜²é‡æ•°æ®æœºåˆ¶æ¸…é›¶ã€‚
 	ezWnd->IsStyleWindow = TRUE;
 	ezWnd->EZStyle = EZStyle;
 
@@ -295,15 +295,15 @@ EZWND CreateEZStyleWindow(EZWND ezParent, TCHAR Title[], DWORD EZStyle, int x, i
 EZWND CreateEZStyleParentWindow(TCHAR Title[], DWORD EZStyle, int x, int y, int Width, int Height, BOOL bAdjust, EZWNDPROC ezWndProc)
 {
 	EZWND ezParent = 0, ezWnd = 0;
-	//½âÎöÊôĞÔ£¬¼ì²âÊÇ·ñ³åÍ»£¬È»ºó´´½¨´°¿Ú¡£
+	//è§£æå±æ€§ï¼Œæ£€æµ‹æ˜¯å¦å†²çªï¼Œç„¶ååˆ›å»ºçª—å£ã€‚
 	if (CHK_ALT_STYLE(EZStyle, EZS_CHILD))
 	{
 
 	}
 	else
 	{
-		//Ö÷´°¿Ú
-		//×Ó´°¿Ú
+		//ä¸»çª—å£
+		//å­çª—å£
 		DWORD WinStyle = WS_VISIBLE | WS_DLGFRAME | WS_POPUP | WS_THICKFRAME;
 		switch (EZStyle & MKDW(00000000, 00000000, 00000000, 11111111))
 		{
@@ -339,7 +339,7 @@ EZWND CreateEZStyleParentWindow(TCHAR Title[], DWORD EZStyle, int x, int y, int 
 	((pEZSE)ezParent->Extend)->IsFontUserControl = -1;
 
 
-	//×îºóÔÙÉèÖÃÒ»±é£¬·ÀÖ¹Ö®Ç°±»·ÀÒ°Êı¾İ»úÖÆÇåÁã¡£
+	//æœ€åå†è®¾ç½®ä¸€éï¼Œé˜²æ­¢ä¹‹å‰è¢«é˜²é‡æ•°æ®æœºåˆ¶æ¸…é›¶ã€‚
 	ezParent->IsStyleWindow = TRUE;
 	ezParent->EZStyle = EZStyle;
 
@@ -348,30 +348,30 @@ EZWND CreateEZStyleParentWindow(TCHAR Title[], DWORD EZStyle, int x, int y, int 
 	return ezWnd;
 }
 
-//Ïú»Ù´°¿Úº¯Êı
+//é”€æ¯çª—å£å‡½æ•°
 BOOL DestroyEZWindow(EZWND ezWnd)
 {
 
 	if (ezWnd->IsTopWindow)
 	{
-		DestroyWindow(ezWnd->hParent);//Õâ¾ÍĞĞÁË£¬Ïú»Ù»áÔÚÕâÀïÍê³É¡£ÕâÒ²Ã»Ê²Ã´ºÃËµµÄ£¬²»ÓÃ¹ÜÁ´±í£¬ÇåÀí¾ÍÊÇÁË¡£
+		DestroyWindow(ezWnd->hParent);//è¿™å°±è¡Œäº†ï¼Œé”€æ¯ä¼šåœ¨è¿™é‡Œå®Œæˆã€‚è¿™ä¹Ÿæ²¡ä»€ä¹ˆå¥½è¯´çš„ï¼Œä¸ç”¨ç®¡é“¾è¡¨ï¼Œæ¸…ç†å°±æ˜¯äº†ã€‚
 		return TRUE;
 	}
 
 
 
-	//ÏÈ±£´æĞÅÏ¢£¬µ¹ÍÆ£¬Ïû³ıËùÓĞ×ÓËï´°¿Ú
+	//å…ˆä¿å­˜ä¿¡æ¯ï¼Œå€’æ¨ï¼Œæ¶ˆé™¤æ‰€æœ‰å­å­™çª—å£
 	if (IsEZWindow(ezWnd->FirstChild))
 	{
 		DestroyEZWindowWithNext(ezWnd->FirstChild);
 	}
 
 
-	//°ÑÄã×Ô¼ºÇåÀíÁË
-	EZSendMessage(ezWnd, EZWM_DESTROY, (WPARAM)NULL, (LPARAM)NULL);//·¢ËÍÏú»ÙĞÅÏ¢
+	//æŠŠä½ è‡ªå·±æ¸…ç†äº†
+	EZSendMessage(ezWnd, EZWM_DESTROY, (WPARAM)NULL, (LPARAM)NULL);//å‘é€é”€æ¯ä¿¡æ¯
 
-	DeleteMemDC(ezWnd->hdc);//ÇåÀíDC
-	//DeleteMemDC(ezWnd->hdcCopy);//ÇåÀíDC
+	DeleteMemDC(ezWnd->hdc);//æ¸…ç†DC
+	//DeleteMemDC(ezWnd->hdcCopy);//æ¸…ç†DC
 
 	if (ezWnd->ezRootParent->TopWndExtend->MouseOnWnd == ezWnd)
 	{
@@ -402,38 +402,38 @@ BOOL DestroyEZWindow(EZWND ezWnd)
 	{
 		free(ezWnd->Extend);
 	}
-	//Î¬»¤Ò»ÏÂÁ´±í£¿
+	//ç»´æŠ¤ä¸€ä¸‹é“¾è¡¨ï¼Ÿ
 	if (ezWnd->LastEZWnd)
 	{
-		//ÓĞÉÏÒ»¸ö
+		//æœ‰ä¸Šä¸€ä¸ª
 		if (ezWnd->NextEZWnd)
 		{
-			//»¹ÓĞÏÂÒ»¸ö¡£
+			//è¿˜æœ‰ä¸‹ä¸€ä¸ªã€‚
 			ezWnd->LastEZWnd->NextEZWnd = ezWnd->NextEZWnd;
 			ezWnd->NextEZWnd->LastEZWnd = ezWnd->LastEZWnd;
-			//Á´½ÓºÃ¿©
+			//é“¾æ¥å¥½å’¯
 		}
 		else
 		{
-			//ÏÂÒ»¸öÊÇ¿ÕµÄ
+			//ä¸‹ä¸€ä¸ªæ˜¯ç©ºçš„
 			ezWnd->LastEZWnd->NextEZWnd = NULL;
 		}
 	}
 	else
 	{
-		//Ã»ÓĞÉÏÒ»¸ö£¿ÄãÊÇ¶¥²ã´°¿Ú£¿»¹ÊÇµÚÒ»¸ö£¿
+		//æ²¡æœ‰ä¸Šä¸€ä¸ªï¼Ÿä½ æ˜¯é¡¶å±‚çª—å£ï¼Ÿè¿˜æ˜¯ç¬¬ä¸€ä¸ªï¼Ÿ
 		if (!(ezWnd->IsTopWindow))
 		{
-			//²»ÊÇ¶¥²ã°¡£¬ÄãÊÇÄ³¸öÁ´µÄµÚÒ»¸ö
+			//ä¸æ˜¯é¡¶å±‚å•Šï¼Œä½ æ˜¯æŸä¸ªé“¾çš„ç¬¬ä¸€ä¸ª
 			if (ezWnd->NextEZWnd)
 			{
-				//»¹ÓĞÏÂÒ»¸ö
+				//è¿˜æœ‰ä¸‹ä¸€ä¸ª
 				ezWnd->ezParent->FirstChild = ezWnd->NextEZWnd;
 				ezWnd->NextEZWnd->LastEZWnd = NULL;
 			}
 			else
 			{
-				//ÄãÃ»ÏÂÃæÒ»¸öÁË£¬Äã¸¸´°¿ÚÃ»¶ù×ÓÁË¡£
+				//ä½ æ²¡ä¸‹é¢ä¸€ä¸ªäº†ï¼Œä½ çˆ¶çª—å£æ²¡å„¿å­äº†ã€‚
 				ezWnd->ezParent->FirstChild = NULL;
 			}
 		}
@@ -442,11 +442,11 @@ BOOL DestroyEZWindow(EZWND ezWnd)
 
 	if ((ezWnd->ezParent->EZStyle != 0) && (!(ezWnd->ezParent->EZStyle & EZS_CHILD)) && ezWnd->ezParent->IsTopWindow)
 	{
-		//¸¸´°¿ÚÊÇÑùÊ½¸¸´°¿Ú,°ó¶¨É¾³ı
+		//çˆ¶çª—å£æ˜¯æ ·å¼çˆ¶çª—å£,ç»‘å®šåˆ é™¤
 		if (ezWnd->ezParent->FirstChild)
 		{
 
-			ezWnd->ezParent->FirstChild = 0;//ÈÃ¸¸´°¿ÚÎóÒÔÎª×Ô¼ºÃ»ÓĞ×Ó´°¿Ú£¬¾Í²»»áµİ¹éÉ¾³ı½øÈëËÀÑ­»·ÁË
+			ezWnd->ezParent->FirstChild = 0;//è®©çˆ¶çª—å£è¯¯ä»¥ä¸ºè‡ªå·±æ²¡æœ‰å­çª—å£ï¼Œå°±ä¸ä¼šé€’å½’åˆ é™¤è¿›å…¥æ­»å¾ªç¯äº†
 			DestroyWindow(ezWnd->ezParent->hParent);
 		}
 	}
@@ -461,41 +461,41 @@ BOOL DestroyEZWindowWithNext(EZWND ezWnd)
 {
 	EZWND ezChildLast;
 
-	//»Ø¹ö£¬×¼±¸ÇåÀí²¢ÁĞ´°¿Ú
+	//å›æ»šï¼Œå‡†å¤‡æ¸…ç†å¹¶åˆ—çª—å£
 	if (IsEZWindow(ezWnd->NextEZWnd))
 	{
 		ezChildLast = ezWnd->NextEZWnd;
 
-		//Ñ­»·µ½Á´±í×îºó
+		//å¾ªç¯åˆ°é“¾è¡¨æœ€å
 		while (1)
 		{
 			if (!IsEZWindow(ezChildLast->NextEZWnd))
 			{
-				break;//×îºó£¬Ìø³ö¡£
+				break;//æœ€åï¼Œè·³å‡ºã€‚
 			}
 			ezChildLast = ezChildLast->NextEZWnd;
 		}
 
 
-		//ÔÙÑ­»·¹ö»ØÁ´±í×îÇ°£¨Ò»±ß¹öÒ»±ßÉ¾£©
+		//å†å¾ªç¯æ»šå›é“¾è¡¨æœ€å‰ï¼ˆä¸€è¾¹æ»šä¸€è¾¹åˆ ï¼‰
 
-		//ÎªÁËÊı¾İ£¬ÏÈ»Ø¹ö£¬È»ºóÍ¨¹ıÏòÏÂµÄÖ¸ÕëÕÒ»ØÈ¥£¬É¾ÁË
-		while (IsEZWindow(ezChildLast->LastEZWnd))//»¹Ã»µ½Í·
+		//ä¸ºäº†æ•°æ®ï¼Œå…ˆå›æ»šï¼Œç„¶åé€šè¿‡å‘ä¸‹çš„æŒ‡é’ˆæ‰¾å›å»ï¼Œåˆ äº†
+		while (IsEZWindow(ezChildLast->LastEZWnd))//è¿˜æ²¡åˆ°å¤´
 		{
 
-			ezChildLast = ezChildLast->LastEZWnd;//»Ø¹ö
+			ezChildLast = ezChildLast->LastEZWnd;//å›æ»š
 
-												 //ÕâÊ±£¬ezChildLast->NextEZWnd¾ÍÊÇ×îºóÒ»¸ö¡£DestroyEZWindow»áÉ¾ÁË¸Ã´°¿ÚºÍÕâ¸ö´°¿ÚµÄ×Ó´°¿Ú¡£
-			DestroyEZWindow(ezChildLast->NextEZWnd);//É¾ÁË
+												 //è¿™æ—¶ï¼ŒezChildLast->NextEZWndå°±æ˜¯æœ€åä¸€ä¸ªã€‚DestroyEZWindowä¼šåˆ äº†è¯¥çª—å£å’Œè¿™ä¸ªçª—å£çš„å­çª—å£ã€‚
+			DestroyEZWindow(ezChildLast->NextEZWnd);//åˆ äº†
 		}
-		//¹ö¶¯µ½Í·ÁË£¬DestroyEZWindow»áÉ¾ÁË¸Ã´°¿ÚºÍÕâ¸ö´°¿ÚµÄ×Ó´°¿Ú¡£
+		//æ»šåŠ¨åˆ°å¤´äº†ï¼ŒDestroyEZWindowä¼šåˆ äº†è¯¥çª—å£å’Œè¿™ä¸ªçª—å£çš„å­çª—å£ã€‚
 		DestroyEZWindow(ezChildLast);
 		return TRUE;
 
 	}
 	else
-	{//Äã¾ÍÊÇ×îºóÒ»¸ö²¢ÁĞ´°¿Ú¡£
-		DestroyEZWindow(ezWnd);//É¾ÁË
+	{//ä½ å°±æ˜¯æœ€åä¸€ä¸ªå¹¶åˆ—çª—å£ã€‚
+		DestroyEZWindow(ezWnd);//åˆ äº†
 	}
 	return TRUE;
 
@@ -503,17 +503,17 @@ BOOL DestroyEZWindowWithNext(EZWND ezWnd)
 
 
 
-//´°¿ÚÉèÖÃº¯Êı
+//çª—å£è®¾ç½®å‡½æ•°
 BOOL MoveEZWindow(EZWND ezWnd, int x, int y, int Width, int Height, BOOL repaint)
 {
-	HDC fhdc;//ÁÙÊ±DC
+	HDC fhdc;//ä¸´æ—¶DC
 
 
 	if (ezWnd->IsTopWindow)
 	{
 		MoveWindow(ezWnd->hParent, x, y, Width, Height, FALSE);
-		//Ê£ÏÂµÄ¹¤×÷ÀïÃæ»áÍê³ÉµÄ
-		//TODO:ÕæµÄËùÓĞ¹¤×÷¶¼»áÍê³É£¿×ĞÏ¸¼ì²é
+		//å‰©ä¸‹çš„å·¥ä½œé‡Œé¢ä¼šå®Œæˆçš„
+		//TODO:çœŸçš„æ‰€æœ‰å·¥ä½œéƒ½ä¼šå®Œæˆï¼Ÿä»”ç»†æ£€æŸ¥
 
 		return TRUE;
 	}
@@ -525,13 +525,13 @@ BOOL MoveEZWindow(EZWND ezWnd, int x, int y, int Width, int Height, BOOL repaint
 		ezWnd->Height = Height;
 		ezWnd->px = ezWnd->ezParent->px + x + ezWnd->ezParent->ScrollX;
 		ezWnd->py = ezWnd->ezParent->py + y + ezWnd->ezParent->ScrollY;
-		//Ã¶¾ÙËùÓĞ×Ó´°¿Ú²¢ÖØÉèpx£¬py
+		//æšä¸¾æ‰€æœ‰å­çª—å£å¹¶é‡è®¾pxï¼Œpy
 		EZResetChildPxPy(ezWnd);
 	}
 
 
 
-	//ÔİÊ±ÇåÀíDC£¬È»ºóÖØĞÂ»ñµÃÒ»¸ö¡£
+	//æš‚æ—¶æ¸…ç†DCï¼Œç„¶åé‡æ–°è·å¾—ä¸€ä¸ªã€‚
 	/*DeleteMemDC(ezWnd->hdc);
 	DeleteMemDC(ezWnd->hdcCopy);
 
@@ -570,7 +570,7 @@ BOOL MoveEZWindow(EZWND ezWnd, int x, int y, int Width, int Height, BOOL repaint
 	return TRUE;
 }
 
-BOOL ScrollEZWindow(EZWND ezWnd, int x, int y, BOOL bAdd)//bAddÎªTRUE£¬ÔòÀÛ¼Ó¡£·ñÔòÖØÖÃ
+BOOL ScrollEZWindow(EZWND ezWnd, int x, int y, BOOL bAdd)//bAddä¸ºTRUEï¼Œåˆ™ç´¯åŠ ã€‚å¦åˆ™é‡ç½®
 {
 	if (bAdd)
 	{
@@ -600,7 +600,7 @@ BOOL EZResetChildPxPy(EZWND ezWnd)
 	return 0;
 }
 
-BOOL SetEZWndTransparent(EZWND ezWnd, int Transparent)//ÉèÖÃEZ´°¿ÚÍ¸Ã÷¶È
+BOOL SetEZWndTransparent(EZWND ezWnd, int Transparent)//è®¾ç½®EZçª—å£é€æ˜åº¦
 {
 	ezWnd->Transparent = Transparent;
 	return TRUE;
@@ -608,7 +608,7 @@ BOOL SetEZWndTransparent(EZWND ezWnd, int Transparent)//ÉèÖÃEZ´°¿ÚÍ¸Ã÷¶È
 
 BOOL EZCaptureMouse(EZWND ezWnd)
 {
-	//Ïò¶¥²ã¸¸´°¿ÚÌá½»Òª²¶»ñ¡°ÀÏÊó¡±µÄ´°¿ÚµÄ¾ä±ú¡£
+	//å‘é¡¶å±‚çˆ¶çª—å£æäº¤è¦æ•è·â€œè€é¼ â€çš„çª—å£çš„å¥æŸ„ã€‚
 	if (ezWnd->ezRootParent->TopWndExtend->CptMouseWindow)
 	{
 		EZSendMessage(ezWnd->ezRootParent->TopWndExtend->CptMouseWindow, EZWM_RELEASEMOUSE, 0, 0);
@@ -622,11 +622,11 @@ BOOL EZCaptureMouse(EZWND ezWnd)
 
 BOOL EZReleaseMouse(EZWND ezWnd)
 {
-	//Ïò¶¥²ã¸¸´°¿ÚÌá½»ÊÍ·Å¡°ÀÏÊó¡±ÉêÇë¡£
+	//å‘é¡¶å±‚çˆ¶çª—å£æäº¤é‡Šæ”¾â€œè€é¼ â€ç”³è¯·ã€‚
 
 	ReleaseCapture();
 
-	//ÏÂÃæÁ½Õâ¾ä²»ĞèÒª£¬ÔÚWindow´°¿Ú´¦ÀíWM_CAPTURECHANGEÖ®¼äÒÑ¾­´¦ÀíºÃÁË
+	//ä¸‹é¢ä¸¤è¿™å¥ä¸éœ€è¦ï¼Œåœ¨Windowçª—å£å¤„ç†WM_CAPTURECHANGEä¹‹é—´å·²ç»å¤„ç†å¥½äº†
 	//EZSendMessage(ezWnd->ezRootParent->CptMouseWindow, EZWM_RELEASEMOUSE, 0, 0);
 	//ezWnd->ezRootParent->CptMouseWindow = NULL;
 
@@ -664,20 +664,20 @@ BOOL SetShowState(EZWND ezWnd, int State)
 
 
 
-//Óë´°¿Ú»æÖÆÓĞ¹ØµÄº¯Êı
-BOOL EZRedraw(EZWND ezWnd)//ÖØ»æµ½ÄÚ´ædc,²»¸üĞÂ¡£
+//ä¸çª—å£ç»˜åˆ¶æœ‰å…³çš„å‡½æ•°
+BOOL EZRedraw(EZWND ezWnd)//é‡ç»˜åˆ°å†…å­˜dc,ä¸æ›´æ–°ã€‚
 {
-	//ÕâÀï£¬ÎÒÃÇĞèÒªÏÈÈ·¶¨ĞèÒªÖØ»æµÄ·¶Î§
+	//è¿™é‡Œï¼Œæˆ‘ä»¬éœ€è¦å…ˆç¡®å®šéœ€è¦é‡ç»˜çš„èŒƒå›´
 
 	/*
-	ÔÚÕû¸ö´ó´°¿ÚÌåÏµÏÂ
-	ÈÎºÎºÍ¸Ã´°¿ÚÓĞ·¶Î§ÖØ¸´µÄ´°¿Ú
-	È«£¡²¿£¡Ğè£¡Òª£¡ÖØ»æ£¡£¡£¡£¡
+	åœ¨æ•´ä¸ªå¤§çª—å£ä½“ç³»ä¸‹
+	ä»»ä½•å’Œè¯¥çª—å£æœ‰èŒƒå›´é‡å¤çš„çª—å£
+	å…¨ï¼éƒ¨ï¼éœ€ï¼è¦ï¼é‡ç»˜ï¼ï¼ï¼ï¼
 
-	ËùÒÔ£¬ÎÒÃÇÒªÏòËùÓĞ´°¿Ú£¬°üÀ¨×Ó´°¿Ú¹ã²¥ÏûÏ¢¡£ÈÎºÎÓĞÖØ¸´µÄ´°¿Ú£¬È«²¿ĞèÒªÖØ»æµ½ÄÚ´æ
-	È»ºó½øĞĞµş¼Ó´¦Àí¡£
+	æ‰€ä»¥ï¼Œæˆ‘ä»¬è¦å‘æ‰€æœ‰çª—å£ï¼ŒåŒ…æ‹¬å­çª—å£å¹¿æ’­æ¶ˆæ¯ã€‚ä»»ä½•æœ‰é‡å¤çš„çª—å£ï¼Œå…¨éƒ¨éœ€è¦é‡ç»˜åˆ°å†…å­˜
+	ç„¶åè¿›è¡Œå åŠ å¤„ç†ã€‚
 
-	²»ĞèÒªÖØ»æµ½Windows¸¸´°¿Ú¡£
+	ä¸éœ€è¦é‡ç»˜åˆ°Windowsçˆ¶çª—å£ã€‚
 
 	*/
 
@@ -686,7 +686,7 @@ BOOL EZRedraw(EZWND ezWnd)//ÖØ»æµ½ÄÚ´ædc,²»¸üĞÂ¡£
 		return FALSE;
 	}
 
-	for (EZWND WndNow = ezWnd; WndNow; WndNow = WndNow->ezParent)//ÏòÉÏÍÆ£¬Ö±µ½¸¸´°¿Ú
+	for (EZWND WndNow = ezWnd; WndNow; WndNow = WndNow->ezParent)//å‘ä¸Šæ¨ï¼Œç›´åˆ°çˆ¶çª—å£
 	{
 		if (WndNow->ShowState == 2)return 0;
 	}
@@ -725,7 +725,7 @@ BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT Rec
 
 		for (LastChild = ezWnd->FirstChild; LastChild; LastChild = LastChild->NextEZWnd)
 		{
-			//ÕıĞò£¬ËùÒÔ£¬ÏÈ´¦Àí×Ô¼º¡£
+			//æ­£åºï¼Œæ‰€ä»¥ï¼Œå…ˆå¤„ç†è‡ªå·±ã€‚
 			RECT RectDst, RectAns;
 
 			{
@@ -736,12 +736,12 @@ BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT Rec
 			}
 
 			if (!((IntersectRect(&RectAns, &RectSrc, &RectDst) == 0) || (LastChild->ShowState == 2)))
-				//ÁÙÊ±´¦Àí
+				//ä¸´æ—¶å¤„ç†
 				//if (LastChild->ShowState == 1)
 			{
 				/*HRGN hRgn, OldRgn;*/
 
-				BroadcastProc(LastChild, SEZWM_REDRAW, wp, lp);//´¦Àí×Ô¼º
+				BroadcastProc(LastChild, SEZWM_REDRAW, wp, lp);//å¤„ç†è‡ªå·±
 
 
 
@@ -755,15 +755,15 @@ BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT Rec
 
 
 
-				RedrawBroadcast(LastChild, wp, lp, cx + LastChild->x + LastChild->ezParent->ScrollX, cy + LastChild->y + LastChild->ezParent->ScrollY, RectAns);//¸ø×Ô¼ºµÄ×Ó´°¿Ú·¢ËÍ¸ÃÏûÏ¢																															 /*	DeleteObject(SelectObject(LastChild->hdc, OldRgn));*/
+				RedrawBroadcast(LastChild, wp, lp, cx + LastChild->x + LastChild->ezParent->ScrollX, cy + LastChild->y + LastChild->ezParent->ScrollY, RectAns);//ç»™è‡ªå·±çš„å­çª—å£å‘é€è¯¥æ¶ˆæ¯																															 /*	DeleteObject(SelectObject(LastChild->hdc, OldRgn));*/
 
 
-				BroadcastProc(LastChild, SEZWM_COPYDC, wp, lp);//´¦Àí×Ô¼º
+				BroadcastProc(LastChild, SEZWM_COPYDC, wp, lp);//å¤„ç†è‡ªå·±
 
 			}
 
 
-			//ÏòÏÂ¹ö
+			//å‘ä¸‹æ»š
 
 		}
 
@@ -771,19 +771,19 @@ BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT Rec
 	return TRUE;
 }
 
-BOOL EZUpdate(EZWND ezWnd, HDC hdc)//½«DC¸üĞÂµ½´°Ìå£¬²»ÖØ»æ¡£µÚ¶ş¸ö²ÎÊıÊÇDC£¬Èç²»Ìá¹©£¬º¯Êı½«×Ô¶¯»ñÈ¡¡£
+BOOL EZUpdate(EZWND ezWnd, HDC hdc)//å°†DCæ›´æ–°åˆ°çª—ä½“ï¼Œä¸é‡ç»˜ã€‚ç¬¬äºŒä¸ªå‚æ•°æ˜¯DCï¼Œå¦‚ä¸æä¾›ï¼Œå‡½æ•°å°†è‡ªåŠ¨è·å–ã€‚
 {
 	if (!IsEZWindow(ezWnd))
 	{
 		return FALSE;
 	}
 
-	//Ö»ĞèÒª°ÑÕâ¸ö´°¿Ú£¨²»ĞèÒªÈ«ÆÁBitBlt£©,µÃµ½Ïà¶Ô¸¸´°¿ÚµÄÎ»ÖÃ
+	//åªéœ€è¦æŠŠè¿™ä¸ªçª—å£ï¼ˆä¸éœ€è¦å…¨å±BitBltï¼‰,å¾—åˆ°ç›¸å¯¹çˆ¶çª—å£çš„ä½ç½®
 
 	////EZBroadcastToAllChild(ezWnd, TRUE, SEZWM_COPYDC, (WPARAM)NULL, (LPARAM)NULL);,
 
 
-	if (!hdc)//Ã»DC
+	if (!hdc)//æ²¡DC
 	{
 
 		/*if (ezWnd->ezRootParent->DrawOnNC)
@@ -839,7 +839,7 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 
 
 
-	for (EZWND WndNow = ezWnd; WndNow; WndNow = WndNow->ezParent)//ÏòÉÏÍÆ£¬Ö±µ½¸¸´°¿Ú
+	for (EZWND WndNow = ezWnd; WndNow; WndNow = WndNow->ezParent)//å‘ä¸Šæ¨ï¼Œç›´åˆ°çˆ¶çª—å£
 	{
 		if (WndNow->ShowState == 2)return 0;
 	}
@@ -859,7 +859,7 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 		//	BitBlt(hdc, ezWnd->px - ezWnd->ScrollX, ezWnd->py - ezWnd->ScrollY, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
 		BitBlt(hdc, 0, 0, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
 	}
-	else//Ã»DC
+	else//æ²¡DC
 	{
 		
 		hdc = GetDC(ezWnd->hParent);
@@ -879,23 +879,23 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 			ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, SRCCOPY);
 	}
 
-	EZSendMessage(ezWnd, EZWM_REDRAWFINISH, 0, 0);//×ÔÓÉÓ³ÉäÊ±¼äµ½
+	EZSendMessage(ezWnd, EZWM_REDRAWFINISH, 0, 0);//è‡ªç”±æ˜ å°„æ—¶é—´åˆ°
 	return 0;
 }
 
 
 
 
-//¼ÆÊ±Æ÷º¯Êı
+//è®¡æ—¶å™¨å‡½æ•°
 int SetEZTimer(EZWND ezWnd, int iTimeSpace)
 {
-	//ÉêÇë¼ÆÊ±Æ÷£¬ÔÚ¶¥²¿´°¿ÚµÄ¼ÆÊ±Æ÷ÖĞÕÒµ½Ò»¸ö¿ÕÎ»£¬Ğ´ÈëĞÅÏ¢£¬·µ»Ø·ÖÅäµÄID¡£
+	//ç”³è¯·è®¡æ—¶å™¨ï¼Œåœ¨é¡¶éƒ¨çª—å£çš„è®¡æ—¶å™¨ä¸­æ‰¾åˆ°ä¸€ä¸ªç©ºä½ï¼Œå†™å…¥ä¿¡æ¯ï¼Œè¿”å›åˆ†é…çš„IDã€‚
 	int i;
 	for (i = 0; i < MAX_EZ_TIMER; i++)
 	{
 		if (ezWnd->ezRootParent->TopWndExtend->Timer[i].ezWnd == NULL)
 		{
-			//Ğ´ÈëĞÅÏ¢
+			//å†™å…¥ä¿¡æ¯
 			ezWnd->ezRootParent->TopWndExtend->Timer[i].ezWnd = ezWnd;
 
 			int IDGet = SetTimer(NULL, 0, iTimeSpace, ezInsideTimerProc);
@@ -911,7 +911,7 @@ int SetEZTimer(EZWND ezWnd, int iTimeSpace)
 
 BOOL KillEZTimer(EZWND ezWnd, int TimerID)
 {
-	//É¾³ıĞÅÏ¢
+	//åˆ é™¤ä¿¡æ¯
 	if (ezWnd->ezRootParent->TopWndExtend->Timer[TimerID].WinTimerID == -1)return -1;
 	if (ezWnd->ezRootParent->TopWndExtend->Timer[TimerID].ezWnd != NULL)
 	{
@@ -929,7 +929,7 @@ BOOL KillEZTimer(EZWND ezWnd, int TimerID)
 
 
 
-//¹â±êº¯Êı
+//å…‰æ ‡å‡½æ•°
 BOOL EZCreateCaret(EZWND ezWnd, HBITMAP hBitmap, int nWidth, int nHeight)
 {
 	return CreateCaret(ezWnd->hParent, hBitmap, nWidth, nHeight);
@@ -937,7 +937,7 @@ BOOL EZCreateCaret(EZWND ezWnd, HBITMAP hBitmap, int nWidth, int nHeight)
 
 BOOL EZSetCaretPos(EZWND ezWnd, int x, int y)
 {
-	//TODO:¼ì²âÊÇ·ñ³¬³ö´°¿ÚÏÔÊ¾±ß½ç¡£
+	//TODO:æ£€æµ‹æ˜¯å¦è¶…å‡ºçª—å£æ˜¾ç¤ºè¾¹ç•Œã€‚
 	return SetCaretPos(ezWnd->px + x, ezWnd->py + y);
 }
 
@@ -956,7 +956,7 @@ BOOL EZDestroyCaret()
 	DestroyCaret();
 }
 
-//µ¯³ö¶Ô»°¿òº¯Êı
+//å¼¹å‡ºå¯¹è¯æ¡†å‡½æ•°
 
 typedef struct tagDlgMaskHookExtend
 {
@@ -970,14 +970,14 @@ typedef struct tagDlgMaskHookExtend
 
 EZWND EZDialogBox(EZWND ezParent, int x, int y, int w, int h, DWORD Style, COLORREF MaskClr, EZWNDPROC ezWndProc)
 {
-	//TODO: Ê¹ÓÃ×îĞÂµÄÏûÏ¢ EZWM_COVERCHILD À´´úÌæMask´°¿ÚÒÔÌá¸ßĞÔÄÜ
+	//TODO: ä½¿ç”¨æœ€æ–°çš„æ¶ˆæ¯ EZWM_COVERCHILD æ¥ä»£æ›¿Maskçª—å£ä»¥æé«˜æ€§èƒ½
 	EZWND Mask;
 	EZWND Dialog;
 	BOOL bMask, bCenter;
 	bMask = Style & EZDLG_MASK;
 	bCenter = Style & EZDLG_CENTER;
 
-	//ÎÒÃÇĞèÒªÀ¹½ØÒ»Ğ©ÏûÏ¢£¬±ÈÈç¸¸´°¿Ú´óĞ¡¸Ä±äÖ®ÀàµÄ
+	//æˆ‘ä»¬éœ€è¦æ‹¦æˆªä¸€äº›æ¶ˆæ¯ï¼Œæ¯”å¦‚çˆ¶çª—å£å¤§å°æ”¹å˜ä¹‹ç±»çš„
 	DlgMaskHookExtend * DlgMskHkExtend;
 	DlgMskHkExtend = malloc(sizeof(DlgMaskHookExtend));
 	DlgMskHkExtend->OldExtend = ezParent->Extend;
@@ -994,7 +994,7 @@ EZWND EZDialogBox(EZWND ezParent, int x, int y, int w, int h, DWORD Style, COLOR
 		EZSendMessage(Mask, EZWM_USER_NOTIFY, 0, MaskClr);
 		if (bMask)
 		{
-			EZSendMessage(Mask, EZWM_USER_NOTIFY, 1, 1);//´ò¿ª£¨or´ò¿ªing£©Mask	
+			EZSendMessage(Mask, EZWM_USER_NOTIFY, 1, 1);//æ‰“å¼€ï¼ˆoræ‰“å¼€ingï¼‰Mask	
 		}
 		if (bCenter)
 		{
@@ -1011,7 +1011,7 @@ EZWND EZDialogBox(EZWND ezParent, int x, int y, int w, int h, DWORD Style, COLOR
 		DlgMskHkExtend->Dialog = Dialog;
 		if (bMask)
 		{
-			EZSendMessage(Mask, EZWM_USER_NOTIFY, 2, Dialog);//ÉèÖÃDialog
+			EZSendMessage(Mask, EZWM_USER_NOTIFY, 2, Dialog);//è®¾ç½®Dialog
 		}
 	}
 	EZRepaint(ezParent, 0);
@@ -1023,8 +1023,8 @@ BOOL EZEndDialog(EZWND ezWnd)
 
 	EZWND ezParent = ezWnd->ezParent;
 
-	//×¢Òâ£¬´«ÈëµÄÊÇ¶Ô»°¿ò¾ä±ú
-	//Ê×ÏÈ»¹Ô­¸¸´°¿ÚµÄExtendºÍWndProc,½ÓÏÂÀ´±ê¼ÇMask½¥±ä£¬£¨Íê³Éºó×ÔÉ¾³ı£©Êó±êÏûÏ¢Í¸Ã÷£¬²¢É¾³ıÉú³ÉµÄDialog
+	//æ³¨æ„ï¼Œä¼ å…¥çš„æ˜¯å¯¹è¯æ¡†å¥æŸ„
+	//é¦–å…ˆè¿˜åŸçˆ¶çª—å£çš„Extendå’ŒWndProc,æ¥ä¸‹æ¥æ ‡è®°Maskæ¸å˜ï¼Œï¼ˆå®Œæˆåè‡ªåˆ é™¤ï¼‰é¼ æ ‡æ¶ˆæ¯é€æ˜ï¼Œå¹¶åˆ é™¤ç”Ÿæˆçš„Dialog
 	DlgMaskHookExtend * NewExt = ezParent->Extend;
 
 	ezParent->Extend = NewExt->OldExtend;
@@ -1032,7 +1032,7 @@ BOOL EZEndDialog(EZWND ezWnd)
 	if (NewExt->Mask)
 	{
 
-		EZSendMessage(NewExt->Mask, EZWM_USER_NOTIFY, 1, 0);//¹Ø±ÕMask
+		EZSendMessage(NewExt->Mask, EZWM_USER_NOTIFY, 1, 0);//å…³é—­Mask
 		NewExt->Mask->MouseMsgRecv = 2;
 	}
 	DestroyEZWindow(ezWnd);
@@ -1050,17 +1050,17 @@ EZWNDPROC EZDlgHookProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam)
 
 	if (message == EZWM_DESTROY)
 	{
-		//Õâ¸öÊ±ºò£¬×Ó´°¿ÚÓ¦¸ÃÉ¾¸É¾»ÁË¡£MaskµÄÄÚ´æÒ²¸ÃÊÍ·ÅÍêÁË
+		//è¿™ä¸ªæ—¶å€™ï¼Œå­çª—å£åº”è¯¥åˆ å¹²å‡€äº†ã€‚Maskçš„å†…å­˜ä¹Ÿè¯¥é‡Šæ”¾å®Œäº†
 
-		ezWnd->Extend = NewExt->OldExtend;//»Ö¸´³ÉÔ­À´µÄExtend
-										  //·¢ËÍ¸øÔ­À´µÄ´°¿Ú¹ı³Ì
+		ezWnd->Extend = NewExt->OldExtend;//æ¢å¤æˆåŸæ¥çš„Extend
+										  //å‘é€ç»™åŸæ¥çš„çª—å£è¿‡ç¨‹
 		ezWnd->ezWndProc = NewExt->OldProc;
 		free(NewExt);
 		return EZSendMessage(ezWnd, message, wParam, lParam);
 	}
 	if (message == EZWM_SIZE)
 	{
-		//´¦ÀíÒ»ÏÂ
+		//å¤„ç†ä¸€ä¸‹
 		MoveEZWindow(NewExt->Mask, 0, 0, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), 0);
 		if (NewExt->bCenter)
 		{
@@ -1072,12 +1072,12 @@ EZWNDPROC EZDlgHookProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam)
 
 	}
 
-	ezWnd->Extend = NewExt->OldExtend;//»Ö¸´³ÉÔ­À´µÄExtend
-									  //·¢ËÍ¸øÔ­À´µÄ´°¿Ú¹ı³Ì
-									  //Èç¹ûËµÕâÌõÏûÏ¢Òı·¢ÁË±ğµÄÏûÏ¢£¬¶ø´°¿Ú¹ı³Ì¹³×ÓÃ»ÓĞĞ¶ÏÂÀ´£¬Òı·¢µÄÏûÏ¢»¹»á´«µ½ÕâÀï£¬µ«ÊÇÕâÊ±ºòExtendÒÑ¾­ÊÇĞ¶ÏÂÀ´µÄ×´Ì¬ÁË£¬¾Í»ágg¡£¿¼ÂÇµ½EZWM_SIZEºÜÉÙ»áÒı·¢×ÔÉí±»size£¨ÄÇ²»¾ÍÊÇËÀÑ­»·ÁËÂğ£©£¬ËùÒÔÕâÀïÔİÊ±»¹Ô­´°¿Ú¹ı³Ì
+	ezWnd->Extend = NewExt->OldExtend;//æ¢å¤æˆåŸæ¥çš„Extend
+									  //å‘é€ç»™åŸæ¥çš„çª—å£è¿‡ç¨‹
+									  //å¦‚æœè¯´è¿™æ¡æ¶ˆæ¯å¼•å‘äº†åˆ«çš„æ¶ˆæ¯ï¼Œè€Œçª—å£è¿‡ç¨‹é’©å­æ²¡æœ‰å¸ä¸‹æ¥ï¼Œå¼•å‘çš„æ¶ˆæ¯è¿˜ä¼šä¼ åˆ°è¿™é‡Œï¼Œä½†æ˜¯è¿™æ—¶å€™Extendå·²ç»æ˜¯å¸ä¸‹æ¥çš„çŠ¶æ€äº†ï¼Œå°±ä¼šggã€‚è€ƒè™‘åˆ°EZWM_SIZEå¾ˆå°‘ä¼šå¼•å‘è‡ªèº«è¢«sizeï¼ˆé‚£ä¸å°±æ˜¯æ­»å¾ªç¯äº†å—ï¼‰ï¼Œæ‰€ä»¥è¿™é‡Œæš‚æ—¶è¿˜åŸçª—å£è¿‡ç¨‹
 	ezWnd->ezWndProc = NewExt->OldProc;
 	iRet = NewExt->OldProc(ezWnd, message, wParam, lParam);
-	//»¹Ô­
+	//è¿˜åŸ
 	ezWnd->ezWndProc = EZDlgHookProc;
 	ezWnd->Extend = NewExt;
 	return iRet;
@@ -1110,7 +1110,7 @@ EZWNDPROC EZDialogBoxMask(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam
 		return 0;
 
 	case EZWM_USER_NOTIFY:
-		if (wParam == 0)//ÉèÖÃÑÕÉ«
+		if (wParam == 0)//è®¾ç½®é¢œè‰²
 		{
 			DeleteObject(DlgMaskInfo->hBrush);
 			DlgMaskInfo->hBrush = CreateSolidBrush(lParam);
@@ -1119,9 +1119,9 @@ EZWNDPROC EZDialogBoxMask(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam
 		}
 		if (wParam == 1)
 		{
-			//ÓĞ¹ØMask¿ª¹Ø
+			//æœ‰å…³Maskå¼€å…³
 			//	DlgMaskInfo->MaskOpen = lParam;
-			if (lParam)//´ò¿ªMask
+			if (lParam)//æ‰“å¼€Mask
 			{
 				if (DlgMaskInfo->MaskOpen == 0)
 				{
@@ -1133,7 +1133,7 @@ EZWNDPROC EZDialogBoxMask(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam
 
 				}
 			}
-			else//¹Ø±ÕMask
+			else//å…³é—­Mask
 			{
 				if (DlgMaskInfo->MaskOpen == 1)
 				{
@@ -1183,17 +1183,17 @@ EZWNDPROC EZDialogBoxMask(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam
 		}
 		else
 		{
-			//ÕıÔÚ¹Ø±Õing
+			//æ­£åœ¨å…³é—­ing
 			if (ezWnd->Transparent - 16 <= 0)
 			{
 				ezWnd->Transparent = 0;
 				KillEZTimer(ezWnd, DlgMaskInfo->TimerID);
 				DlgMaskInfo->TimerID = -1;
 				EZRepaint(ezWnd->ezParent, 0);
-				//×ÔÉ¾³ı
+				//è‡ªåˆ é™¤
 
 				DestroyEZWindow(ezWnd);
-				return 0;//±ÜÃâµ÷ÓÃEZRepaint
+				return 0;//é¿å…è°ƒç”¨EZRepaint
 			}
 			else
 			{
@@ -1202,7 +1202,7 @@ EZWNDPROC EZDialogBoxMask(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam
 		}
 
 		EZRepaint(ezWnd->ezParent, 0);
-		//ÁÙÊ±²Ù×÷
+		//ä¸´æ—¶æ“ä½œ
 		/*	if (DlgMaskInfo->Dialog)
 		{
 		EZUpdate(DlgMaskInfo->Dialog, 0);
@@ -1231,7 +1231,7 @@ EZWNDPROC EZDialogBoxMask(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam
 	return 0;
 }
 
-//ÄÚ²¿º¯Êı
+//å†…éƒ¨å‡½æ•°
 LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
@@ -1253,10 +1253,10 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	{
 		ezWnd = (EZWND)(((LPCREATESTRUCT)lParam)->lpCreateParams);
 		SetWindowLongPtr(hwnd, 0, (LONG_PTR)ezWnd);
-		ezWnd->hParent = hwnd;//ÉèÖÃWin¸¸´°¿Ú
+		ezWnd->hParent = hwnd;//è®¾ç½®Winçˆ¶çª—å£
 
 							  //HDC fhdc;
-							  //ÆäÊµ£¬±¾Ó¦¸ÃÓÃÕâ¸ö±äÁ¿.µ«ÊÇ£¿hdc±äÁ¿ÏÖÔÚ²»ÕıÏĞ×ÅÂğ£¿£¿£¿¸É´à¾ÍÓÃÄÇ¸ö°É£¬Ê¡ÄÚ´æ
+							  //å…¶å®ï¼Œæœ¬åº”è¯¥ç”¨è¿™ä¸ªå˜é‡.ä½†æ˜¯ï¼Ÿhdcå˜é‡ç°åœ¨ä¸æ­£é—²ç€å—ï¼Ÿï¼Ÿï¼Ÿå¹²è„†å°±ç”¨é‚£ä¸ªå§ï¼Œçœå†…å­˜
 							  //ezWnd->DrawOnNC = 0;
 
 		hdc = GetDC(hwnd);
@@ -1266,7 +1266,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 		ReleaseDC(hwnd, hdc);
 
-		EZSendMessage(ezWnd, EZWM_CREATE, 0, 0);//·¢ËÍ´´½¨ÏûÏ¢
+		EZSendMessage(ezWnd, EZWM_CREATE, 0, 0);//å‘é€åˆ›å»ºæ¶ˆæ¯
 
 		return 0;
 
@@ -1300,7 +1300,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		//DeleteMemDC(ezWnd->TopWndExtend->hdcTop);
 
 		//HDC fhdc;
-		//ÆäÊµ£¬±¾Ó¦¸ÃÓÃÕâ¸ö±äÁ¿.µ«ÊÇ£¿hdc±äÁ¿ÏÖÔÚ²»ÕıÏĞ×ÅÂğ£¿£¿£¿¸É´à¾ÍÓÃÄÇ¸ö°É£¬Ê¡ÄÚ´æ
+		//å…¶å®ï¼Œæœ¬åº”è¯¥ç”¨è¿™ä¸ªå˜é‡.ä½†æ˜¯ï¼Ÿhdcå˜é‡ç°åœ¨ä¸æ­£é—²ç€å—ï¼Ÿï¼Ÿï¼Ÿå¹²è„†å°±ç”¨é‚£ä¸ªå§ï¼Œçœå†…å­˜
 
 		//	hdc = GetDC(hwnd);
 		/*ezWnd->hdc = GetMemDC(hdc, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -1382,12 +1382,12 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_MOUSEMOVE:
 	{
-		//ÀÏÊóÔÚÅÜÀ´ÅÜÈ¥¡£
+		//è€é¼ åœ¨è·‘æ¥è·‘å»ã€‚
 		if (!ezWnd->TopWndExtend->MouseOnWnd)
 		{
-			//¸Õ¸Õ½øÀ´
+			//åˆšåˆšè¿›æ¥
 
-			//¿ÉÒÔ½øĞĞ¼à²âÁË¡£
+			//å¯ä»¥è¿›è¡Œç›‘æµ‹äº†ã€‚
 			TRACKMOUSEEVENT tme;
 			tme.cbSize = sizeof(TRACKMOUSEEVENT);
 			tme.dwFlags = TME_LEAVE;
@@ -1411,9 +1411,9 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	case WM_CAPTURECHANGED:
 	{
 		//EZReleaseMouse(((EZWND)GetWindowLongPtr(hwnd, 0))->CptMouseWindow);
-		//ÉÏÃæÕâ¸ö²»ĞĞ£¬ÒòÎªÕâ¸öº¯Êı»¹»áÖØ¸´µ÷ÓÃReleaseCapture.
+		//ä¸Šé¢è¿™ä¸ªä¸è¡Œï¼Œå› ä¸ºè¿™ä¸ªå‡½æ•°è¿˜ä¼šé‡å¤è°ƒç”¨ReleaseCapture.
 
-		//°ÑÉÏÃæÕâ¸öº¯ÊıÀïÃæµÄÄÚÈİ¿½ÏÂÀ´¸ÄÒ»¸Ä¾Í¿ÉÒÔÁË
+		//æŠŠä¸Šé¢è¿™ä¸ªå‡½æ•°é‡Œé¢çš„å†…å®¹æ‹·ä¸‹æ¥æ”¹ä¸€æ”¹å°±å¯ä»¥äº†
 		if (ezWnd->TopWndExtend->CptMouseWindow)
 		{
 			EZSendMessage(ezWnd->TopWndExtend->CptMouseWindow, EZWM_RELEASEMOUSE, 0, 0);
@@ -1425,8 +1425,8 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_MOUSELEAVE:
 	{
-		//Ñ½£¬ÀÏÊóÅÜÁË~~~   ¹ã²¥Ò»ÏÂ£¬ÈÃÃ¿¸ö×Ó´°¿Ú¿´¿´ÊÇ²»ÊÇ´Ó×Ô¼ºÄÇÀïÁï³öÈ¥µÄ¡£
-		//ÏÈ¼ì²é×Ô¼º¡£
+		//å‘€ï¼Œè€é¼ è·‘äº†~~~   å¹¿æ’­ä¸€ä¸‹ï¼Œè®©æ¯ä¸ªå­çª—å£çœ‹çœ‹æ˜¯ä¸æ˜¯ä»è‡ªå·±é‚£é‡Œæºœå‡ºå»çš„ã€‚
+		//å…ˆæ£€æŸ¥è‡ªå·±ã€‚
 		if (ezWnd->TopWndExtend->MouseOnWnd)
 		{
 			ezWnd->TopWndExtend->MouseOnWnd->MouseOn = FALSE;
@@ -1439,7 +1439,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	case WM_NCHITTEST:
 	{
 		int iHT;
-		iHT = EZSendMessage(ezWnd, EZWM_WINNCHITTEST, wParam, lParam);//Ö»ÓĞÖ÷´°¿Ú²ÅÄÜÊÕµ½ EZWM_WINNCHITTEST ÏûÏ¢
+		iHT = EZSendMessage(ezWnd, EZWM_WINNCHITTEST, wParam, lParam);//åªæœ‰ä¸»çª—å£æ‰èƒ½æ”¶åˆ° EZWM_WINNCHITTEST æ¶ˆæ¯
 		if (iHT == 0)
 		{
 			break;
@@ -1458,7 +1458,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_ERASEBKGND:
 	{
-		//Ö±½ÓÎŞÊÓ£¨ÎÒ¹ÜÄãÄØ£¬·´ÕıÕı³£µÄ»°,ÓĞERASE¾ÍÓĞPAINT£©
+		//ç›´æ¥æ— è§†ï¼ˆæˆ‘ç®¡ä½ å‘¢ï¼Œåæ­£æ­£å¸¸çš„è¯,æœ‰ERASEå°±æœ‰PAINTï¼‰
 		return 1;
 	}
 
@@ -1466,7 +1466,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	{
 		if (!EZSendMessage(ezWnd, EZWM_WINNCDRAW, wParam, lParam))
 		{
-			//Îª0£¬Ä¬ÈÏ
+			//ä¸º0ï¼Œé»˜è®¤
 			break;
 		}
 		return 0;
@@ -1474,14 +1474,14 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_PAINT:
 	{
-		//ÖØ»æÇøÓòÎŞĞ§À²£¡£¡£¡
+		//é‡ç»˜åŒºåŸŸæ— æ•ˆå•¦ï¼ï¼ï¼
 		hdc = BeginPaint(hwnd, &ps);
 
-		//	ÕâÀïÓÃÎŞĞ§¾ØĞÎ½øĞĞÁËÓÅ»¯
+		//	è¿™é‡Œç”¨æ— æ•ˆçŸ©å½¢è¿›è¡Œäº†ä¼˜åŒ–
 		BitBlt(hdc, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top, ezWnd->TopWndExtend->hdcTop, ps.rcPaint.left, ps.rcPaint.top, SRCCOPY);
 		EndPaint(hwnd, &ps);
 
-		//ºÃÁË£¬ÏÖÔÚÓĞĞ§ÁË¡£ÉèÖÃÒ»ÏÂ¡£
+		//å¥½äº†ï¼Œç°åœ¨æœ‰æ•ˆäº†ã€‚è®¾ç½®ä¸€ä¸‹ã€‚
 		ezWnd->Update = 0;
 		return 0;
 		/*}*/
@@ -1494,7 +1494,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		{
 			return 0;
 		}
-		//·µ»ØÖµÎª0£¬½»¸øÄ¬ÈÏ
+		//è¿”å›å€¼ä¸º0ï¼Œäº¤ç»™é»˜è®¤
 		break;
 	}
 
@@ -1524,7 +1524,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	{
 
 		//MSDN - The DefWindowProc function draws the title bar or icon title in its active colors when the wParam parameter is TRUE and in its inactive colors when wParam is FALSE.
-		//»æÖÆ×Ü¹éÈÃÈË¼Ò»æÖÆ°É¡£¡£¡£·µ»ØÖµÎÒÒ²²»Ïë´¦ÀíÁËÓÚÊÇ¾ÍĞ´³ÉÁËÕâÑù
+		//ç»˜åˆ¶æ€»å½’è®©äººå®¶ç»˜åˆ¶å§ã€‚ã€‚ã€‚è¿”å›å€¼æˆ‘ä¹Ÿä¸æƒ³å¤„ç†äº†äºæ˜¯å°±å†™æˆäº†è¿™æ ·
 
 		int iRet = DefWindowProc(hwnd, message, wParam, lParam);
 		EZSendMessage(ezWnd, EZWM_WINNCACTIVATE, wParam, lParam);
@@ -1541,21 +1541,21 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_DESTROY:
 	{
-		//ÏÈ±£´æĞÅÏ¢£¬µ¹ÍÆ£¬Ïû³ıËùÓĞ×ÓËï´°¿Ú
+		//å…ˆä¿å­˜ä¿¡æ¯ï¼Œå€’æ¨ï¼Œæ¶ˆé™¤æ‰€æœ‰å­å­™çª—å£
 		if (IsEZWindow(ezWnd->FirstChild))
 		{
 			EZWND FirstChildBuf = ezWnd->FirstChild;
 			ezWnd->FirstChild = 0;
 			DestroyEZWindowWithNext(FirstChildBuf);
 		}
-		//°ÑÄã×Ô¼ºÇåÀíÁË
-		EZSendMessage(ezWnd, EZWM_DESTROY, (WPARAM)NULL, (LPARAM)NULL);//·¢ËÍÏú»ÙĞÅÏ¢
-		DeleteMemDC(ezWnd->hdc);//ÇåÀíDC
-	   // DeleteMemDC(ezWnd->hdcCopy);//ÇåÀíDC
+		//æŠŠä½ è‡ªå·±æ¸…ç†äº†
+		EZSendMessage(ezWnd, EZWM_DESTROY, (WPARAM)NULL, (LPARAM)NULL);//å‘é€é”€æ¯ä¿¡æ¯
+		DeleteMemDC(ezWnd->hdc);//æ¸…ç†DC
+	   // DeleteMemDC(ezWnd->hdcCopy);//æ¸…ç†DC
 		DeleteMemDC(ezWnd->TopWndExtend->hdcTop);
 
 		free(ezWnd->TopWndExtend);
-		//ÎÊÌâÊÇÕâÑùµÄ£ºµ±Windows¿ªÊ¼Ö´ĞĞ´İ»Ù´°¿ÚÊ±£¬ÕâÀï»áµİ¹éÍùÏÂÉ¾³ı¡£¶ø¿Í»§Çø×Ó´°¿Ú·¢ÏÖ¸¸´°¿ÚÊÇÒ»¸öÑùÊ½´°¿Úºó£¬¾ÍÓÖÒªÇó¸¸´°¿ÚÉ¾³ıÇÒ½öÉ¾³ı×Ô¼º£¬
+		//é—®é¢˜æ˜¯è¿™æ ·çš„ï¼šå½“Windowså¼€å§‹æ‰§è¡Œæ‘§æ¯çª—å£æ—¶ï¼Œè¿™é‡Œä¼šé€’å½’å¾€ä¸‹åˆ é™¤ã€‚è€Œå®¢æˆ·åŒºå­çª—å£å‘ç°çˆ¶çª—å£æ˜¯ä¸€ä¸ªæ ·å¼çª—å£åï¼Œå°±åˆè¦æ±‚çˆ¶çª—å£åˆ é™¤ä¸”ä»…åˆ é™¤è‡ªå·±ï¼Œ
 		if (ezWnd->IsStyleWindow)
 		{
 			free(ezWnd->Extend);
@@ -1568,7 +1568,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	}
 
 	case WM_KILLFOCUS:
-		//Í¨Öª½¹µã´°¿Ú£¬Ê§È¥½¹µã¡£
+		//é€šçŸ¥ç„¦ç‚¹çª—å£ï¼Œå¤±å»ç„¦ç‚¹ã€‚
 		if (IsEZWindow(ezWnd->TopWndExtend->FocusWindow))
 		{
 			ezWnd->ezRootParent->TopWndExtend->FocusWindow->FocusState = 0;
@@ -1623,7 +1623,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 VOID CALLBACK ezInsideTimerProc(HWND hwnd, UINT message, UINT iTimerID, DWORD dwTime)
 {
 
-	//ÔÚÁĞ±íÀïÕÒµ½¶ÔÓ¦µÄezWnd£¬²¢×ª·¢EZWM_TIMERÏûÏ¢
+	//åœ¨åˆ—è¡¨é‡Œæ‰¾åˆ°å¯¹åº”çš„ezWndï¼Œå¹¶è½¬å‘EZWM_TIMERæ¶ˆæ¯
 
 	int i;
 	pTWE TopExtend = ((EZWND)GetWindowLongPtr(hwnd, 0))->TopWndExtend;
@@ -1631,8 +1631,8 @@ VOID CALLBACK ezInsideTimerProc(HWND hwnd, UINT message, UINT iTimerID, DWORD dw
 	{
 		if (iTimerID == TopExtend->Timer[i].WinTimerID)
 		{
-			//¼ÆÊ±Æ÷IDºÍ¼ÇÂ¼µÄÏà·û
-			//ÄÇÃ´£¬·¢ËÍÏûÏ¢°¡
+			//è®¡æ—¶å™¨IDå’Œè®°å½•çš„ç›¸ç¬¦
+			//é‚£ä¹ˆï¼Œå‘é€æ¶ˆæ¯å•Š
 			EZSendMessage(TopExtend->Timer[i].ezWnd, EZWM_TIMER, i, 0);
 
 
@@ -1644,7 +1644,7 @@ VOID CALLBACK ezInsideTimerProc(HWND hwnd, UINT message, UINT iTimerID, DWORD dw
 
 int ezInsideWndProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam)
 {
-	//ÕâÀï£¡ĞŞ¸Äº¯Êı£¬Á´±íÃ¶¾Ù·½ÏòÓ¦¸Ã·´¹ıÀ´£¬ÏÈÕÒµ½×îºó£¬È»ºó·µ»ØÀ´Ò»¸ö¸ö¼ì²é¡££¨±£Ö¤ºÍ»æÖÆµÄÃ¶¾ÙË³ĞòÏàÍ¬£©
+	//è¿™é‡Œï¼ä¿®æ”¹å‡½æ•°ï¼Œé“¾è¡¨æšä¸¾æ–¹å‘åº”è¯¥åè¿‡æ¥ï¼Œå…ˆæ‰¾åˆ°æœ€åï¼Œç„¶åè¿”å›æ¥ä¸€ä¸ªä¸ªæ£€æŸ¥ã€‚ï¼ˆä¿è¯å’Œç»˜åˆ¶çš„æšä¸¾é¡ºåºç›¸åŒï¼‰
 	EZWND ezChildLast;
 
 	ezChildLast = ezWnd->FirstChild;
@@ -1657,58 +1657,58 @@ int ezInsideWndProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam)
 			ezChildLast = ezChildLast->NextEZWnd;
 		}
 
-		//¹ö¶¯µ½Á´±í¶¥²¿£¬¼ì²éÊÇ·ñÔÚ×Ó´°¿ÚÄÚ
+		//æ»šåŠ¨åˆ°é“¾è¡¨é¡¶éƒ¨ï¼Œæ£€æŸ¥æ˜¯å¦åœ¨å­çª—å£å†…
 		//**************************************************
 		while (ezChildLast)
 		{
-			//¼ì²éÊÇ·ñÔÚ×Ó´°¿ÚÄÚ£¬×¢ÒâÆÁÄ»ÒÆ¶¯
+			//æ£€æŸ¥æ˜¯å¦åœ¨å­çª—å£å†…ï¼Œæ³¨æ„å±å¹•ç§»åŠ¨
 			//if (PtInEZWnd(ezChildLast, GET_X_LPARAM(lParam) - ezChildLast->ScrollX, GET_Y_LPARAM(lParam) - ezChildLast->ScrollY))
 			if ((ezChildLast->MouseMsgRecv != 2) && PtInEZWnd(ezChildLast, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)))
 			{
-				//¿ÉÒÔÁË£¬ÔÚÕâ¸ö´°¿Ú
+				//å¯ä»¥äº†ï¼Œåœ¨è¿™ä¸ªçª—å£
 				if (ezInsideWndProc(ezChildLast, message, wParam, MAKELPARAM(GET_X_LPARAM(lParam) - ezChildLast->x - ezChildLast->ScrollX, GET_Y_LPARAM(lParam) - ezChildLast->y - ezChildLast->ScrollY)) != TRANSPARENT)
 				{
 					return 0;
 				}
-				//ºÃ°É£¬×Ó´°¿ÚËµËûÊÇÍ¸Ã÷µÄ¡·¡£¡£¡£¡£¡£¼ÌĞø¿´»á²»»áÂäÔÚÆäËû×Ó´°¿ÚÄÚ
+				//å¥½å§ï¼Œå­çª—å£è¯´ä»–æ˜¯é€æ˜çš„ã€‹ã€‚ã€‚ã€‚ã€‚ã€‚ç»§ç»­çœ‹ä¼šä¸ä¼šè½åœ¨å…¶ä»–å­çª—å£å†…
 			}
 
 			ezChildLast = ezChildLast->LastEZWnd;
 		}
 		//**************************************************		
 
-		//ÒÑ¾­µ½×îºóÁË£¬ÄÇÃ´£¬¾ÍÊÇÔÚÖ÷´°¿Ú¡£Ö±½Ó³öÈ¥ºÍÍâÃæµÄºÏ²¢
+		//å·²ç»åˆ°æœ€åäº†ï¼Œé‚£ä¹ˆï¼Œå°±æ˜¯åœ¨ä¸»çª—å£ã€‚ç›´æ¥å‡ºå»å’Œå¤–é¢çš„åˆå¹¶
 
 	}
 
 	{
-		//Á¬¸ö×Ó´°¿Ú¶¼Ã»¡£¡£¡£ÄÇÃ´£¬¾ÍÔÚÄãÕâÀïÁË¡£
+		//è¿ä¸ªå­çª—å£éƒ½æ²¡ã€‚ã€‚ã€‚é‚£ä¹ˆï¼Œå°±åœ¨ä½ è¿™é‡Œäº†ã€‚
 
-		//ÏÈ·¢ËÍÊó±êµ½À´ÏûÏ¢
-		//¸ü¸ÄÕâÀïµÄÊ±ºò£¬±ğÍüÁË°ÑÉÏÃæÏàÍ¬µÄÒ»Æğ¸ÄÁË~~~~~
+		//å…ˆå‘é€é¼ æ ‡åˆ°æ¥æ¶ˆæ¯
+		//æ›´æ”¹è¿™é‡Œçš„æ—¶å€™ï¼Œåˆ«å¿˜äº†æŠŠä¸Šé¢ç›¸åŒçš„ä¸€èµ·æ”¹äº†~~~~~
 		if (message == EZWM_MOUSEMOVE && ezWnd->MouseOn == FALSE)
 		{
 			if (ezWnd->ezRootParent->TopWndExtend->MouseOnWnd)
 			{
-				ezWnd->ezRootParent->TopWndExtend->MouseOnWnd->MouseOn = FALSE;//±ê¼ÇÒ»ÏÂ¡£
+				ezWnd->ezRootParent->TopWndExtend->MouseOnWnd->MouseOn = FALSE;//æ ‡è®°ä¸€ä¸‹ã€‚
 				EZSendMessage(ezWnd->ezRootParent->TopWndExtend->MouseOnWnd, EZWM_MOUSELEAVE, 0, 0);
 			}
 			ezWnd->ezRootParent->TopWndExtend->MouseOnWnd = ezWnd;
-			ezWnd->MouseOn = TRUE;//±ê¼ÇÒ»ÏÂ¡£
-			EZSendMessage(ezWnd, EZWM_MOUSECOME, (WPARAM)NULL, (LPARAM)NULL);//ÀÏÊóÀ´ÁË
+			ezWnd->MouseOn = TRUE;//æ ‡è®°ä¸€ä¸‹ã€‚
+			EZSendMessage(ezWnd, EZWM_MOUSECOME, (WPARAM)NULL, (LPARAM)NULL);//è€é¼ æ¥äº†
 		}
 
-		else if (ezWnd->FocusState == 0 && message == EZWM_LBUTTONDOWN)//ÄãÃ»½¹µã£¬ÏûÏ¢ÊÇ×ó¼ü
+		else if (ezWnd->FocusState == 0 && message == EZWM_LBUTTONDOWN)//ä½ æ²¡ç„¦ç‚¹ï¼Œæ¶ˆæ¯æ˜¯å·¦é”®
 		{
 			if (IsEZWindow(EZGetTopParentWindow(ezWnd)->TopWndExtend->FocusWindow))
 			{
-				EZGetTopParentWindow(ezWnd)->TopWndExtend->FocusWindow->FocusState = 0;//ÄãÃ»½¹µãÁË¡£
+				EZGetTopParentWindow(ezWnd)->TopWndExtend->FocusWindow->FocusState = 0;//ä½ æ²¡ç„¦ç‚¹äº†ã€‚
 				EZSendMessage(EZGetTopParentWindow(ezWnd)->TopWndExtend->FocusWindow, EZWM_KILLFOCUS, NULL, NULL);
 			}
 			ezWnd->FocusState = 1;
 
 			EZGetTopParentWindow(ezWnd)->TopWndExtend->FocusWindow = ezWnd;
-			EZSendMessage(ezWnd, EZWM_SETFOCUS, (WPARAM)NULL, (LPARAM)NULL);//ÄãÓĞ½¹µãÁË£¡
+			EZSendMessage(ezWnd, EZWM_SETFOCUS, (WPARAM)NULL, (LPARAM)NULL);//ä½ æœ‰ç„¦ç‚¹äº†ï¼
 		}
 		return EZSendMessage(ezWnd, message, wParam, lParam);
 
@@ -1719,47 +1719,47 @@ int ezInsideWndProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam)
 
 BOOL EZBroadcastToAllChildFunc(EZWND ezWnd, BOOL sequence, int message, WPARAM wp, LPARAM lp)
 {
-	//×¢Òâ£¬Õâ¸öº¯ÊıÊÇÒÔÉî¶ÈÓÅÏÈµÄ·½Ê½·¢ËÍÏûÏ¢µÄ¡££¨ÎÒÀÁµÃÔÙĞ´Ò»¸ö¹ã¶ÈÓÅÏÈµÄ£¬Èç¹ûÒÔºóÎÒĞ´ÁË£¬É¾µôÕâÒ»¾ä»°£©
+	//æ³¨æ„ï¼Œè¿™ä¸ªå‡½æ•°æ˜¯ä»¥æ·±åº¦ä¼˜å…ˆçš„æ–¹å¼å‘é€æ¶ˆæ¯çš„ã€‚ï¼ˆæˆ‘æ‡’å¾—å†å†™ä¸€ä¸ªå¹¿åº¦ä¼˜å…ˆçš„ï¼Œå¦‚æœä»¥åæˆ‘å†™äº†ï¼Œåˆ æ‰è¿™ä¸€å¥è¯ï¼‰
 	EZWND LastChild;
 
 	LastChild = ezWnd->FirstChild;
-	//Ïò»Ø¹ö£¬ÈçÕıĞòÔòÖ±½Ó´¦Àí£¬µ¹Ğğ²»´¦Àí¡£
+	//å‘å›æ»šï¼Œå¦‚æ­£åºåˆ™ç›´æ¥å¤„ç†ï¼Œå€’å™ä¸å¤„ç†ã€‚
 	for (;;)
 	{
-		if (sequence)//Õı
+		if (sequence)//æ­£
 		{
-			//ÕıĞò£¬ËùÒÔ£¬ÏÈ´¦Àí×Ô¼º¡£
-			BroadcastProc(LastChild, message, wp, lp);//´¦Àí×Ô¼º
+			//æ­£åºï¼Œæ‰€ä»¥ï¼Œå…ˆå¤„ç†è‡ªå·±ã€‚
+			BroadcastProc(LastChild, message, wp, lp);//å¤„ç†è‡ªå·±
 
-			EZBroadcastToAllChild(LastChild, sequence, message, wp, lp);//¸ø×Ô¼ºµÄ×Ó´°¿Ú·¢ËÍ¸ÃÏûÏ¢
+			EZBroadcastToAllChild(LastChild, sequence, message, wp, lp);//ç»™è‡ªå·±çš„å­çª—å£å‘é€è¯¥æ¶ˆæ¯
 
 		}
 
-		if (!IsEZWindow(LastChild->NextEZWnd))//Ã»ÓĞÏÂÒ»¸ö
+		if (!IsEZWindow(LastChild->NextEZWnd))//æ²¡æœ‰ä¸‹ä¸€ä¸ª
 		{
-			break;//Ã»ÓĞÏÂÒ»¸öÁË
+			break;//æ²¡æœ‰ä¸‹ä¸€ä¸ªäº†
 		}
 
-		LastChild = LastChild->NextEZWnd;//ÏòÏÂ¹ö
+		LastChild = LastChild->NextEZWnd;//å‘ä¸‹æ»š
 
 	}
 
-	//Èç¹ûµ¹£¬ÄÇÃ´ÔÙ¹ö»ØÈ¥
+	//å¦‚æœå€’ï¼Œé‚£ä¹ˆå†æ»šå›å»
 	if (!sequence)
 	{
 		for (;;)
 		{
-			//¸ø×Ô¼ºµÄ×Ó´°¿Ú·¢ËÍ¸ÃÏûÏ¢
+			//ç»™è‡ªå·±çš„å­çª—å£å‘é€è¯¥æ¶ˆæ¯
 			EZBroadcastToAllChild(LastChild, sequence, message, wp, lp);
 
-			BroadcastProc(LastChild, message, wp, lp);//´¦Àí×Ô¼º
+			BroadcastProc(LastChild, message, wp, lp);//å¤„ç†è‡ªå·±
 
-			if (!IsEZWindow(LastChild->LastEZWnd))//µ½Í·ÁË
+			if (!IsEZWindow(LastChild->LastEZWnd))//åˆ°å¤´äº†
 			{
 				break;
 			}
 
-			LastChild = LastChild->LastEZWnd;//»Ø¹ö
+			LastChild = LastChild->LastEZWnd;//å›æ»š
 
 		}
 	}
@@ -1778,10 +1778,10 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 	case SEZWM_COPYDC:
 	{
 		EZSendMessage(ezWnd, EZWM_COVERCHILD, ezWnd->hdc, 0);
-		//¿´¿´ÊÇ·ñÊÇ¶¥²ãEZ´°¿Ú¡£
+		//çœ‹çœ‹æ˜¯å¦æ˜¯é¡¶å±‚EZçª—å£ã€‚
 		if (!ezWnd->IsTopWindow)
 		{
-			//²»ÊÇ
+			//ä¸æ˜¯
 			BitBlt(ezWnd->ezParent->hdc,
 				ezWnd->x + ezWnd->ezParent->ScrollX,
 				ezWnd->y + ezWnd->ezParent->ScrollY,
@@ -1805,10 +1805,10 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 
 		int X_PSX;
 		int Y_PSY;
-		//ÅĞ¶ÏÊÇ·ñÊÇ¶¥²ã´°¿Ú
+		//åˆ¤æ–­æ˜¯å¦æ˜¯é¡¶å±‚çª—å£
 		if (ezWnd->IsTopWindow)
 		{
-			//»­°×²¼Ò»¿é
+			//ç”»ç™½å¸ƒä¸€å—
 			PatBlt(ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, WHITENESS);
 			//PatBlt(ezWnd->hdcWC, 0, 0, ezWnd->Width, ezWnd->Height, WHITENESS);
 		}
@@ -1816,7 +1816,7 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 		{
 			X_PSX = ezWnd->x + ezWnd->ezParent->ScrollX;
 			Y_PSY = ezWnd->y + ezWnd->ezParent->ScrollY;
-			//¸´ÖÆÉÏ¼¶´°¿ÚµÄÏàÓ¦²¿·Ö¡£
+			//å¤åˆ¶ä¸Šçº§çª—å£çš„ç›¸åº”éƒ¨åˆ†ã€‚
 			BitBlt(ezWnd->hdc, 0, 0,
 				max(ezWnd->Width, ezWnd->ezParent->Width), max(ezWnd->Height, ezWnd->ezParent->Height),
 				ezWnd->ezParent->hdc,
@@ -1828,17 +1828,17 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 		EZSendMessage(ezWnd, EZWM_TRANSDRAW, (WPARAM)(ezWnd->hdc), (LPARAM)NULL);
 
 
-		if (ezWnd->Transparent != 255)//Èç¹û²»ÊÇ255£¬»ìºÏ¡£ÊÇ255£¬ÄÇÃ´£¬±ğ»ìºÏÁË£¡
+		if (ezWnd->Transparent != 255)//å¦‚æœä¸æ˜¯255ï¼Œæ··åˆã€‚æ˜¯255ï¼Œé‚£ä¹ˆï¼Œåˆ«æ··åˆäº†ï¼
 		{
 			BLENDFUNCTION bf = { 0 };
 			/*bf.AlphaFormat = 0;
 			bf.BlendFlags = 0;
-			bf.BlendOp = AC_SRC_OVER;*/ // ÕâÈı¸ö×Ö¶ÎÈ«ÊÇ 0
+			bf.BlendOp = AC_SRC_OVER;*/ // è¿™ä¸‰ä¸ªå­—æ®µå…¨æ˜¯ 0
 			bf.SourceConstantAlpha = 255 - ezWnd->Transparent;
 
 			if (!ezWnd->IsTopWindow)
 			{
-				//Õâ¸ö´À»õº¯Êı£¬²»ÔÊĞí³¬³ö±ß½ç¡£ÎÒÃÇÖ»ÄÜÊÖ¶¯È·±£Ã»ÓĞ³¬³ö±ß½ç¡£
+				//è¿™ä¸ªè ¢è´§å‡½æ•°ï¼Œä¸å…è®¸è¶…å‡ºè¾¹ç•Œã€‚æˆ‘ä»¬åªèƒ½æ‰‹åŠ¨ç¡®ä¿æ²¡æœ‰è¶…å‡ºè¾¹ç•Œã€‚
 				int ab_Width, ab_Height;
 				ab_Width = min((ezWnd->Width), (ezWnd->ezParent->Width - (X_PSX)));
 				ab_Height = min((ezWnd->Height), (ezWnd->ezParent->Height - (Y_PSY)));
@@ -1857,7 +1857,7 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 			}
 			else
 			{
-				//°×É«
+				//ç™½è‰²
 				HDC hParentdc;
 				HDC hdcWhite = GetMemDC(hParentdc = GetDC(ezWnd->hParent), ezWnd->Width, ezWnd->Height);
 
@@ -1870,9 +1870,9 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 			}
 		}
 
-		//»ìºÏ»æÖÆÏÖÔÚÒÔ²»Í¸Ã÷µÄ·½Ê½ÔÚDCÉÏ£¬ÏÖÔÚ´Ó¸¸´°¿Ú¸´ÖÆÒÔ255-Í¸Ã÷¶È¸´ÖÆµ½hdcWC
+		//æ··åˆç»˜åˆ¶ç°åœ¨ä»¥ä¸é€æ˜çš„æ–¹å¼åœ¨DCä¸Šï¼Œç°åœ¨ä»çˆ¶çª—å£å¤åˆ¶ä»¥255-é€æ˜åº¦å¤åˆ¶åˆ°hdcWC
 
-		//·¢ËÍÆÕÍ¨»æÖÆÏûÏ¢£¬»æÖÆµ½DC¡£
+		//å‘é€æ™®é€šç»˜åˆ¶æ¶ˆæ¯ï¼Œç»˜åˆ¶åˆ°DCã€‚
 		EZSendMessage(ezWnd, EZWM_DRAW, (WPARAM)(ezWnd->hdc), (LPARAM)NULL);
 		//BitBlt(ezWnd->hdcCopy, 0, 0, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
 
@@ -1907,7 +1907,7 @@ int EZWndMessageLoop()
 
 
 
-//ÅĞ¶Ïº¯Êı
+//åˆ¤æ–­å‡½æ•°
 BOOL PtInEZWnd(EZWND ezWnd, int x, int y)
 {
 	return (BOOL)((x > ezWnd->x) && (x < (ezWnd->x + ezWnd->Width)) && (y > ezWnd->y) && (y < (ezWnd->y + ezWnd->Height)));
@@ -1920,7 +1920,7 @@ BOOL IsEZWindow(EZWND ezWnd)
 
 
 //*********************************************************************************************************
-//                ÏÂÃæÕâĞ©º¯Êı±¾²»ÊôÓÚEZWindow£¬µ«EZWindow»ùÓÚÕâĞ©º¯Êı¡£ÕâĞ©º¯ÊıÒ²¿ÉÒÔµ¥¶ÀÊ¹ÓÃ¡£
+//                ä¸‹é¢è¿™äº›å‡½æ•°æœ¬ä¸å±äºEZWindowï¼Œä½†EZWindowåŸºäºè¿™äº›å‡½æ•°ã€‚è¿™äº›å‡½æ•°ä¹Ÿå¯ä»¥å•ç‹¬ä½¿ç”¨ã€‚
 //*********************************************************************************************************
 
 HDC GetMemDC(HDC hdc, int cx, int cy)
@@ -1938,7 +1938,6 @@ BOOL DeleteMemDC(HDC hdc)
 	HBITMAP hBitmap = CreateCompatibleBitmap(hdc, 1, 1);
 	DeleteObject(SelectObject(hdc, hBitmap));
 	DeleteDC(hdc);
-	DeleteObject(hBitmap);
 	return TRUE;
 }
 
@@ -1948,7 +1947,7 @@ BOOL AdjustMemDC(HDC hdc, HDC hdcCpb, int cx, int cy)
 }
 
 //*********************************************************************************************************
-//                EZWindow·ç¸ñÀ©Õ¹Í·ÎÄ¼ş ÒÔ¼°ºê¶¨Òå
+//                EZWindowé£æ ¼æ‰©å±•å¤´æ–‡ä»¶ ä»¥åŠå®å®šä¹‰
 //*********************************************************************************************************
 
 
@@ -2016,17 +2015,17 @@ EZWNDPROC EZStyle_ButtonProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPa
 			{
 
 				(((ezWnd->Extend))->MouseHold) = FALSE;
-				//°´Å¥±»µ¥»÷ÁË£¡
+				//æŒ‰é’®è¢«å•å‡»äº†ï¼
 
-				//ÅĞ¶Ï°´Å¥ÀàĞÍ
+				//åˆ¤æ–­æŒ‰é’®ç±»å‹
 				if (CHK_STYLE(ezWnd->EZStyle & MKDW(11111111, 00000000, 00000000, 00000000), EZBS_PUSHBUTTON))
 				{
-					//·¢ËÍ¿ØÖÆÏûÏ¢¡£
+					//å‘é€æ§åˆ¶æ¶ˆæ¯ã€‚
 					EZSendMessage(ezWnd->ezParent, EZWM_COMMAND, 0, ezWnd);
 				}
 				else if (CHK_STYLE(ezWnd->EZStyle & MKDW(11111111, 00000000, 00000000, 00000000), EZBS_RADIOBUTTON))
 				{
-					//Ã»ËµÊÇAUTOÅ¶£¬ÒªÌı¸¸´°¿ÚµÄ»°¡£
+					//æ²¡è¯´æ˜¯AUTOå“¦ï¼Œè¦å¬çˆ¶çª—å£çš„è¯ã€‚
 				}
 			}
 
@@ -2109,10 +2108,10 @@ EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARA
 	switch (message)
 	{
 	case EZWM_CREATE:
-		//´´½¨3¸ö×Ó´°¿Ú
-		//ÏòÉÏ£¨×ó£¿£©¹ö¶¯ -- À©Õ¹0ºÅ¿Ø¼ş 
-		//ÏòÏÂ£¨ÓÒ£¿£©¹ö¶¯ -- À©Õ¹1ºÅ¿Ø¼ş 
-		//ÍÏ¶¯Ìõ -- À©Õ¹2ºÅ¿Ø¼ş 
+		//åˆ›å»º3ä¸ªå­çª—å£
+		//å‘ä¸Šï¼ˆå·¦ï¼Ÿï¼‰æ»šåŠ¨ -- æ‰©å±•0å·æ§ä»¶ 
+		//å‘ä¸‹ï¼ˆå³ï¼Ÿï¼‰æ»šåŠ¨ -- æ‰©å±•1å·æ§ä»¶ 
+		//æ‹–åŠ¨æ¡ -- æ‰©å±•2å·æ§ä»¶ 
 
 		ezWnd->Extend->hExtend[0] = CreateEZWindow(ezWnd, 0, 0, 0, 0, EZStyle_Scroll_BtnProc);
 		ezWnd->Extend->hExtend[0]->ezID = 0;
@@ -2124,52 +2123,52 @@ EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARA
 		ezWnd->Extend->hExtend[2]->ezID = 2;
 
 
-		//ÎªÁËÈÃ×Ó´°¿Ú¿ÉÒÔ¸ü·½±ãµÄÅĞ¶ÏÓ¦¸ÃºáÏò»¹ÊÇ×İÏò»æÖÆ
-		//ÓÃÁ½¸ö°´Å¥µÄStyle½øĞĞ±êÊ¶
+		//ä¸ºäº†è®©å­çª—å£å¯ä»¥æ›´æ–¹ä¾¿çš„åˆ¤æ–­åº”è¯¥æ¨ªå‘è¿˜æ˜¯çºµå‘ç»˜åˆ¶
+		//ç”¨ä¸¤ä¸ªæŒ‰é’®çš„Styleè¿›è¡Œæ ‡è¯†
 
 		if ((ezWnd->EZStyle & MKDW(00000000, 00000000, 00000000, 11111111)) == EZS_CHILD_VSCROLL)
 		{
-			//EZS_CHILD_VSCROLL£¬ÊúÖ±
+			//EZS_CHILD_VSCROLLï¼Œç«–ç›´
 			ezWnd->Extend->hExtend[0]->EZStyle = ezWnd->Extend->hExtend[1]->EZStyle = 0;
 		}
 		else
 		{
-			//EZS_CHILD_HSCROLL£¬Ë®Æ½
+			//EZS_CHILD_HSCROLLï¼Œæ°´å¹³
 			ezWnd->Extend->hExtend[0]->EZStyle = ezWnd->Extend->hExtend[1]->EZStyle = 1;
 		}
 
 
-		//³õÊ¼»¯¹ö¶¯·¶Î§£¬Î»ÖÃ
-		//¹ö¶¯×î´ó·¶Î§ -- intÀ©Õ¹ 0 ºÅ
-		//¹ö¶¯Î»ÖÃÉÏ -- intÀ©Õ¹ 1 ºÅ
-		//¹ö¶¯Î»ÖÃÏÂ -- intÀ©Õ¹ 2 ºÅ
-		ezWnd->Extend->iExtend[0] = 16;//Ä¬ÈÏ16£¿2333£¬Ëæ±ãÁË¡£
-		ezWnd->Extend->iExtend[1] = 0;//Ä¬ÈÏ0
-		ezWnd->Extend->iExtend[2] = 1;//Ä¬ÈÏ1
+		//åˆå§‹åŒ–æ»šåŠ¨èŒƒå›´ï¼Œä½ç½®
+		//æ»šåŠ¨æœ€å¤§èŒƒå›´ -- intæ‰©å±• 0 å·
+		//æ»šåŠ¨ä½ç½®ä¸Š -- intæ‰©å±• 1 å·
+		//æ»šåŠ¨ä½ç½®ä¸‹ -- intæ‰©å±• 2 å·
+		ezWnd->Extend->iExtend[0] = 16;//é»˜è®¤16ï¼Ÿ2333ï¼Œéšä¾¿äº†ã€‚
+		ezWnd->Extend->iExtend[1] = 0;//é»˜è®¤0
+		ezWnd->Extend->iExtend[2] = 1;//é»˜è®¤1
 
 		return 0;
 	case EZWM_SIZE:
 	{
 
 		if ((ezWnd->EZStyle & MKDW(00000000, 00000000, 00000000, 11111111)) == EZS_CHILD_VSCROLL)
-		{	//EZS_CHILD_VSCROLL£¬ÊúÖ±
+		{	//EZS_CHILD_VSCROLLï¼Œç«–ç›´
 
-		   //¼ì²âÊúÖ±·½Ïò³¤¶ÈÊÇ·ñ´óÓÚ3±¶Ë®Æ½£¬²»È»Ò²Ì«²»Ïñ»°ÁË¡£
+		   //æ£€æµ‹ç«–ç›´æ–¹å‘é•¿åº¦æ˜¯å¦å¤§äº3å€æ°´å¹³ï¼Œä¸ç„¶ä¹Ÿå¤ªä¸åƒè¯äº†ã€‚
 			if (!(ezWnd->Height >= ezWnd->Width * 3))
 			{
-				//¹ö°É
+				//æ»šå§
 				MoveEZWindow(ezWnd->Extend->hExtend[0], 0, 0, 0, 0, 0);
 				MoveEZWindow(ezWnd->Extend->hExtend[1], 0, 0, 0, 0, 0);
 				MoveEZWindow(ezWnd->Extend->hExtend[2], 0, 0, 0, 0, 0);
 				return 0;
 			}
-			//µ÷ÕûÎ»ÖÃ¿©
-			MoveEZWindow(ezWnd->Extend->hExtend[0], 0, 0, ezWnd->Width, (ezWnd->Width * 17) / 15, 0);//ÉÏÃæÄÇ¸ö°´Å¥
-			MoveEZWindow(ezWnd->Extend->hExtend[1], 0, ezWnd->Height - (ezWnd->Width * 17) / 15, ezWnd->Width, (ezWnd->Width * 17) / 15, 0);//ÏÂÃæÄÇ¸ö°´Å¥
+			//è°ƒæ•´ä½ç½®å’¯
+			MoveEZWindow(ezWnd->Extend->hExtend[0], 0, 0, ezWnd->Width, (ezWnd->Width * 17) / 15, 0);//ä¸Šé¢é‚£ä¸ªæŒ‰é’®
+			MoveEZWindow(ezWnd->Extend->hExtend[1], 0, ezWnd->Height - (ezWnd->Width * 17) / 15, ezWnd->Width, (ezWnd->Width * 17) / 15, 0);//ä¸‹é¢é‚£ä¸ªæŒ‰é’®
 
-																																			//¹ö¶¯Ìõ¿í¶ÈÎª MAX(£¨×Ü¿í¶È / ×î´ó¹ö¶¯·¶Î§£©,×îĞ¡¿í¶È£©
+																																			//æ»šåŠ¨æ¡å®½åº¦ä¸º MAX(ï¼ˆæ€»å®½åº¦ / æœ€å¤§æ»šåŠ¨èŒƒå›´ï¼‰,æœ€å°å®½åº¦ï¼‰
 
-																																			//×Ü¿í¶ÈÊÇÒª¿ÛÈ¥Á½±ßµÄ°´Å¥µÄÅ¶
+																																			//æ€»å®½åº¦æ˜¯è¦æ‰£å»ä¸¤è¾¹çš„æŒ‰é’®çš„å“¦
 			BarLen = ((ezWnd->Height - (ezWnd->Width) * 34.0 / 15.0) / (float)ezWnd->Extend->iExtend[0]);
 			MoveEZWindow(ezWnd->Extend->hExtend[2],
 				0,
@@ -2180,20 +2179,20 @@ EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARA
 
 		}
 		else
-		{	//EZS_CHILD_HSCROLL£¬Ë®Æ½
+		{	//EZS_CHILD_HSCROLLï¼Œæ°´å¹³
 
-		   //¼ì²âË®Æ½·½Ïò³¤¶ÈÊÇ·ñ´óÓÚ3±¶ÊúÖ±£¬²»È»Ò²Ì«²»Ïñ»°ÁË¡£
+		   //æ£€æµ‹æ°´å¹³æ–¹å‘é•¿åº¦æ˜¯å¦å¤§äº3å€ç«–ç›´ï¼Œä¸ç„¶ä¹Ÿå¤ªä¸åƒè¯äº†ã€‚
 			if (!(ezWnd->Width >= ezWnd->Height * 3))
 			{
-				//¹ö°É
+				//æ»šå§
 				MoveEZWindow(ezWnd->Extend->hExtend[0], 0, 0, 0, 0, 0);
 				MoveEZWindow(ezWnd->Extend->hExtend[1], 0, 0, 0, 0, 0);
 				MoveEZWindow(ezWnd->Extend->hExtend[2], 0, 0, 0, 0, 0);
 				return 0;
 			}
-			//µ÷ÕûÎ»ÖÃ¿©
-			MoveEZWindow(ezWnd->Extend->hExtend[0], 0, 0, (ezWnd->Height * 17.0) / 15.0, ezWnd->Height, 0);//×ó±ßÄÇ¸ö°´Å¥
-			MoveEZWindow(ezWnd->Extend->hExtend[1], ezWnd->Width - (ezWnd->Height * 17.0) / 15.0, 0, (ezWnd->Height * 17.0) / 15.0, ezWnd->Height, 0);//ÓÒ±ßÄÇ¸ö°´Å¥
+			//è°ƒæ•´ä½ç½®å’¯
+			MoveEZWindow(ezWnd->Extend->hExtend[0], 0, 0, (ezWnd->Height * 17.0) / 15.0, ezWnd->Height, 0);//å·¦è¾¹é‚£ä¸ªæŒ‰é’®
+			MoveEZWindow(ezWnd->Extend->hExtend[1], ezWnd->Width - (ezWnd->Height * 17.0) / 15.0, 0, (ezWnd->Height * 17.0) / 15.0, ezWnd->Height, 0);//å³è¾¹é‚£ä¸ªæŒ‰é’®
 
 
 			BarLen = (((float)ezWnd->Width - (float)(ezWnd->Height) * 34.0 / 15.0) / ((float)(ezWnd->Extend->iExtend[0])));
@@ -2218,7 +2217,7 @@ EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARA
 			ezWnd->Extend->iExtend[2] = 1;
 		}
 		if ((ezWnd->EZStyle & MKDW(00000000, 00000000, 00000000, 11111111)) == EZS_CHILD_VSCROLL)
-		{	//EZS_CHILD_VSCROLL£¬ÊúÖ±
+		{	//EZS_CHILD_VSCROLLï¼Œç«–ç›´
 			BarLen = ((ezWnd->Height - (ezWnd->Width) * 34.0 / 15.0) / (float)ezWnd->Extend->iExtend[0]);
 			MoveEZWindow(ezWnd->Extend->hExtend[2],
 				0,
@@ -2228,7 +2227,7 @@ EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARA
 				0);
 		}
 		else
-		{	//EZS_CHILD_HSCROLL£¬Ë®Æ½
+		{	//EZS_CHILD_HSCROLLï¼Œæ°´å¹³
 			BarLen = (((float)ezWnd->Width - (float)(ezWnd->Height) * 34.0 / 15.0) / ((float)(ezWnd->Extend->iExtend[0])));
 
 			MoveEZWindow(ezWnd->Extend->hExtend[2],
@@ -2248,7 +2247,7 @@ EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARA
 			ezWnd->Extend->iExtend[1] = wParam;
 			ezWnd->Extend->iExtend[2] = lParam;
 			if ((ezWnd->EZStyle & MKDW(00000000, 00000000, 00000000, 11111111)) == EZS_CHILD_VSCROLL)
-			{	//EZS_CHILD_VSCROLL£¬ÊúÖ±
+			{	//EZS_CHILD_VSCROLLï¼Œç«–ç›´
 				BarLen = ((ezWnd->Height - (ezWnd->Width) * 34.0 / 15.0) / (float)ezWnd->Extend->iExtend[0]);
 				MoveEZWindow(ezWnd->Extend->hExtend[2],
 					0,
@@ -2258,7 +2257,7 @@ EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARA
 					0);
 			}
 			else
-			{	//EZS_CHILD_HSCROLL£¬Ë®Æ½
+			{	//EZS_CHILD_HSCROLLï¼Œæ°´å¹³
 				BarLen = (((float)ezWnd->Width - (float)(ezWnd->Height) * 34.0 / 15.0) / ((float)(ezWnd->Extend->iExtend[0])));
 
 				MoveEZWindow(ezWnd->Extend->hExtend[2],
@@ -2308,14 +2307,14 @@ EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARA
 		{
 			int iMove;
 			if ((ezWnd->EZStyle & MKDW(00000000, 00000000, 00000000, 11111111)) == EZS_CHILD_VSCROLL)
-			{	//EZS_CHILD_VSCROLL£¬ÊúÖ±
+			{	//EZS_CHILD_VSCROLLï¼Œç«–ç›´
 				BarLen = (((float)ezWnd->Height - (float)(ezWnd->Width) * 34.0 / 15.0) / (float)ezWnd->Extend->iExtend[0]);
-				iMove = ceil((float)GET_Y_LPARAM(wParam) / BarLen);//²ÎÊıÍ¨¹ıwParam´«ËÍ¹ıÀ´
+				iMove = ceil((float)GET_Y_LPARAM(wParam) / BarLen);//å‚æ•°é€šè¿‡wParamä¼ é€è¿‡æ¥
 			}
 			else
 			{
 				BarLen = (((float)ezWnd->Width - (float)(ezWnd->Height) * 34.0 / 15.0) / ((float)(ezWnd->Extend->iExtend[0])));
-				iMove = ceil((float)GET_X_LPARAM(wParam) / BarLen);//²ÎÊıÍ¨¹ıwParam´«ËÍ¹ıÀ´
+				iMove = ceil((float)GET_X_LPARAM(wParam) / BarLen);//å‚æ•°é€šè¿‡wParamä¼ é€è¿‡æ¥
 			}
 			if (-iMove > ezWnd->Extend->iExtend[1])
 			{
@@ -2342,7 +2341,7 @@ EZWNDPROC EZStyle_Scroll_BtnProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 	switch (message)
 	{
 	case EZWM_CREATE:
-		//Õâ¸ö´°¿ÚÂï£¬Ö»ÊÇÆÕÍ¨´´½¨³öÀ´µÄ£¬¿ÉÏ§ÎÒÃÇÒ²ÏëÓÃÀ©Õ¹£¬ÄÇ×Ô¼ºÉêÇë°¡~
+		//è¿™ä¸ªçª—å£å˜›ï¼Œåªæ˜¯æ™®é€šåˆ›å»ºå‡ºæ¥çš„ï¼Œå¯æƒœæˆ‘ä»¬ä¹Ÿæƒ³ç”¨æ‰©å±•ï¼Œé‚£è‡ªå·±ç”³è¯·å•Š~
 		ezWnd->Extend = malloc(sizeof(EZSE));
 
 		((pEZSE)ezWnd->Extend)->BackGroundColor = RGB(70, 70, 70);
@@ -2353,14 +2352,14 @@ EZWNDPROC EZStyle_Scroll_BtnProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 		((pEZSE)ezWnd->Extend)->hFont = NULL;
 		((pEZSE)ezWnd->Extend)->IsFontUserControl = -1;
 
-		ezWnd->Extend->Title = NULL;//ÕâÑùÇåÀíµÄÊ±ºò¾Í»áÌø¹ıÇåÀíÁË£¬Ãâ×ÅfreeÒ»¸öÒ°Ö¸Õë¡£
+		ezWnd->Extend->Title = NULL;//è¿™æ ·æ¸…ç†çš„æ—¶å€™å°±ä¼šè·³è¿‡æ¸…ç†äº†ï¼Œå…ç€freeä¸€ä¸ªé‡æŒ‡é’ˆã€‚
 
-									//MD£¬²»ÊÇÑùÊ½´°¿Ú£¨¼ÙÃ°µÄ£©
+									//MDï¼Œä¸æ˜¯æ ·å¼çª—å£ï¼ˆå‡å†’çš„ï¼‰
 		ezWnd->IsStyleWindow = FALSE;
 		ezWnd->EZStyle = NULL;
 
 		ezWnd->Extend->iExtend[0] = 0;
-		//ÉèÖÃÍ¸Ã÷¶È 
+		//è®¾ç½®é€æ˜åº¦ 
 		SetEZWndTransparent(ezWnd, 20);
 		EZRepaint(ezWnd, NULL);
 		return 0;
@@ -2419,7 +2418,7 @@ EZWNDPROC EZStyle_Scroll_BtnProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 		//		EZCaptureMouse(ezWnd);
 		//		(((ezWnd->Extend))->MouseHold) = TRUE;
 		//		//ezWnd->TimerID[0] = SetTimer(NULL, 0, 100, ScrollBtnTimerProc);
-		//		//ÕâÀï£¡ÉèÖÃ¶¨Ê±Æ÷£¡
+		//		//è¿™é‡Œï¼è®¾ç½®å®šæ—¶å™¨ï¼
 
 		//		EZSendMessage(ezWnd->ezParent, EZWM_COMMAND, 0, ezWnd);
 		//		ezWnd->TimerID[0] = SetEZTimer(ezWnd, 80);
@@ -2434,7 +2433,7 @@ EZWNDPROC EZStyle_Scroll_BtnProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 		//	{
 		//		
 		//		(((ezWnd->Extend))->MouseHold) = FALSE;
-		//		//ÕâÀï£¡È¡Ïû¶¨Ê±Æ÷£¡
+		//		//è¿™é‡Œï¼å–æ¶ˆå®šæ—¶å™¨ï¼
 		//		KillEZTimer(ezWnd, ezWnd->TimerID[0]);
 		//		ezWnd->Extend->iExtend[0] = 0;
 
@@ -2461,12 +2460,12 @@ EZWNDPROC EZStyle_Scroll_BtnProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 		//	return 0;
 
 	case EZWM_DRAW:
-		//»æÖÆ¼ıÍ·
-		//¾ÍµØdefine.
+		//ç»˜åˆ¶ç®­å¤´
+		//å°±åœ°define.
 #define SRLBTN_ARR_W 3
 #define SRLBTN_ARR_H 2
 
-		 //×¼±¸»­±Ê£¬»­Ë¢¡£
+		 //å‡†å¤‡ç”»ç¬”ï¼Œç”»åˆ·ã€‚
 		hPen = NULL;
 		hBrush = NULL;
 		if ((((ezWnd->Extend))->MouseHold) == TRUE)
@@ -2482,7 +2481,7 @@ EZWNDPROC EZStyle_Scroll_BtnProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 
 		if (ezWnd->EZStyle == 0)
 		{
-			//ÊúÖ±
+			//ç«–ç›´
 			pt[0].x = ezWnd->Width / 2;
 			pt[1].x = ezWnd->Width / 2 + SRLBTN_ARR_W;
 			pt[2].x = ezWnd->Width / 2 + SRLBTN_ARR_W;
@@ -2529,7 +2528,7 @@ EZWNDPROC EZStyle_Scroll_BtnProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 		}
 		else
 		{
-			//Ë®Æ½
+			//æ°´å¹³
 
 			pt[0].y = ezWnd->Height / 2;
 			pt[1].y = ezWnd->Height / 2 + SRLBTN_ARR_W;
@@ -2586,14 +2585,14 @@ EZWNDPROC EZStyle_Scroll_BtnProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 		return 0;
 
 	case EZWM_TRANSDRAW:
-		//»æÖÆÍ¸Ã÷±³¾°
+		//ç»˜åˆ¶é€æ˜èƒŒæ™¯
 		SelectObject(wParam, hBrush = CreateSolidBrush(ezWnd->Extend->BackGroundColor));
 		PatBlt(wParam, 0, 0, ezWnd->Width, ezWnd->Height, PATCOPY);
 		DeleteObject(hBrush);
 		return 0;
 
 	case EZWM_TIMER:
-		//Ìí¼Ó´¦Àí
+		//æ·»åŠ å¤„ç†
 		if (ezWnd->Extend->iExtend[0] < 3)
 		{
 			ezWnd->Extend->iExtend[0]++;
@@ -2619,10 +2618,10 @@ EZWNDPROC EZStyle_Scroll_BarProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 	switch (message)
 	{
 	case EZWM_CREATE:
-		//ÎÒÃÇÒ²ÏëÓÃÀ©Õ¹£¡£¡£¡
+		//æˆ‘ä»¬ä¹Ÿæƒ³ç”¨æ‰©å±•ï¼ï¼ï¼
 		ezWnd->Extend = malloc(sizeof(EZSE));
 
-		//²»ÓÃ
+		//ä¸ç”¨
 		//((pEZSE)ezWnd->Extend)->BackGroundColor = RGB(70, 70, 70);
 		//((pEZSE)ezWnd->Extend)->ForeGroundColor = RGB(70, 70, 70);
 
@@ -2631,9 +2630,9 @@ EZWNDPROC EZStyle_Scroll_BarProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 		((pEZSE)ezWnd->Extend)->hFont = NULL;
 		((pEZSE)ezWnd->Extend)->IsFontUserControl = -1;
 
-		ezWnd->Extend->Title = NULL;//ÕâÑùÇåÀíµÄÊ±ºò¾Í»áÌø¹ıÇåÀíÁË£¬Ãâ×ÅfreeÒ»¸öÒ°Ö¸Õë¡£
+		ezWnd->Extend->Title = NULL;//è¿™æ ·æ¸…ç†çš„æ—¶å€™å°±ä¼šè·³è¿‡æ¸…ç†äº†ï¼Œå…ç€freeä¸€ä¸ªé‡æŒ‡é’ˆã€‚
 
-									//MD£¬²»ÊÇÑùÊ½´°¿Ú£¨¼ÙÃ°µÄ£©
+									//MDï¼Œä¸æ˜¯æ ·å¼çª—å£ï¼ˆå‡å†’çš„ï¼‰
 		ezWnd->IsStyleWindow = FALSE;
 		ezWnd->EZStyle = NULL;
 
@@ -2657,7 +2656,7 @@ EZWNDPROC EZStyle_Scroll_BarProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 
 			EZCaptureMouse(ezWnd);
 
-			//¼ÇÂ¼Êó±ê°´ÏÂµÄÎ»ÖÃ
+			//è®°å½•é¼ æ ‡æŒ‰ä¸‹çš„ä½ç½®
 			ezWnd->Extend->iExtend[0] = GET_X_LPARAM(lParam);
 			ezWnd->Extend->iExtend[1] = GET_Y_LPARAM(lParam);
 
@@ -2677,8 +2676,8 @@ EZWNDPROC EZStyle_Scroll_BarProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 	case EZWM_MOUSEMOVE:
 		if (ezWnd->Extend->MouseHold == TRUE)
 		{
-			//±ğÍüÁË£¬ÕâÊÇÒ»¸ö¹ö¶¯Ìõ.
-			//½«Êó±êÒÆ¶¯µÄÇé¿ö¸æËß¸¸´°¿Ú
+			//åˆ«å¿˜äº†ï¼Œè¿™æ˜¯ä¸€ä¸ªæ»šåŠ¨æ¡.
+			//å°†é¼ æ ‡ç§»åŠ¨çš„æƒ…å†µå‘Šè¯‰çˆ¶çª—å£
 			EZSendMessage(ezWnd->ezParent, EZWM_COMMAND,
 				MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->Extend->iExtend[0], GET_Y_LPARAM(lParam) - ezWnd->Extend->iExtend[1]),
 				ezWnd);
@@ -2720,9 +2719,6 @@ EZWNDPROC EZStyle_DefaultProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lP
 		{
 			ezWnd->Extend->BackGroundColor = (COLORREF)wParam;
 			ezWnd->Extend->ForeGroundColor = (COLORREF)lParam;
-
-			EZRepaint(ezWnd, NULL);
-
 		}
 	}
 	return 0;
@@ -2743,19 +2739,19 @@ EZWNDPROC EZStyle_DefaultProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lP
 
 		if (wParam)
 		{
-			//ÓÃ»§Ìá½»ÁËHFONT£¬ÓÃ»§¸ºÔğÊÍ·Å¡£
+			//ç”¨æˆ·æäº¤äº†HFONTï¼Œç”¨æˆ·è´Ÿè´£é‡Šæ”¾ã€‚
 			((pEZSE)ezWnd->Extend)->hFont = (HFONT)wParam;
 			((pEZSE)ezWnd->Extend)->IsFontUserControl = 0;
 		}
 		else if (lParam)
 		{
-			//ÓÃ»§Ìá½»ÁËLOGFONT£¬ÎÒÃÇ´´½¨²¢Ïú»Ù¡£
+			//ç”¨æˆ·æäº¤äº†LOGFONTï¼Œæˆ‘ä»¬åˆ›å»ºå¹¶é”€æ¯ã€‚
 			((pEZSE)ezWnd->Extend)->hFont = CreateFontIndirect(lParam);
 			((pEZSE)ezWnd->Extend)->IsFontUserControl = 1;
 		}
 		else
 		{
-			//¶¼Îª¿Õ£¬Ê¹ÓÃÄ¬ÈÏ×ÖÌå¡£
+			//éƒ½ä¸ºç©ºï¼Œä½¿ç”¨é»˜è®¤å­—ä½“ã€‚
 			LOGFONT lf;
 			lf.lfHeight = 19;
 			lf.lfWidth = 0;
@@ -2770,7 +2766,7 @@ EZWNDPROC EZStyle_DefaultProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lP
 			lf.lfClipPrecision = 0;
 			lf.lfQuality = 0;
 			lf.lfPitchAndFamily = 0;
-			lstrcpy(lf.lfFaceName, TEXT("Î¢ÈíÑÅºÚ"));
+			lstrcpy(lf.lfFaceName, TEXT("å¾®è½¯é›…é»‘"));
 			((pEZSE)ezWnd->Extend)->hFont = CreateFontIndirect(&lf);
 			((pEZSE)ezWnd->Extend)->IsFontUserControl = 2;
 		}
@@ -2820,10 +2816,10 @@ EZWNDPROC EZStyle_DefaultProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lP
 	break;
 	case EZWM_DESTROY:
 	{
-		//ÇåÀíÏµÁĞÄÚÈİ
+		//æ¸…ç†ç³»åˆ—å†…å®¹
 		if (ezWnd->Extend)
 		{
-			//ÇåÀí×ÖÌå
+			//æ¸…ç†å­—ä½“
 			if (((pEZSE)ezWnd->Extend)->hFont)
 			{
 				switch (((pEZSE)ezWnd->Extend)->IsFontUserControl)
@@ -2836,7 +2832,7 @@ EZWNDPROC EZStyle_DefaultProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lP
 				((pEZSE)ezWnd->Extend)->hFont = NULL;
 			}
 
-			//ÇåÀí±êÌâ
+			//æ¸…ç†æ ‡é¢˜
 			if (((pEZSE)ezWnd->Extend)->Title)
 			{
 				free(((pEZSE)(ezWnd->Extend))->Title);
@@ -2870,18 +2866,18 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 	switch (message)
 	{
 	case EZWM_CREATE:
-		//´´½¨×Ó´°¿Ú¡£
-		//0ºÅÀ©Õ¹·ÅÖ÷±à¼­´°¿Ú
-		//1ºÅÀ©Õ¹·ÅÊúÖ±¹ö¶¯Ìõ
-		//2ºÅË®Æ½¹ö¶¯Ìõ
+		//åˆ›å»ºå­çª—å£ã€‚
+		//0å·æ‰©å±•æ”¾ä¸»ç¼–è¾‘çª—å£
+		//1å·æ‰©å±•æ”¾ç«–ç›´æ»šåŠ¨æ¡
+		//2å·æ°´å¹³æ»šåŠ¨æ¡
 		ezWnd->Extend->iExtend[0] = 0;
 		ezWnd->Extend->iExtend[1] = 0;
 		ezWnd->Extend->iExtend[2] = 0;
-		ezWnd->Extend->hExtend[0] = CreateEZWindow(ezWnd, 0, 0, 0, 0, EZStyle_Edit_InputProc);//Ö÷±à¼­´°¿Ú
+		ezWnd->Extend->hExtend[0] = CreateEZWindow(ezWnd, 0, 0, 0, 0, EZStyle_Edit_InputProc);//ä¸»ç¼–è¾‘çª—å£
 		ezWnd->Extend->hExtend[1] = CreateEZStyleWindow(ezWnd, TEXT(""), EZS_CHILD | EZS_CHILD_VSCROLL, 0, 0, 0, 0);
 		ezWnd->Extend->hExtend[2] = CreateEZStyleWindow(ezWnd, TEXT(""), EZS_CHILD | EZS_CHILD_HSCROLL, 0, 0, 0, 0);
 
-		ezWnd->Extend->iExtend[3] = -1;//ÎŞÏŞÖÆ
+		ezWnd->Extend->iExtend[3] = -1;//æ— é™åˆ¶
 		ezWnd->Extend->BackGroundColor = RGB(255, 255, 255);
 		SetEZWndTransparent(ezWnd, 0);
 
@@ -2898,12 +2894,12 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 			CHK_ALT_STYLE(ezWnd->EZStyle, EZS_VSCROLL) ? ezWnd->Width - 15 : ezWnd->Width,
 			CHK_ALT_STYLE(ezWnd->EZStyle, EZS_HSCROLL) ? ezWnd->Height - 15 : ezWnd->Height,
 			0);
-		MoveEZWindow(ezWnd->Extend->hExtend[1],//ÊúÖ±£¬V
+		MoveEZWindow(ezWnd->Extend->hExtend[1],//ç«–ç›´ï¼ŒV
 			ezWnd->Width - 15, 0,
 			CHK_ALT_STYLE(ezWnd->EZStyle, EZS_VSCROLL) ? (15) : (0),
 			CHK_ALT_STYLE(ezWnd->EZStyle, EZS_HSCROLL) ? (ezWnd->Height - 15) : (ezWnd->Height)
 			, 0);
-		MoveEZWindow(ezWnd->Extend->hExtend[2],//Ë®Æ½£¬H
+		MoveEZWindow(ezWnd->Extend->hExtend[2],//æ°´å¹³ï¼ŒH
 			0, ezWnd->Height - 15,
 			CHK_ALT_STYLE(ezWnd->EZStyle, EZS_VSCROLL) ? (ezWnd->Width - 15) : (ezWnd->Width),
 			CHK_ALT_STYLE(ezWnd->EZStyle, EZS_HSCROLL) ? (15) : (0)
@@ -2912,13 +2908,13 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 	}
 
 	case EZWM_SETFONT:
-		//ºÙºÙ£¬É§²Ù×÷¡£Ö±½Óµİ½»¸øÄ¬ÈÏ´¦Àí¡£
+		//å˜¿å˜¿ï¼Œéªšæ“ä½œã€‚ç›´æ¥é€’äº¤ç»™é»˜è®¤å¤„ç†ã€‚
 		EZStyle_DefaultProc(ezWnd, message, wParam, lParam);
 
 
-		//²¢ÈëÏÂÃæSETTEXTµÄ²¿·Ö
+		//å¹¶å…¥ä¸‹é¢SETTEXTçš„éƒ¨åˆ†
 	case EZWM_SETTEXT:
-		//½ØÏÂÀ´£¬¼ÆËãºÃ´óĞ¡£¬È»ºóÔÙÌá½»¸øÄ¬ÈÏ´¦Àí
+		//æˆªä¸‹æ¥ï¼Œè®¡ç®—å¥½å¤§å°ï¼Œç„¶åå†æäº¤ç»™é»˜è®¤å¤„ç†
 	{
 
 		if (message == EZWM_SETTEXT)
@@ -2958,7 +2954,7 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 
 			if (Text[iMove] == '\0')
 			{
-				//»æÖÆµ±Ç°ĞĞ£¬²¢ÍË³ö¡£
+				//ç»˜åˆ¶å½“å‰è¡Œï¼Œå¹¶é€€å‡ºã€‚
 				GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
 				xCount = max(xCount, size.cx);
@@ -2968,7 +2964,7 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 			}
 			else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
 			{
-				//windows»»ĞĞ±ê¼Ç£¬»æÖÆµ±Ç°ĞĞ£¬ÖØĞÂ¿ªÊ¼¡£
+				//windowsæ¢è¡Œæ ‡è®°ï¼Œç»˜åˆ¶å½“å‰è¡Œï¼Œé‡æ–°å¼€å§‹ã€‚
 				GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
 				xCount = max(xCount, size.cx);
@@ -2980,7 +2976,7 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 			}
 			else if (Text[iMove] == '\n')
 			{
-				//Linux»»ĞĞ±ê¼Ç£¬»æÖÆµ±Ç°ĞĞ¡£
+				//Linuxæ¢è¡Œæ ‡è®°ï¼Œç»˜åˆ¶å½“å‰è¡Œã€‚
 				GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
 				xCount = max(xCount, size.cx);
@@ -2988,10 +2984,10 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 
 				LastMove = iMove + 1;
 			}
-			iMove++;//·ÅÔÚforÀïÃæÎÒÅÂÎÒ¸ã»ì....·Åµ½ÕâÀï¾Í²»»áÁË
+			iMove++;//æ”¾åœ¨foré‡Œé¢æˆ‘æ€•æˆ‘ææ··....æ”¾åˆ°è¿™é‡Œå°±ä¸ä¼šäº†
 		}
 
-		//ÉèÖÃ¹ö¶¯		MoveEZWindow(ezWnd->Extend->hExtend[3], 0, 0, max(ezWnd->Extend->hExtend[0]->Width, xCount), max(ezWnd->Extend->hExtend[0]->Height, yCount), 0);
+		//è®¾ç½®æ»šåŠ¨		MoveEZWindow(ezWnd->Extend->hExtend[3], 0, 0, max(ezWnd->Extend->hExtend[0]->Width, xCount), max(ezWnd->Extend->hExtend[0]->Height, yCount), 0);
 
 
 
@@ -3030,21 +3026,21 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 
 		if (message == EZWM_SETFONT)
 		{
-			//ÒÑ¾­¸øÄ¬ÈÏ´¦ÀíÌá½»¹ıÁË£¬ÔÚÇ°Ãæ¡£
+			//å·²ç»ç»™é»˜è®¤å¤„ç†æäº¤è¿‡äº†ï¼Œåœ¨å‰é¢ã€‚
 			return 0;
 		}
-		//else,EZWM_SETTEXT£¬Ìá½»¸øÄ¬ÈÏ´¦Àí¡£
+		//else,EZWM_SETTEXTï¼Œæäº¤ç»™é»˜è®¤å¤„ç†ã€‚
 		break;
 	}
 	break;
 
 	case EZWM_SCROLLPOSCHANGE:
-		//wParam¾ÍÊÇÆ«ÒÆÏñËØÊı
-		if (lParam == ezWnd->Extend->hExtend[1])//ÊúÖ±
+		//wParamå°±æ˜¯åç§»åƒç´ æ•°
+		if (lParam == ezWnd->Extend->hExtend[1])//ç«–ç›´
 		{
 			ezWnd->Extend->hExtend[0]->ScrollY = -(int)(wParam);
 		}
-		else if (lParam == ezWnd->Extend->hExtend[2])//Ë®Æ½
+		else if (lParam == ezWnd->Extend->hExtend[2])//æ°´å¹³
 		{
 			ezWnd->Extend->hExtend[0]->ScrollX = -((int)wParam);
 		}
@@ -3069,7 +3065,7 @@ EZWNDPROC EZStyle_Edit_InputProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM
 	switch (message)
 	{
 	case EZWM_CREATE:
-		//¸¸´°¿ÚµÄÀ©Õ¹ÀË·ÑÁË£¬¸É´àÎÒÃÇÒ²Ò»ÆğÓÃ¸¸´°¿Ú¶àÓàµÄÀ©Õ¹°É
+		//çˆ¶çª—å£çš„æ‰©å±•æµªè´¹äº†ï¼Œå¹²è„†æˆ‘ä»¬ä¹Ÿä¸€èµ·ç”¨çˆ¶çª—å£å¤šä½™çš„æ‰©å±•å§
 		ezWnd->ezParent->Extend->hExtend[3] = CreateEZWindow(ezWnd, 0, 0, 0, 0, EZStyle_Edit_InputChildProc);
 		return 0;
 	case EZWM_SIZE:
@@ -3116,7 +3112,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 		{
 			if (Text[iMove] == '\0')
 			{
-				//µ±Ç°ĞĞ£¬²¢ÍË³ö¡£
+				//å½“å‰è¡Œï¼Œå¹¶é€€å‡ºã€‚
 				//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
 				if (yCount >= GET_Y_LPARAM(lParam))
@@ -3129,7 +3125,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 			}
 			else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
 			{
-				//windows»»ĞĞ±ê¼Ç£¬ÖØĞÂ¿ªÊ¼¡£
+				//windowsæ¢è¡Œæ ‡è®°ï¼Œé‡æ–°å¼€å§‹ã€‚
 				//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
 				if (yCount >= GET_Y_LPARAM(lParam))
@@ -3145,7 +3141,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 			}
 			else if (Text[iMove] == '\n')
 			{
-				//Linux»»ĞĞ±ê¼Ç
+				//Linuxæ¢è¡Œæ ‡è®°
 				//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
 				if (yCount >= GET_Y_LPARAM(lParam))
@@ -3158,12 +3154,12 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 				LineCount++;
 				LastMove = iMove + 1;
 			}
-			iMove++;//·ÅÔÚforÀïÃæÎÒÅÂÎÒ¸ã»ì....·Åµ½ÕâÀï¾Í²»»áÁË
+			iMove++;//æ”¾åœ¨foré‡Œé¢æˆ‘æ€•æˆ‘ææ··....æ”¾åˆ°è¿™é‡Œå°±ä¸ä¼šäº†
 		}
 
 		if (IsFounded)
 		{
-			//¾ÍÔÚµ±Ç°ĞĞ£¡
+			//å°±åœ¨å½“å‰è¡Œï¼
 
 			CaretY = yCount;
 			IsFounded = FALSE;
@@ -3174,7 +3170,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 
 				if ((Text[iMove] == '\0') || (Text[iMove] == '\r' && Text[iMove + 1] == '\n') || (Text[iMove] == '\n'))
 				{
-					//Ã»ÕÒµ½£¬ÔÚĞĞÄ©Î²
+					//æ²¡æ‰¾åˆ°ï¼Œåœ¨è¡Œæœ«å°¾
 					ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
 					break;
 				}
@@ -3187,17 +3183,17 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 				CurrLen += CharWidth;
 
 
-				//µÃµ½¾ÉÎ»ÖÃºÍĞÂÎ»ÖÃµÄÆ½¾ùÎ»ÖÃ
+				//å¾—åˆ°æ—§ä½ç½®å’Œæ–°ä½ç½®çš„å¹³å‡ä½ç½®
 				if (GET_X_LPARAM(lParam) <= (LastLen + CurrLen) / 2)
 				{
-					//²åÈë·ûºÅÔÚÕâ¸ö×Ö·ûÍùÇ°ÍÆÒ»¸ö,Ò²¾ÍÊÇÔÚLastCurrµÄÎ»ÖÃ
+					//æ’å…¥ç¬¦å·åœ¨è¿™ä¸ªå­—ç¬¦å¾€å‰æ¨ä¸€ä¸ª,ä¹Ÿå°±æ˜¯åœ¨LastCurrçš„ä½ç½®
 					IsFounded = TRUE;
 					ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
 					break;
 
 				}
 
-				iMove++;//·ÅÔÚforÀïÃæÎÒÅÂÎÒ¸ã»ì....·Åµ½ÕâÀï¾Í²»»áÁË
+				iMove++;//æ”¾åœ¨foré‡Œé¢æˆ‘æ€•æˆ‘ææ··....æ”¾åˆ°è¿™é‡Œå°±ä¸ä¼šäº†
 			}
 
 			if (IsFounded)
@@ -3211,7 +3207,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 		}
 		else
 		{
-			//ÎÄµµÄ©Î²
+			//æ–‡æ¡£æœ«å°¾
 			CaretY = yCount;
 		}
 
@@ -3228,7 +3224,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 	case EZWM_DRAW:
 	{
 		EZHideCaret(ezWnd);
-		//¿ªÊ¼»æÖÆ£¬Ñ­»·¼ì²é£¬ÕÒµ½\r\n£¬»ò\n£¬ÆşĞĞ£¬Êä³ö¡£
+		//å¼€å§‹ç»˜åˆ¶ï¼Œå¾ªç¯æ£€æŸ¥ï¼Œæ‰¾åˆ°\r\nï¼Œæˆ–\nï¼Œæè¡Œï¼Œè¾“å‡ºã€‚
 
 		Text = ezWnd->ezParent->ezParent->Extend->Title;
 		if (!Text)
@@ -3251,7 +3247,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 
 			if (Text[iMove] == '\0')
 			{
-				//»æÖÆµ±Ç°ĞĞ£¬²¢ÍË³ö¡£
+				//ç»˜åˆ¶å½“å‰è¡Œï¼Œå¹¶é€€å‡ºã€‚
 				TextOut(wParam, 0, yCount, Text + LastMove, iMove - LastMove);
 				//GetTextExtentPoint32(wParam, Text + LastMove, iMove - LastMove, &size);
 
@@ -3264,7 +3260,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 			}
 			else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
 			{
-				//windows»»ĞĞ±ê¼Ç£¬»æÖÆµ±Ç°ĞĞ£¬ÖØĞÂ¿ªÊ¼¡£
+				//windowsæ¢è¡Œæ ‡è®°ï¼Œç»˜åˆ¶å½“å‰è¡Œï¼Œé‡æ–°å¼€å§‹ã€‚
 				TextOut(wParam, 0, yCount, Text + LastMove, iMove - LastMove);
 				//GetTextExtentPoint32(wParam, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
@@ -3277,7 +3273,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 			}
 			else if (Text[iMove] == '\n')
 			{
-				//Linux»»ĞĞ±ê¼Ç£¬»æÖÆµ±Ç°ĞĞ¡£
+				//Linuxæ¢è¡Œæ ‡è®°ï¼Œç»˜åˆ¶å½“å‰è¡Œã€‚
 				TextOut(wParam, 0, yCount, Text + LastMove, iMove - LastMove);
 				//GetTextExtentPoint32(wParam, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
@@ -3286,7 +3282,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 
 				LastMove = iMove + 1;
 			}
-			iMove++;//·ÅÔÚforÀïÃæÎÒÅÂÎÒ¸ã»ì....·Åµ½ÕâÀï¾Í²»»áÁË
+			iMove++;//æ”¾åœ¨foré‡Œé¢æˆ‘æ€•æˆ‘ææ··....æ”¾åˆ°è¿™é‡Œå°±ä¸ä¼šäº†
 		}
 
 	}
@@ -3296,8 +3292,8 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 
 	case EZWM_CHAR:
 
-		//ÕâÀï£¡½â¾öĞÂ¼Ó×Ö·ûÎÊÌâ¡£
-		//Ã¿´ÎÓĞEZWM_CHAR£¬¶¼ÊÇÍ¨¹ı´«µİÄ£ÄâSETTEXTÊµÏÖĞŞ¸ÄµÄ¡£µ«ÊÇSETTEXT¿ÉÃ»ÓĞ´¦ÀíÎ»ÒÆÎÊÌâ¡£±ÈÈçµ±Ç°ÊäÈëÁËÒ»¸ö×Ö·û£¬³¬³öÁË±ß½çÖ®ÀàµÄÎÊÌâ
+		//è¿™é‡Œï¼è§£å†³æ–°åŠ å­—ç¬¦é—®é¢˜ã€‚
+		//æ¯æ¬¡æœ‰EZWM_CHARï¼Œéƒ½æ˜¯é€šè¿‡ä¼ é€’æ¨¡æ‹ŸSETTEXTå®ç°ä¿®æ”¹çš„ã€‚ä½†æ˜¯SETTEXTå¯æ²¡æœ‰å¤„ç†ä½ç§»é—®é¢˜ã€‚æ¯”å¦‚å½“å‰è¾“å…¥äº†ä¸€ä¸ªå­—ç¬¦ï¼Œè¶…å‡ºäº†è¾¹ç•Œä¹‹ç±»çš„é—®é¢˜
 		EZHideCaret(ezWnd);
 
 		int pp_CaretPos = ezWnd->ezParent->ezParent->Extend->iExtend[2];
@@ -3311,7 +3307,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 			}
 			if (pTitle[pp_CaretPos - 1] == '\n' && pTitle[pp_CaretPos - 2] == '\r')
 			{
-				EZSendMessage(ezWnd, EZWM_KEYDOWN, 37, 0);//Ä£Äâ°´¼ü
+				EZSendMessage(ezWnd, EZWM_KEYDOWN, 37, 0);//æ¨¡æ‹ŸæŒ‰é”®
 
 				pp_CaretPos = ezWnd->ezParent->ezParent->Extend->iExtend[2];
 
@@ -3336,7 +3332,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 					pTitle + pp_CaretPos,
 					ezWnd->ezParent->ezParent->Extend->TitleLen - pp_CaretPos + 1);
 				EZSendMessage(ezWnd->ezParent->ezParent, EZWM_SETTEXT, TextBuffer, 0);
-				EZSendMessage(ezWnd, EZWM_KEYDOWN, 37, 0);//Ä£Äâ°´¼ü
+				EZSendMessage(ezWnd, EZWM_KEYDOWN, 37, 0);//æ¨¡æ‹ŸæŒ‰é”®
 				pp_CaretPos = ezWnd->ezParent->ezParent->Extend->iExtend[2];
 				EZRepaint(ezWnd->ezParent->ezParent, 0);
 			}
@@ -3354,8 +3350,8 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 					return 0;
 				}
 			}
-			//»»ĞĞ·û£¬²åÈë\r\n
-			//Ö§³Ö¶àĞĞ£¿
+			//æ¢è¡Œç¬¦ï¼Œæ’å…¥\r\n
+			//æ”¯æŒå¤šè¡Œï¼Ÿ
 			if (CHK_ALT_STYLE(ezWnd->ezParent->ezParent->EZStyle, EZES_SINGLELINE))
 			{
 				EZSendMessage(ezWnd->ezParent->ezParent->ezParent, EZWM_COMMAND, 0, ezWnd->ezParent->ezParent);
@@ -3372,11 +3368,11 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 			//ezWnd->ezParent->ezParent->Extend->iExtend[2]++;
 			EZSendMessage(ezWnd->ezParent->ezParent, EZWM_SETTEXT, TextBuffer, 0);
 			pTitle = ezWnd->ezParent->ezParent->Extend->Title;
-			EZSendMessage(ezWnd, EZWM_KEYDOWN, 39, 0);//Ä£Äâ°´¼ü
+			EZSendMessage(ezWnd, EZWM_KEYDOWN, 39, 0);//æ¨¡æ‹ŸæŒ‰é”®
 			pp_CaretPos = ezWnd->ezParent->ezParent->Extend->iExtend[2];
 			EZRepaint(ezWnd->ezParent->ezParent, 0);
 
-			wParam = '\n';//³öÈ¥Ö®ºó×Ô¶¯²åÈë
+			wParam = '\n';//å‡ºå»ä¹‹åè‡ªåŠ¨æ’å…¥
 		}
 
 		if (ezWnd->ezParent->ezParent->Extend->iExtend[3] != -1)
@@ -3398,7 +3394,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 		//ezWnd->ezParent->ezParent->Extend->iExtend[2]++;
 		EZSendMessage(ezWnd->ezParent->ezParent, EZWM_SETTEXT, TextBuffer, 0);
 		//	pTitle = ezWnd->ezParent->ezParent->Extend->Title;
-		EZSendMessage(ezWnd, EZWM_KEYDOWN, 39, 0);//Ä£Äâ°´¼ü
+		EZSendMessage(ezWnd, EZWM_KEYDOWN, 39, 0);//æ¨¡æ‹ŸæŒ‰é”®
 												  //pp_CaretPos = ezWnd->ezParent->ezParent->Extend->iExtend[2];
 		EZRepaint(ezWnd->ezParent->ezParent, 0);
 		EZShowCaret(ezWnd);
@@ -3421,42 +3417,42 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 		{
 			if (wParam == 37)
 			{
-				//×ó
-				//¿´¿´Ç°ÃæÊÇ²»µ½Í·ÁË£¬»òÊÇ '\n' »ò "\r\n"
+				//å·¦
+				//çœ‹çœ‹å‰é¢æ˜¯ä¸åˆ°å¤´äº†ï¼Œæˆ–æ˜¯ '\n' æˆ– "\r\n"
 				if (ezWnd->ezParent->ezParent->Extend->iExtend[2] == 0)
 				{
-					//±ğ¶¯ÁË£¬µ½Í·ÁË£¬²»ĞèÒªÈÎºÎ²Ù×÷
+					//åˆ«åŠ¨äº†ï¼Œåˆ°å¤´äº†ï¼Œä¸éœ€è¦ä»»ä½•æ“ä½œ
 					return 0;
 				}
 
-				//ÊÇ²»ÊÇ»»ĞĞ£¿
+				//æ˜¯ä¸æ˜¯æ¢è¡Œï¼Ÿ
 				if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2] - 1] == '\n')
 				{
-					//ÊÇÄÄÖÖ»»ĞĞ£¿
+					//æ˜¯å“ªç§æ¢è¡Œï¼Ÿ
 					if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2] - 2] == '\r')
 					{
-						ezWnd->ezParent->ezParent->Extend->iExtend[2]--;//¶îÍâ-1
+						ezWnd->ezParent->ezParent->Extend->iExtend[2]--;//é¢å¤–-1
 					}
 				}
-				//ÎŞÂÛÊÇ²»ÊÇ»»ĞĞ£¬¶¼Òª-1.
+				//æ— è®ºæ˜¯ä¸æ˜¯æ¢è¡Œï¼Œéƒ½è¦-1.
 				ezWnd->ezParent->ezParent->Extend->iExtend[2]--;
 			}
 			else if (wParam == 39)
 			{
-				//ÓÒ
+				//å³
 
-				//¿´¿´ºóÃæÊÇ²»ÊÇµ½Î²ÁË£¬»òÊÇ'\n' »ò "\r\n"
+				//çœ‹çœ‹åé¢æ˜¯ä¸æ˜¯åˆ°å°¾äº†ï¼Œæˆ–æ˜¯'\n' æˆ– "\r\n"
 				if (ezWnd->ezParent->ezParent->Extend->iExtend[2] == ezWnd->ezParent->ezParent->Extend->TitleLen)
 				{
-					//±ğ¶¯ÁË£¬µ½Î²ÁË£¬²»ĞèÒªÈÎºÎ²Ù×÷
+					//åˆ«åŠ¨äº†ï¼Œåˆ°å°¾äº†ï¼Œä¸éœ€è¦ä»»ä½•æ“ä½œ
 					return 0;
 				}
-				//ÊÇ²»ÊÇ»»ĞĞ£¿
+				//æ˜¯ä¸æ˜¯æ¢è¡Œï¼Ÿ
 				if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2]] == '\r')
 				{
 					if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2] + 1] == '\n')
 					{
-						ezWnd->ezParent->ezParent->Extend->iExtend[2]++;//¶îÍâ+1
+						ezWnd->ezParent->ezParent->Extend->iExtend[2]++;//é¢å¤–+1
 					}
 				}
 				ezWnd->ezParent->ezParent->Extend->iExtend[2]++;
@@ -3474,7 +3470,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 				}
 				if (Text[iMove] == '\0')
 				{
-					//»æÖÆµ±Ç°ĞĞ£¬²¢ÍË³ö¡£
+					//ç»˜åˆ¶å½“å‰è¡Œï¼Œå¹¶é€€å‡ºã€‚
 					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 					yCount += tm.tmHeight;
 
@@ -3483,7 +3479,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 				}
 				else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
 				{
-					//windows»»ĞĞ±ê¼Ç£¬»æÖÆµ±Ç°ĞĞ£¬ÖØĞÂ¿ªÊ¼¡£
+					//windowsæ¢è¡Œæ ‡è®°ï¼Œç»˜åˆ¶å½“å‰è¡Œï¼Œé‡æ–°å¼€å§‹ã€‚
 					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 					yCount += tm.tmHeight;
 
@@ -3493,13 +3489,13 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 				}
 				else if (Text[iMove] == '\n')
 				{
-					//Linux»»ĞĞ±ê¼Ç£¬»æÖÆµ±Ç°ĞĞ¡£
+					//Linuxæ¢è¡Œæ ‡è®°ï¼Œç»˜åˆ¶å½“å‰è¡Œã€‚
 					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 
 					LastMove = iMove + 1;
 					yCount += tm.tmHeight;
 				}
-				iMove++;//·ÅÔÚforÀïÃæÎÒÅÂÎÒ¸ã»ì....·Åµ½ÕâÀï¾Í²»»áÁË
+				iMove++;//æ”¾åœ¨foré‡Œé¢æˆ‘æ€•æˆ‘ææ··....æ”¾åˆ°è¿™é‡Œå°±ä¸ä¼šäº†
 			}
 
 			//if (ezWnd->FocusState == 1)
@@ -3530,7 +3526,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 				if (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight > ezWnd->ezParent->Height)
 				{
 					ezWnd->ezParent->ScrollY -= (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight - ezWnd->ezParent->Height);
-					//ÉèÖÃ¹ö¶¯Ìõ
+					//è®¾ç½®æ»šåŠ¨æ¡
 					/*	EZSendMessage(ezWnd->ezParent->ezParent->Extend->hExtend[1], EZWM_SETSCROLLPOS, ezWnd->ezParent->ezParent->Extend->iExtend[1] - ezWnd->ezParent->ezParent->Extend->hExtend[0]->Height + tm.tmHeight,
 					ezWnd->ezParent->ezParent->Extend->iExtend[1] + tm.tmHeight);*/
 				}
@@ -3554,10 +3550,10 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 
 			if (wParam == 38)
 			{
-				//ÓĞÃ»ÓĞÉÏÒ»ĞĞ£¿
-				//ÍùÇ°µİ¹é£¬¿ç¹ıÒ»¸ö»»ĞĞ·û£¬µ½´ïµÚ¶ş¸ö»»ĞĞ·û
+				//æœ‰æ²¡æœ‰ä¸Šä¸€è¡Œï¼Ÿ
+				//å¾€å‰é€’å½’ï¼Œè·¨è¿‡ä¸€ä¸ªæ¢è¡Œç¬¦ï¼Œåˆ°è¾¾ç¬¬äºŒä¸ªæ¢è¡Œç¬¦
 
-				//ÓĞÖÖÇé¿ö£¬ÄÇ¾ÍÊÇ....Õâ¸ö¾ÍÊÇ»»ĞĞ·û£¨ÏÖÔÚÔÚĞĞÎ²¡££©ĞèÒªÎÒÃÇÊÖ¶¯¼ì²é²¢±ÜÃâÕâÖÖÇé¿ö
+				//æœ‰ç§æƒ…å†µï¼Œé‚£å°±æ˜¯....è¿™ä¸ªå°±æ˜¯æ¢è¡Œç¬¦ï¼ˆç°åœ¨åœ¨è¡Œå°¾ã€‚ï¼‰éœ€è¦æˆ‘ä»¬æ‰‹åŠ¨æ£€æŸ¥å¹¶é¿å…è¿™ç§æƒ…å†µ
 
 				if (Text[iLineBeginCount] == '\n')
 				{
@@ -3575,7 +3571,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 					{
 						if (iLineCross == 1)
 						{
-							//Á½¸öÆëÁË£¡ÏÖÔÚText[iLineBeginCount]ÊÇ '\n'£¬ËùÒÔÒª¼ÓÒ»
+							//ä¸¤ä¸ªé½äº†ï¼ç°åœ¨Text[iLineBeginCount]æ˜¯ '\n'ï¼Œæ‰€ä»¥è¦åŠ ä¸€
 							iLineBeginCount++;
 							iLineCross++;
 							break;
@@ -3590,7 +3586,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 				}
 				if (iLineCross == 0)
 				{
-					//Ã»ÓĞÉÏÒ»ĞĞ
+					//æ²¡æœ‰ä¸Šä¸€è¡Œ
 					return 0;
 				}
 				CaretY = ezWnd->ezParent->ezParent->Extend->iExtend[1] - tm.tmHeight;
@@ -3599,8 +3595,8 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 			}
 			else if (wParam == 40)
 			{
-				//ÓĞÃ»ÓĞÏÂÒ»ĞĞ£¿
-				//Íùºóµİ¹é£¬¿ç¹ıÒ»¸ö»»ĞĞ·û£¬µ½´ïµÚ¶şĞĞĞĞÊ×
+				//æœ‰æ²¡æœ‰ä¸‹ä¸€è¡Œï¼Ÿ
+				//å¾€åé€’å½’ï¼Œè·¨è¿‡ä¸€ä¸ªæ¢è¡Œç¬¦ï¼Œåˆ°è¾¾ç¬¬äºŒè¡Œè¡Œé¦–
 				int LineCrossRec;
 				for (; iLineBeginCount < iMaxLen; iLineBeginCount++)
 				{
@@ -3621,14 +3617,14 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 				}
 				if (iLineCross == 0)
 				{
-					//Ã»ÓĞÏÂÒ»ĞĞ
+					//æ²¡æœ‰ä¸‹ä¸€è¡Œ
 					return 0;
 				}
 				CaretY = ezWnd->ezParent->ezParent->Extend->iExtend[1] + tm.tmHeight;
 
 			}
 
-			//ÔÚĞÂĞĞÖĞ£¬ÕÒµ½ÓëÏÖÔÚÎ»ÖÃ×î½üµÄÎ»ÖÃ¡£
+			//åœ¨æ–°è¡Œä¸­ï¼Œæ‰¾åˆ°ä¸ç°åœ¨ä½ç½®æœ€è¿‘çš„ä½ç½®ã€‚
 
 			int iFindCount;
 
@@ -3648,12 +3644,12 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 				GetTextExtentPoint32(ezWnd->hdc, Text + iLineBeginCount, iMove - iLineBeginCount, &size);
 				CurrLen = size.cx;
 
-				//µÃµ½¾ÉÎ»ÖÃºÍĞÂÎ»ÖÃµÄÆ½¾ùÎ»ÖÃ
+				//å¾—åˆ°æ—§ä½ç½®å’Œæ–°ä½ç½®çš„å¹³å‡ä½ç½®
 				if (ezWnd->ezParent->ezParent->Extend->iExtend[0] <= (LastLen + CurrLen) / 2)
 				{
-					//²åÈë·ûºÅÔÚÕâ¸ö×Ö·ûÍùÇ°ÍÆÒ»¸ö,Ò²¾ÍÊÇÔÚLastCurrµÄÎ»ÖÃ
+					//æ’å…¥ç¬¦å·åœ¨è¿™ä¸ªå­—ç¬¦å¾€å‰æ¨ä¸€ä¸ª,ä¹Ÿå°±æ˜¯åœ¨LastCurrçš„ä½ç½®
 					IsFounded = TRUE;
-					//ÓĞÒ»ÖÖÇé¿öÊÇÌØÊâµÄ£¬ÄÇ¾ÍÊÇĞĞÊ×¡£ÔÚĞĞÊ×£¬Á½¸öÖµ¶¼Îª0.ÕâÑùµÄ»°£¬iMove²»Ó¦-1
+					//æœ‰ä¸€ç§æƒ…å†µæ˜¯ç‰¹æ®Šçš„ï¼Œé‚£å°±æ˜¯è¡Œé¦–ã€‚åœ¨è¡Œé¦–ï¼Œä¸¤ä¸ªå€¼éƒ½ä¸º0.è¿™æ ·çš„è¯ï¼ŒiMoveä¸åº”-1
 					if (iMove == iLineBeginCount)
 					{
 						ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
@@ -3666,13 +3662,13 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 
 				if ((Text[iMove] == '\0') || (Text[iMove] == '\r' && Text[iMove + 1] == '\n') || (Text[iMove] == '\n'))
 				{
-					//Ã»ÕÒµ½£¬ÔÚĞĞÄ©Î²
+					//æ²¡æ‰¾åˆ°ï¼Œåœ¨è¡Œæœ«å°¾
 					ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
 					break;
 				}
 
 
-				iMove++;//·ÅÔÚforÀïÃæÎÒÅÂÎÒ¸ã»ì....·Åµ½ÕâÀï¾Í²»»áÁË
+				iMove++;//æ”¾åœ¨foré‡Œé¢æˆ‘æ€•æˆ‘ææ··....æ”¾åˆ°è¿™é‡Œå°±ä¸ä¼šäº†
 			}
 
 			GetTextExtentPoint32(ezWnd->hdc, Text + iLineBeginCount, iMove - iLineBeginCount, &size);
@@ -3711,7 +3707,7 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 			if (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight > ezWnd->ezParent->Height)
 			{
 				ezWnd->ezParent->ScrollY -= (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight - ezWnd->ezParent->Height);
-				//ÉèÖÃ¹ö¶¯Ìõ
+				//è®¾ç½®æ»šåŠ¨æ¡
 				/*EZSendMessage(ezWnd->ezParent->ezParent->Extend->hExtend[1], EZWM_SETSCROLLPOS, ezWnd->ezParent->ezParent->Extend->iExtend[1] - ezWnd->ezParent->ezParent->Extend->hExtend[0]->Height + tm.tmHeight,
 				ezWnd->ezParent->ezParent->Extend->iExtend[1]+ tm.tmHeight);*/
 			}
@@ -3768,7 +3764,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 	case EZWM_CREATE:
 		if ((ezWnd->EZStyle & MKDW(00000000, 00000000, 00000000, 11111111)) == EZS_OVERLAPPEDWINDOW)
 		{
-			//ÕâÀï£¡£¡´´½¨¹Ø±Õ£¬ËõĞ¡£¬·Å´ó°´Å¥£¡£¡£¡
+			//è¿™é‡Œï¼ï¼åˆ›å»ºå…³é—­ï¼Œç¼©å°ï¼Œæ”¾å¤§æŒ‰é’®ï¼ï¼ï¼
 			int BtnLen = floor(EZWND_CAP_HEIGHT * 1.618);
 			ezWnd->Extend->hExtend[1] = CreateEZWindow(ezWnd, ezWnd->Width - BtnLen, 0, BtnLen, EZWND_CAP_HEIGHT, EZStyle_WndCloseProc);
 			ezWnd->Extend->hExtend[2] = CreateEZWindow(ezWnd, ezWnd->Width - (BtnLen << 1), 0, BtnLen, EZWND_CAP_HEIGHT, EZStyle_WndMaxProc);
@@ -3807,7 +3803,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 		else
 		{
 			HFONT OldFont, hFont;
-			hFont = CreateFont(EZWND_CAP_HEIGHT * 0.6, 0, 0, 0, 550, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, TEXT("Î¢ÈíÑÅºÚ"));
+			hFont = CreateFont(EZWND_CAP_HEIGHT * 0.6, 0, 0, 0, 550, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, TEXT("å¾®è½¯é›…é»‘"));
 			OldFont = SelectObject(wParam, hFont);
 			TextOut(wParam, EZWND_CAP_HEIGHT >> 1, EZWND_CAP_HEIGHT * 0.2, pTitle, lstrlen(pTitle));
 			DeleteObject(SelectObject(wParam, OldFont));
@@ -3823,19 +3819,19 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 		HDC hdc = GetDC(ezWnd->hParent);
 		BitBlt(hdc, 0, 0, ezWnd->Width, ezWnd->Height, ezWnd->TopWndExtend->hdcTop, 0, 0, SRCCOPY);
 		ReleaseDC(ezWnd->hParent, hdc);
-		//ÕâÊÇÎÒÄÜÏë³öÀ´µÄ×î¿ìµÄ²Ù×÷ÁË
+		//è¿™æ˜¯æˆ‘èƒ½æƒ³å‡ºæ¥çš„æœ€å¿«çš„æ“ä½œäº†
 		return 0;
 	}
 	//
 	//case EZWM_LBUTTONDOWN:
-	//	SendMessage(ezWnd->hParent, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);//ÍÏ¶¯´°¿Ú¡£
-	////	ÕâÀï¿ªÊ¼£¡£¡£¡¸Ä³É´¦ÀíEZWM_NCHITTEST£¬Ìí¼ÓEZWM_NCHITTESTµÄµİ¹é£¿
+	//	SendMessage(ezWnd->hParent, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);//æ‹–åŠ¨çª—å£ã€‚
+	////	è¿™é‡Œå¼€å§‹ï¼ï¼ï¼æ”¹æˆå¤„ç†EZWM_NCHITTESTï¼Œæ·»åŠ EZWM_NCHITTESTçš„é€’å½’ï¼Ÿ
 	//	return 0;
 
 
 	case EZWM_WINNCHITTEST:
 	{
-		////¼ì²â·¶Î§¡£ÏÈÎÊÎÊÄ¬ÈÏµÄÒâ¼û£¬Èç¹ûÄ¬ÈÏËµÊÇ¿Í»§ÇøÎÒÃÇÔÙ¿´ÊÇ²»ÊÇ±êÌâÀ¸
+		////æ£€æµ‹èŒƒå›´ã€‚å…ˆé—®é—®é»˜è®¤çš„æ„è§ï¼Œå¦‚æœé»˜è®¤è¯´æ˜¯å®¢æˆ·åŒºæˆ‘ä»¬å†çœ‹æ˜¯ä¸æ˜¯æ ‡é¢˜æ 
 		int iHTDef = DefWindowProc(ezWnd->hParent, WM_NCHITTEST, wParam, lParam);
 		if (iHTDef != HTCLIENT)
 		{
@@ -3850,7 +3846,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 
 
 		SetRect(&rect, 0, 0, ezWnd->Width, EZWND_CAP_HEIGHT);
-		if ((ezWnd->EZStyle & 0xff) == EZS_OVERLAPPEDWINDOW)//ÄÇ¸ö0xffÊÇMKDW(00000000,00000000,00000000,11111111)
+		if ((ezWnd->EZStyle & 0xff) == EZS_OVERLAPPEDWINDOW)//é‚£ä¸ª0xffæ˜¯MKDW(00000000,00000000,00000000,11111111)
 		{
 			rect.right -= 3 * floor(EZWND_CAP_HEIGHT * 1.618);
 		}
@@ -3918,7 +3914,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 	//case EZWM_SETFOCUS:
 	//case EZWM_KILLFOCUS:
 	//	EZRepaint(ezWnd, 0);
-	//ÕâÀï£¡£¡£¡Èç¹û£¬ÊÇ×Ó´°¿ÚÊÕµ½ÁËÄØ£¿ÕâÑù¿Ï¶¨²»ĞĞ¡£ĞŞ¸ÄÕâÀïµÄEZWM_SETFOCUS  EZWM_KILLFOCUS
+	//è¿™é‡Œï¼ï¼ï¼å¦‚æœï¼Œæ˜¯å­çª—å£æ”¶åˆ°äº†å‘¢ï¼Ÿè¿™æ ·è‚¯å®šä¸è¡Œã€‚ä¿®æ”¹è¿™é‡Œçš„EZWM_SETFOCUS  EZWM_KILLFOCUS
 
 	//return 0;
 
@@ -3943,7 +3939,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 				AdjustWindowRect(&(NCCSParam->rgrc[0]), GetWindowLong(ezWnd->hParent, GWL_STYLE), 0);
 
 				NCCSParam->rgrc[0].left += 4;
-				NCCSParam->rgrc[0].top += 1;//ÔÚ±êÌâÀ¸ÉÏÃæÁô³öÒ»Ğ©£¬ÕâÀïÏÈÉÙ¼ÓÒ»Ğ©
+				NCCSParam->rgrc[0].top += 1;//åœ¨æ ‡é¢˜æ ä¸Šé¢ç•™å‡ºä¸€äº›ï¼Œè¿™é‡Œå…ˆå°‘åŠ ä¸€äº›
 				NCCSParam->rgrc[0].right -= 4;
 				NCCSParam->rgrc[0].bottom -= 4;
 
@@ -4013,11 +4009,11 @@ EZWNDPROC EZStyle_WndMinProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPa
 		pInfo = ezWnd->Extend;
 		if (pInfo->MouseHold == 0)
 		{
-			//ÎŞÊÓ
+			//æ— è§†
 		}
 		else
 		{
-			//·¢ËÍ¿ØÖÆĞÅºÅ
+			//å‘é€æ§åˆ¶ä¿¡å·
 			ShowWindow(ezWnd->hParent, SW_MINIMIZE);
 			pInfo->MouseHold = 0;
 			EZReleaseMouse(ezWnd);
@@ -4031,7 +4027,7 @@ EZWNDPROC EZStyle_WndMinProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPa
 		pInfo = ezWnd->Extend;
 		if (ezWnd->MouseOn)
 		{
-			//Í¸Ã÷¶È¼õÉÙ
+			//é€æ˜åº¦å‡å°‘
 
 			if ((int)(ezWnd->Transparent) + 12 >= 48)
 			{
@@ -4124,11 +4120,11 @@ EZWNDPROC EZStyle_WndMaxProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPa
 		pInfo = ezWnd->Extend;
 		if (pInfo->MouseHold == 0)
 		{
-			//ÎŞÊÓ
+			//æ— è§†
 		}
 		else
 		{
-			//·¢ËÍ¿ØÖÆĞÅºÅ
+			//å‘é€æ§åˆ¶ä¿¡å·
 			if (IsZoomed(ezWnd->hParent))
 			{
 				ShowWindow(ezWnd->hParent, SW_RESTORE);
@@ -4149,7 +4145,7 @@ EZWNDPROC EZStyle_WndMaxProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPa
 		pInfo = ezWnd->Extend;
 		if (ezWnd->MouseOn)
 		{
-			//Í¸Ã÷¶È¼õÉÙ
+			//é€æ˜åº¦å‡å°‘
 
 			if ((int)(ezWnd->Transparent) + 12 >= 48)
 			{
@@ -4266,11 +4262,11 @@ EZWNDPROC EZStyle_WndCloseProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM l
 		pInfo = ezWnd->Extend;
 		if (pInfo->MouseHold == 0)
 		{
-			//ÎŞÊÓ
+			//æ— è§†
 		}
 		else
 		{
-			//·¢ËÍ¿ØÖÆĞÅºÅ
+			//å‘é€æ§åˆ¶ä¿¡å·
 			if (EZSendMessage(ezWnd->ezParent->Extend->hExtend[0], EZWM_CLOSE, 0, 0) == EZCLOSE_WINDOW)
 			{
 				DestroyEZWindow(ezWnd->ezParent);
