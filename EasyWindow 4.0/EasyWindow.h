@@ -3,13 +3,13 @@
 
 *                EasyWindow.h
 
-*                EasyWindow ��Դ�ļ� �汾  3.0   Copyright (c) 2017 y.h. All rights reserved.
+*                EasyWindow 库源文件 版本  3.0   Copyright (c) 2017 y.h. All rights reserved.
 
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  */
 
 
 //*********************************************************************************************************
-//                ͷ�ļ���Ԥ����ָ��
+//                头文件等预编译指令
 //*********************************************************************************************************
 
 
@@ -31,14 +31,14 @@
 #pragma endregion
 
 //*********************************************************************************************************
-//                �����궨��
+//                常量宏定义
 //*********************************************************************************************************
 
 
 #pragma region EasyWindowMessageDefines
-//�����Ƕ�EasyWindows��Ϣ�Ķ���
+//下面是对EasyWindows消息的定义
 
-//������Ϣ
+//常规消息
 #define EZWM_CREATE 1
 #define EZWM_DESTROY 2
 #define EZWM_SIZE 3
@@ -52,41 +52,41 @@
 
 #define EZWM_ACTIVATE 9
 #define EZWM_ACTIVATEAPP 10
-#define EZWM_WINNCACTIVATE 11//�������������ֵɶ�ö�û���������ˡ�ֻ�����Ǹ�֪ͨ��ע�⣬���յ�������Ϣ֮ǰ�Ѿ����ù�DefWndProc��
+#define EZWM_WINNCACTIVATE 11//啊。。这个返回值啥用都没，被忽视了。只不过是个通知。注意，在收到这条消息之前已经调用过DefWndProc了
 
 #define EZWM_CLOSE 12
 
-#define EZCLOSE_WINDOW 0//��ӦEZWM_CLOSEʱ�����������رմ���
-#define EZDO_NOT_CLOSE 1//��ӦEZWM_CLOSEʱ����������رմ���
+#define EZCLOSE_WINDOW 0//响应EZWM_CLOSE时，用于声明关闭窗口
+#define EZDO_NOT_CLOSE 1//响应EZWM_CLOSE时，声明请勿关闭窗口
 
 
 
 
-//���ڴ�С��Ϣ
-#define EZWM_GETMINMAXINFO 13 //��������˴������뷵�ط���ֵ��
+//窗口大小消息
+#define EZWM_GETMINMAXINFO 13 //如果进行了处理，请返回非零值。
 
-#define EZWM_WINNCCALCSIZE 14//��������˴���������ֵ��WM_NCCALCSIZE�ķ���ֵ+1��û��������ֵΪ0
+#define EZWM_WINNCCALCSIZE 14//如果进行了处理，返回值是WM_NCCALCSIZE的返回值+1，没处理返回值为0
 
-//�����й���Ϣ
-#define EZWM_DRAW 101//���ƣ���͸��
-#define EZWM_TRANSDRAW 102//͸�����ƣ��ôλ��ƽ���͸����ʽ���ǡ�
-#define EZWM_COVERCHILD 103//�����Ӵ��ڻ��ƣ�����͸���Լ��㣨Ŀǰ��
-#define EZWM_MAPDC 104//ӳ��DC��wParamΪһ��RECTָ�룬ָ�����Ӵ��ڷ�Χ���޸ĸýṹ�弴�ɣ�lparam����Ҫӳ����Ӵ��ڡ�
-#define EZWM_REDRAWFINISH 105//�ô����ػ���ɣ������Լ���ezWnd->hdc���Ƶ���ĵط�������ͬ���������ݰ�ʲô�ģ�
+//绘制有关消息
+#define EZWM_DRAW 101//绘制，不透明
+#define EZWM_TRANSDRAW 102//透明绘制，该次绘制将以透明形式覆盖。
+#define EZWM_COVERCHILD 103//覆盖子窗口绘制，如需透明自己搞（目前）
+#define EZWM_MAPDC 104//映射DC，wParam为一个RECT指针，指明了子窗口范围。修改该结构体即可，lparam是需要映射的子窗口。
+#define EZWM_REDRAWFINISH 105//该窗口重绘完成（可以自己把ezWnd->hdc复制到别的地方，用于同步窗口内容啊什么的）
 
 
-#define EZWM_WINNCDRAW 106//Windows�����ڷǿͻ���Ҫ�ػ�
+#define EZWM_WINNCDRAW 106//Windows父窗口非客户区要重绘
 
-//�����Ϣ
+//鼠标消息
 #define EZWM_LBUTTONDOWN 201
 #define EZWM_LBUTTONUP 202
 #define EZWM_RBUTTONDOWN 203
 #define EZWM_RBUTTONUP 204
-#define EZWM_MOUSEMOVE 205//�����Ϣ���WPARAMΪ1���������͵�EZ�����ڣ�˵����Win���ڳ�ȥ��
+#define EZWM_MOUSEMOVE 205//这个消息如果WPARAM为1，（仅发送到EZ主窗口）说明从Win窗口出去了
 #define EZWM_MOUSECOME 206
 #define EZWM_MOUSELEAVE 207
 
-#define EZWM_WINNCHITTEST 208//�������Ҿ������...Ҳ���Է�����ꣿ��Ȼ����һ���ǿͻ�����Ϣ��ֻ��Win�����ڻ��յ������Ϣ
+#define EZWM_WINNCHITTEST 208//讲道理我觉得这个...也可以放在鼠标？虽然这是一个非客户区消息。只有Win父窗口会收到这个消息
 #define EZWM_NCHITTEST 209//
 
 
@@ -128,55 +128,55 @@
 #define EZWM_CAPTUREMOUSE 251
 #define EZWM_RELEASEMOUSE 252
 
-//������Ϣ
+//键盘消息
 #define EZWM_CHAR 301
 #define EZWM_KEYDOWN 302
 #define EZWM_KEYUP 303
 
 
-//��������Ϣ
+//滚动条消息
 #define EZWM_VSCROLL 401
 #define EZWM_HSCROLL 402
 
 
-//����������Ϣ
+//各类设置消息
 
-#define EZWM_SETCOLOR 501//wParam�Ǳ�����ɫ��lParam��ǰ����ɫ������Ϣ�������ػ档
-#define EZWM_SETFONT 502//�������壬wParam��lParam��ѡһ�����������ø÷��Ĭ�����塣wParam��HFONT���û������ͷţ���lParam��LOGFONT��EZWnd�����ͷţ���wParam����
-#define EZWM_SETTEXT 503//�����ı���wParam���ı���lParam�ǳ��ȣ�Ϊ0���Զ���ȡ����
-#define EZWM_SETTEXTALIGN 504//�ı�����ѡ�wParam���ݲ�������ʱ����ΪDrawText�Ļ��Ʋ��������ڽ������Ľ�
-#define EZWM_SETMAXTEXT 505//��������ı����ȣ�wParam����󳤶�,-1û�����ơ��Ѿ������˲�����д�����
+#define EZWM_SETCOLOR 501//wParam是背景颜色，lParam是前景颜色。该消息会引起重绘。
+#define EZWM_SETFONT 502//设置字体，wParam和lParam二选一，都空则设置该风格默认字体。wParam是HFONT（用户申请释放），lParam是LOGFONT（EZWnd申请释放）。wParam优先
+#define EZWM_SETTEXT 503//设置文本，wParam是文本。lParam是长度，为0则自动获取长度
+#define EZWM_SETTEXTALIGN 504//文本对齐选项，wParam传递参数。临时设置为DrawText的绘制参数。后期将继续改进
+#define EZWM_SETMAXTEXT 505//设置最大文本长度，wParam是最大长度,-1没有限制。已经超过了不会进行处理。
 
-#define EZWM_SETSCROLLRANGE 506//���ù�������Χ��wParam����������Χ��
-#define EZWM_SETSCROLLPOS 507//���ù�����λ�ã�wParam lParam�������¹���λ�á�wParam < lParam <= Max 
-
-
-
-//������Ϣ
-#define EZWM_COMMAND 601//�������岻�����ˡ���Windows��һЩ��lParam�Ǿ����wParam��֪ͨ�ĸ�����Ϣ��
-#define EZWM_SCROLLPOSCHANGE 602//������λ�ö��ˣ�wParam ���Ϲ���λ�ã�lParam�Ǿ����
-
-
-//֪ͨ����Ϣ
-#define EZWM_USER_NOTIFY 701//����ʹ�ã��Լ�Ū�����֪ͨ��ʽ��OK
-#define EZWM_WINWND_CHECKSTATE 702//Ҫ��Win���ڼ����ʾ״̬��
+#define EZWM_SETSCROLLRANGE 506//设置滚动条范围，wParam是最大滚动范围。
+#define EZWM_SETSCROLLPOS 507//设置滚动条位置，wParam lParam，是上下滚动位置。wParam < lParam <= Max 
 
 
 
-//��ȡ��Ϣ��Ϣ
-#define EZWM_GETTEXT 801//����ı�,wParam��������lParam������
+//控制消息
+#define EZWM_COMMAND 601//恩，含义不解释了。比Windows简单一些，lParam是句柄，wParam是通知的附加信息。
+#define EZWM_SCROLLPOSCHANGE 602//滚动条位置动了，wParam 是上滚动位置，lParam是句柄。
+
+
+//通知类消息
+#define EZWM_USER_NOTIFY 701//自由使用，自己弄得清楚通知形式就OK
+#define EZWM_WINWND_CHECKSTATE 702//要求Win窗口检查显示状态。
 
 
 
-//������Ϣ
-#define SEZWM_COPYDC 2001//���洢DC���Ƶ������ڡ�
-#define SEZWM_REDRAW 2002//�ػ浽�ڴ�DC
+//获取信息消息
+#define EZWM_GETTEXT 801//获得文本,wParam缓冲区，lParam最大计数
 
 
-#define SEZWM_KILLFOCUS 2005//�н���Ĵ���ʧȥ���㡣wP�ų���顣
+
+//内置消息
+#define SEZWM_COPYDC 2001//将存储DC复制到父窗口。
+#define SEZWM_REDRAW 2002//重绘到内存DC
 
 
-// #define SEZWM_CAPTURE 2005//��һ���������벶�������Ѿ������˵ĸϽ��ŵ���
+#define SEZWM_KILLFOCUS 2005//有焦点的窗口失去焦点。wP排除检查。
+
+
+// #define SEZWM_CAPTURE 2005//有一个窗口申请捕获老鼠。已经捕获了的赶紧放掉！
 
 #pragma endregion
 
@@ -190,7 +190,7 @@
 #define CHK_STYLE(Style,ChkStyle) (Style ^ ChkStyle)> 0 ? FALSE : TRUE
 #define CHK_ALT_STYLE(Style,AltStyle) (((Style) & (AltStyle)) > 0 ? (TRUE) : (FALSE))
 
-//*****��ѡ������ - ����
+//*****可选择属性 - 定义
 
 //                                                      -|-
 #define EZS_CHILD          MKDW(00000000,00000000,00000001,00000000)
@@ -207,82 +207,84 @@
 
 
 //                                                   -|-
-#define EZS_MINIMIZEBOX    MKDW(00000000,00000000,00001000,00000000)//��С����ť
+#define EZS_MINIMIZEBOX    MKDW(00000000,00000000,00001000,00000000)//最小化按钮
 #define EZS_NO_MINIMIZEBOX MKDW(00000000,00000000,00000000,00000000)
 
 //                                                  -|-
-#define EZS_MAXIMIZEBOX    MKDW(00000000,00000000,00010000,00000000)//��󻯰�ť
+#define EZS_MAXIMIZEBOX    MKDW(00000000,00000000,00010000,00000000)//最大化按钮
 #define EZS_NO_MAXIMIZEBOX MKDW(00000000,00000000,00000000,00000000)
 
 //                                                 -|-
-#define EZS_CLOSEBOX       MKDW(00000000,00000000,00100000,00000000)//�رհ�ť
+#define EZS_CLOSEBOX       MKDW(00000000,00000000,00100000,00000000)//关闭按钮
 #define EZS_NO_CLOSEBOX    MKDW(00000000,00000000,00000000,00000000)
 
 //                                                -|-
-#define EZS_VSCROLL        MKDW(00000000,00000000,01000000,00000000)//��ֱ
+#define EZS_VSCROLL        MKDW(00000000,00000000,01000000,00000000)//竖直
 #define EZS_NO_VSCROLL     MKDW(00000000,00000000,00000000,00000000)
 
 //                                               -|-
-#define EZS_HSCROLL        MKDW(00000000,00000000,10000000,00000000)//ˮƽ
+#define EZS_HSCROLL        MKDW(00000000,00000000,10000000,00000000)//水平
 #define EZS_NO_HSCROLL     MKDW(00000000,00000000,00000000,00000000)
 
 
-//*****������Ҫ���� - ����
-//�Ӵ���ƪ
+//*****窗口主要属性 - 定义
+//子窗口篇
 #define EZS_STATIC         MKDW(00000000,00000000,00000000,00000001)
 #define EZS_BUTTON         MKDW(00000000,00000000,00000000,00000010)
-//�������ɲ��Ǵ��й����ؼ��Ĵ��ڣ����������ǹ����ؼ���
-#define EZS_CHILD_VSCROLL  MKDW(00000000,00000000,00000000,00000011)//��ֱ
-#define EZS_CHILD_HSCROLL  MKDW(00000000,00000000,00000000,00000100)//ˮƽ
+//这两个可不是带有滚动控件的窗口，这两个就是滚动控件。
+#define EZS_CHILD_VSCROLL  MKDW(00000000,00000000,00000000,00000011)//竖直
+#define EZS_CHILD_HSCROLL  MKDW(00000000,00000000,00000000,00000100)//水平
 
 
-#define EZS_EDIT           MKDW(00000000,00000000,00000000,00000101)//�༭��
+#define EZS_EDIT           MKDW(00000000,00000000,00000000,00000101)//编辑框
 
 
 
-//������ƪ
+//父窗口篇
 #define EZS_POPUP          MKDW(00000000,00000000,00000000,00000001)
 #define EZS_OVERLAPPED     MKDW(00000000,00000000,00000000,00000010)
 #define EZS_POPUPWINDOW    MKDW(00000000,00000000,00000000,00000011)
 #define EZS_OVERLAPPEDWINDOW MKDW(00000000, 00000000, 00000000, 00000100)
 
-//�йظ����ڵ���������
+//有关父窗口的其他定义
 #define EZWND_CAP_HEIGHT 30
 
 
-//*****����ϸ������ - ����
-//***�Ӵ���ƪ
-//��ťƪ
-#define EZBS_PUSHBUTTON    MKDW(00000000,00000000,00000000,00000000)//Ĭ�ϣ�ʲô������������ͨ��ť
+//*****窗口细分属性 - 定义
+//***子窗口篇
+//按钮篇
+#define EZBS_PUSHBUTTON    MKDW(00000000,00000000,00000000,00000000)//默认，什么都不带就是普通按钮
 #define EZBS_RADIOBUTTON   MKDW(00000001,00000000,00000000,00000000)
 
-//�༭��ƪ
+//编辑框篇
 //                             -|-
 #define EZES_SINGLELINE    MKDW(10000000,00000000,00000000,00000000)
 //                             -|-
-#define EZES_MULTILINE     MKDW(00000000,00000000,00000000,00000000)//Ĭ��
+#define EZES_MULTILINE     MKDW(00000000,00000000,00000000,00000000)//默认
+//                              -|-
+#define EZES_PASSWORD      MKDW(01000000,00000000,00000000,00000000)//密码编辑框
 
 #pragma endregion
 
 
 #pragma region DialogStyleDefines
-#define EZDLG_MASK 1//�ڸ������Ͻ�����ʾһ�����֡����û�и�ѡ���ɫ������������
+#define EZDLG_MASK 1//在父窗口上渐变显示一个遮罩。如果没有该选项，颜色参数将被忽略
 
-#define EZDLG_CENTER 2//ʼ�վ�����ʾ������x,y������
+#define EZDLG_CENTER 2//始终居中显示，忽略x,y参数。
 
 #pragma endregion
 
 
 #pragma region OtherDefines
 
-//���������궨��
+//各种其他宏定义
 
-//�ڲ��ı���󳤶�
+//内部文本最大长度
 #define MAX_TEXT 16384
 
 #define GET_EXTEND(ezWnd,Extend) (((pEZSE)(ezWnd))->Extend)
 
-//�����
+//抗锯齿
 #define STRETCH 4.0
 
 #pragma endregion
@@ -296,59 +298,59 @@
 
 
 //*******************************************************************************************
-//                �ṹ������
+//                结构体声明
 //*******************************************************************************************
 
 
-typedef struct tagEZWND * EZWND;//��EZWINDOW�ṹ��Ķ��塣EZWND��ָ��ýṹ��ָ�롣
+typedef struct tagEZWND * EZWND;//对EZWINDOW结构体的定义。EZWND是指向该结构的指针。
 
 
 
 #pragma region ExtendForStyles
 typedef struct tagExtendStyle
 {
-	PBYTE Title;//ÿ�ζ�̬���룬��಻�ó��� MAX_TEXT
+	PBYTE Title;//每次动态申请，最多不得超过 MAX_TEXT
 	int TitleLen;
 
-	//UI���
+	//UI相关
 	COLORREF BackGroundColor;
 	COLORREF ForeGroundColor;
 
 	HFONT hFont;
 
 	DWORD TextAlign;
-	int IsFontUserControl;//����˭�����ͷţ���-1 ֮ǰû���壬0 �û����ƣ�1 EZWnd����2 Ĭ�����壩
+	int IsFontUserControl;//字体谁负责释放？（-1 之前没字体，0 用户控制，1 EZWnd负责，2 默认字体）
 
 
-						  //������
-	int MouseHold;//�����ж�����Ƿ��ţ����簴ť�ؼ��ͻ��õõ�����Ȼ������¼��갴��ʱ�䳤��Ҳû����
+						  //鼠标相关
+	int MouseHold;//用于判断鼠标是否按着，比如按钮控件就会用得到。当然用来记录鼠标按的时间长短也没问题
 
-				  //����ʹ����չ
-	int iExtend[4];//4��������չ ����������ɸ��ݿؼ�����ʹ�á�
-	EZWND hExtend[8];//8��EZWND��չ ����������ɸ��ݿؼ�����ʹ�á�
-	void * vExtend[4];//4��ָ����չ ����������ɸ��ݿؼ�����ʹ�á�
+				  //自由使用扩展
+	int iExtend[4];//4个整型扩展 程序可以自由根据控件类型使用。
+	EZWND hExtend[8];//8个EZWND扩展 程序可以自由根据控件类型使用。
+	void* vExtend[4];//4个指针扩展 程序可以自由根据控件类型使用。
 
-}EZSE, *pEZSE;
+}EZSE, * pEZSE;
 #pragma endregion
 
 
-typedef INT(*EZWNDPROC)(EZWND, int, WPARAM, LPARAM);//�ص���������
+typedef INT(*EZWNDPROC)(EZWND, int, WPARAM, LPARAM);//回调函数定义
 
-#define MAX_EZ_TIMER 64//64����ʱ��
+#define MAX_EZ_TIMER 64//64个计时器
 
 
 #pragma region TopWindowExtend
 typedef struct tagezTopWindowExtend
 {
-	EZWND FocusWindow;//ӵ�����뽹��Ĵ���
-	EZWND CptMouseWindow;//����������
-	EZWND MouseOnWnd;//����������
+	EZWND FocusWindow;//拥有输入焦点的窗口
+	EZWND CptMouseWindow;//捕获了鼠标的
+	EZWND MouseOnWnd;//鼠标在上面的
 
-	EZWND CptKbdWindow;//�����˼�����Ϣ��
+	EZWND CptKbdWindow;//捕获了键盘消息的
 
-	HDC hdcTop;//���㴰�������ڴ�ʹ�ã��������ڶ��ԣ���ֻ��һ���յľ����
+	HDC hdcTop;//顶层窗口申请内存使用，其他窗口而言，这只是一个空的句柄。
 
-			   //	int TimerNum;//��ǰʹ���˵ļ�ʱ������
+			   //	int TimerNum;//当前使用了的计时器数量
 
 	struct ezTimer
 	{
@@ -357,7 +359,7 @@ typedef struct tagezTopWindowExtend
 		EZWND ezWnd;
 	} Timer[MAX_EZ_TIMER];
 
-}TopWndExt, *pTWE;
+}TopWndExt, * pTWE;
 #pragma endregion
 
 
@@ -367,80 +369,80 @@ typedef struct tagezTopWindowExtend
 #define WND_TIMER_NUM 8
 typedef struct tagEZWND
 {
-	//�йش�����Ϣ
+	//有关窗口信息
 	int x;
 	int y;
 	int Width;
 	int Height;
 
-	//�����������������Թ����ͻ����ڵ��Ӵ��ڣ��Լ�����������ꡣ
+	//设置这两个变量可以滚动客户区内的子窗口，以及鼠标输入坐标。
 	int ScrollX;
 	int ScrollY;
 
-	int px;//x���꣨����������ڣ�
-	int py;//y���꣨����������ڣ�
-	RECT VisibleRect;//�ɼ��ľ��Σ�����������ڣ�
+	int px;//x坐标（相对于主窗口）
+	int py;//y坐标（相对于主窗口）
+	RECT VisibleRect;//可见的矩形（相对于主窗口）
 	BOOL IsVsbRectNull;
-	//�йػ���״̬****************************
-	BYTE Transparent;//͸���ȣ�0����ȫ͸����255��͸��
+	//有关绘制状态****************************
+	BYTE Transparent;//透明度，0是完全透明，255不透明
 
-					 //�йش���״̬****************************
-	int FocusState;//���뽹��״̬��0-�޽��㡣1-�н��� 
-	int MouseMsgRecv;//�����Ϣ��������� 1���������ܣ�2��͸��
-	int ShowState;//��ʾ״̬��������޹أ�1��������ʾ��2��͸��
+					 //有关窗口状态****************************
+	int FocusState;//输入焦点状态。0-无焦点。1-有焦点 
+	int MouseMsgRecv;//鼠标消息接受情况。 1：正常接受，2：透明
+	int ShowState;//显示状态（和鼠标无关）1：正常显示，2：透明
 
-				  //�й����****************************
-	BOOL MouseOn;//����ڸô����ϡ�
+				  //有关鼠标****************************
+	BOOL MouseOn;//鼠标在该窗口上。
 
-				 //�йػ���****************************
-	HDC hdc;//һ�����ƿռ䡣ʼ�մ��ڣ�ֱ�����ڱ����١����ڻ��ƾͻ�����������档
-	//HDC hdcCopy;//���ڼ��ٻ��ƣ���һ�����ڿ���ֱ�Ӹ��Ƶ�DC��
+				 //有关绘制****************************
+	HDC hdc;//一个绘制空间。始终存在，直到窗口被销毁。窗口绘制就绘制在这个上面。
+	//HDC hdcCopy;//用于加速绘制，下一个窗口可以直接复制的DC。
 
-				//BOOL DrawOnNC;//�Ƿ񸲸Ƿǿͻ������ƣ�����֮���Ƶ�ʱ���Ƿ���GetWindowDC
-	BOOL Update;//��������0Ϊ������£�1Ϊ�����˸ı䣬��Ҫ���¡�
+				//BOOL DrawOnNC;//是否覆盖非客户区绘制，换言之绘制的时候是否用GetWindowDC
+	BOOL Update;//更新区域，0为无需更新，1为发生了改变，需要更新。
 
-				//�йع�������****************************
-	EZWNDPROC ezWndProc;//���ڹ���
-	EZWND ezParent;//EZ������
-	EZWND ezRootParent;//EZ���ȴ���
+				//有关关联窗口****************************
+	EZWNDPROC ezWndProc;//窗口过程
+	EZWND ezParent;//EZ父窗口
+	EZWND ezRootParent;//EZ祖先窗口
 
-	BOOL IsTopWindow;//����ָʾ�Ƿ��Ƕ���EZ���ڡ�
-	HWND hParent;//����Win����.
+	BOOL IsTopWindow;//用于指示是否是顶层EZ窗口。
+	HWND hParent;//祖先Win窗口.
 
-	BOOL IsWinWnd;//�Ƿ����ӵ���һ��Win�Ӵ���
-	HWND hChild;//��Win����
+	BOOL IsWinWnd;//是否链接到了一个Win子窗口
+	HWND hChild;//子Win窗口
 	WNDPROC WinChildProc;
 
-	EZWND FirstChild;//��һ���Ӵ���
-	EZWND LastEZWnd;//����������ڣ����е���һ������
-	EZWND NextEZWnd;//����������ڣ����е���һ������
+	EZWND FirstChild;//第一个子窗口
+	EZWND LastEZWnd;//（和这个窗口）并列的上一个窗口
+	EZWND NextEZWnd;//（和这个窗口）并列的下一个窗口
 
 
-					//���㴰��ר��
+					//顶层窗口专属
 	pTWE TopWndExtend;
 
 
-	//��չ****************************
+	//扩展****************************
 
-	int ezID;//�û���������ʹ�ã����ڱ�ʶ����ID��
-	int TimerID[WND_TIMER_NUM];//8��Ӧ�ù����ˣ���ͨ���ڿ�������ʹ�á�������ʽ�Ĵ��ڿ��ܻ��������Windows��ʱ��ID
-	pEZSE Extend;//��չָ�롣���EZ�������Դ��ģ���ôEZWindow����ʹ��������������Ǽ�����������Ǻ��� EZSTYLE �Ĵ��ڣ����ָ��ᱻEZWindowʹ��
+	int ezID;//用户可以自由使用，用于标识窗口ID。
+	int TimerID[WND_TIMER_NUM];//8个应该够用了，普通窗口可以自由使用。带有样式的窗口可能会用来存放Windows计时器ID
+	pEZSE Extend;//扩展指针。如果EZ窗口是自创的，那么EZWindow不会使用这个变量。但是假如这个窗口是含有 EZSTYLE 的窗口，这个指针会被EZWindow使用
 
-	DWORD EZStyle;//������ʽ��
-	BOOL IsStyleWindow;//�Ƿ��Ǵ�����ʽ�Ĵ���
+	DWORD EZStyle;//窗口样式。
+	BOOL IsStyleWindow;//是否是带有样式的窗口
 
 #pragma region  ezWndStyleExplaination
-					   /*������ʽע��
+					   /*窗口样式注释
 
-					   EZStyle ������Ϊ�� DWORD Ҳ���� 4���ֽڣ�32λ��
+					   EZStyle 被定义为了 DWORD 也就是 4个字节，32位。
 
 					   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
-					   ������ÿ���ֶεĺ��壺
+					   这里是每个字段的含义：
 
-					   ���һ���ֽ�    ��256�֣���ʾ������Ҫ���ͣ����磬�ǲ��ǰ�ť���ǲ��Ǳ༭��ȡ�
-					   �����ڶ������ֽڣ�16λ����ʾ���ڵĿ�ѡ�����ԣ����細���Ƿ���б߿�
-					   �������ĸ��ֽ�  ��256�֣���ʾ����Ҫ�����´��ڵ�ϸ�����ԣ����簴ť�����Ƿ��ǵ�ѡ��ť��
+					   最后一个字节    ：256种，表示窗口主要类型，比如，是不是按钮，是不是编辑框等。
+					   倒数第二三个字节：16位，表示窗口的可选择属性，比如窗口是否带有边框。
+					   倒数第四个字节  ：256种，表示在主要类型下窗口的细分属性，比如按钮窗口是否是单选按钮。
 					   */
 #pragma endregion
 }EZWINDOW;
@@ -448,7 +450,7 @@ typedef struct tagEZWND
 #pragma endregion
 
 //*******************************************************************************************
-//                ��������
+//                函数声明
 //*******************************************************************************************
 
 #pragma region EZWindowFunctionDefines
@@ -497,7 +499,7 @@ typedef struct tagEZWND
 //
 //
 //
-////�ⲿ��ʽ
+////外部样式
 //static EZWNDPROC EZStyle_ButtonProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
 //static EZWNDPROC EZStyle_StaticProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
 //static EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
@@ -562,7 +564,7 @@ int EZWndMessageLoop();
 
 
 
-//�ⲿ��ʽ
+//外部样式
 EZWNDPROC EZStyle_ButtonProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
 EZWNDPROC EZStyle_StaticProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
 EZWNDPROC EZStyle_ScrollChildProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam);
@@ -595,7 +597,7 @@ BOOL AdjustMemDC(HDC hdc, HDC hdcCpb, int cx, int cy);
 #pragma endregion
 
 //*******************************************************************************************
-//                �����궨��
+//                函数宏定义
 //*******************************************************************************************
 
 #pragma region EZWindowFunctions
