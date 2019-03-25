@@ -337,7 +337,7 @@ typedef struct tagExtendStyle
 typedef INT(*EZWNDPROC)(EZWND, int, WPARAM, LPARAM);//回调函数定义
 
 #define MAX_EZ_TIMER 64//64个计时器
-
+#define EZTIMER_BASE 10000
 
 #pragma region TopWindowExtend
 typedef struct tagezTopWindowExtend
