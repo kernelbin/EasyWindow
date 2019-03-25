@@ -898,10 +898,11 @@ int SetEZTimer(EZWND ezWnd, int iTimeSpace)
 			//写入信息
 			ezWnd->ezRootParent->TopWndExtend->Timer[i].ezWnd = ezWnd;
 
-			int IDGet = SetTimer(NULL, 0, iTimeSpace, ezInsideTimerProc);
-			KillTimer(0, IDGet);
+			//int IDGet = SetTimer(NULL, 0, iTimeSpace, ezInsideTimerProc);
+			//KillTimer(0, IDGet);
 
-			ezWnd->ezRootParent->TopWndExtend->Timer[i].WinTimerID = SetTimer(ezWnd->hParent, IDGet, iTimeSpace, ezInsideTimerProc);
+			ezWnd->ezRootParent->TopWndExtend->Timer[i].WinTimerID = SetTimer(ezWnd->hParent, i+EZTIMER_BASE, iTimeSpace, ezInsideTimerProc);
+			
 			return i;
 		}
 	}
@@ -1625,20 +1626,10 @@ VOID CALLBACK ezInsideTimerProc(HWND hwnd, UINT message, UINT iTimerID, DWORD dw
 
 	//在列表里找到对应的ezWnd，并转发EZWM_TIMER消息
 
-	int i;
 	pTWE TopExtend = ((EZWND)GetWindowLongPtr(hwnd, 0))->TopWndExtend;
-	for (i = 0; i < MAX_EZ_TIMER; i++)
-	{
-		if (iTimerID == TopExtend->Timer[i].WinTimerID)
-		{
-			//计时器ID和记录的相符
-			//那么，发送消息啊
-			EZSendMessage(TopExtend->Timer[i].ezWnd, EZWM_TIMER, i, 0);
+	
+	EZSendMessage(TopExtend->Timer[iTimerID - EZTIMER_BASE].ezWnd, EZWM_TIMER, iTimerID - EZTIMER_BASE, 0);
 
-
-			break;
-		}
-	}
 	return;
 }
 
