@@ -1905,7 +1905,7 @@ int EZWndMessageLoop()
 //判断函数
 BOOL PtInEZWnd(EZWND ezWnd, int x, int y)
 {
-	return (BOOL)((x > ezWnd->x) && (x < (ezWnd->x + ezWnd->Width)) && (y > ezWnd->y) && (y < (ezWnd->y + ezWnd->Height)));
+	return (BOOL)((x >= ezWnd->x) && (x < (ezWnd->x + ezWnd->Width)) && (y >= ezWnd->y) && (y < (ezWnd->y + ezWnd->Height)));
 }
 
 BOOL IsEZWindow(EZWND ezWnd)
