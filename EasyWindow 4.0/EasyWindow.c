@@ -37,30 +37,50 @@ EZWND CreateEZParentWindowEx(DWORD EZStyle, int x, int y, int Width, int Height,
 	EZWND ezwndParent;//这是和Win窗口等大的EZ窗口，返回给用户。该窗口摧毁时同时摧毁Win窗口
 
 
-	if (!(ezwndParent = (EZWND)malloc(sizeof(EZWINDOW))))//申请内存并检查
+	ezwndParent = (EZWND)malloc(sizeof(EZWINDOW));
+
+
+	//Create tht EZ Window With out Using "CreateEZWindow"
+	if (!ezwndParent)//检查内存
 	{
 		return (EZWND)0;
 	}
 
-	ZeroMemory(ezwndParent, sizeof(EZWINDOW));
+	ezwndParent->TopWndExtend = (pTWE)malloc(sizeof(TopWndExt));
 
-	if (!(ezwndParent->TopWndExtend = (pTWE)malloc(sizeof(TopWndExt))))
+	if (!ezwndParent->TopWndExtend)//检查内存
 	{
 		free(ezwndParent);
 		return (EZWND)0;
 	}
 
-	ZeroMemory(ezwndParent->TopWndExtend, sizeof(TopWndExt));
 
 	ezwndParent->EZStyle = EZStyle;
 
 	if (EZStyle != 0L)
 	{
 		ezwndParent->Extend = (pEZSE)malloc(sizeof(EZSE));
+
 		ZeroMemory(ezwndParent->Extend, sizeof(EZSE));
 	}
+	else
+	{
+		ezwndParent->Extend = NULL;//防野指针
+	}
 
-	//我将下面所有赋值为0的语句全部注释掉了，因为这是多余的操作
+
+
+	//ezwndParent->Extend = 0;
+
+
+	int i;
+	for (i = 0; i < MAX_EZ_TIMER; i++)
+	{
+		ezwndParent->TopWndExtend->Timer[i].ezWnd = NULL;
+		ezwndParent->TopWndExtend->Timer[i].WinTimerID = 0;
+	}
+
+
 
 
 	ezwndParent->x = x;
@@ -69,51 +89,50 @@ EZWND CreateEZParentWindowEx(DWORD EZStyle, int x, int y, int Width, int Height,
 	ezwndParent->Height = Height;
 
 
-	//ezwndParent->px = 0;
-	//ezwndParent->py = 0;
+	ezwndParent->px = 0;
+	ezwndParent->py = 0;
 
-	//ezwndParent->ScrollX = 0;
-	//ezwndParent->ScrollY = 0;
+	ezwndParent->ScrollX = 0;
+	ezwndParent->ScrollY = 0;
 
 
-	//ezwndParent->FirstChild = NULL;
-	//ezwndParent->LastEZWnd = NULL;
-	//ezwndParent->NextEZWnd = NULL;
-	//ezwndParent->ezParent = NULL;//没有，空。
+	ezwndParent->FirstChild = NULL;
+	ezwndParent->LastEZWnd = NULL;
+	ezwndParent->NextEZWnd = NULL;
+	ezwndParent->ezParent = NULL;//没有，空。
 	ezwndParent->ezRootParent = ezwndParent;//你自己
 
-	//ezwndParent->TopWndExtend->CptMouseWindow = NULL;//没有的，2333
-	//ezwndParent->TopWndExtend->FocusWindow = NULL;
-	//ezwndParent->TopWndExtend->MouseOnWnd = NULL;
-	//ezwndParent->TopWndExtend->CptKbdWindow = NULL;
+	ezwndParent->TopWndExtend->CptMouseWindow = NULL;//没有的，2333
+	ezwndParent->TopWndExtend->FocusWindow = NULL;
+	ezwndParent->TopWndExtend->MouseOnWnd = NULL;
 
 
 	ezwndParent->IsTopWindow = TRUE;//是的，是顶层窗口。
 
-	//ezwndParent->FocusState = FALSE;
+	ezwndParent->FocusState = FALSE;
 
 	ezwndParent->MouseMsgRecv = 1;
 
 	ezwndParent->ShowState = 1;
 
-	//ezwndParent->MouseOn = FALSE;
+	ezwndParent->MouseOn = FALSE;
 
-	//ezwndParent->Update = FALSE;//刚开始，肯定没有更新过。
+	ezwndParent->Update = FALSE;//刚开始，肯定没有更新过。
 
 	ezwndParent->Transparent = 255;//不透明
 
 	ezwndParent->ezWndProc = ezWndProc;
 
-	//ezwndParent->TopWndExtend->FocusWindow = NULL;
+	ezwndParent->TopWndExtend->FocusWindow = NULL;
 
 
-	//ezwndParent->IsWinWnd = 0;
-	//ezwndParent->hChild = 0;
+	ezwndParent->IsWinWnd = 0;
+	ezwndParent->hChild = 0;
 
 
-	//ezwndParent->IsStyleWindow = FALSE;
+	ezwndParent->IsStyleWindow = FALSE;
 
-	//ezwndParent->ezID = 0;
+	ezwndParent->ezID = 0;
 
 	//大部分内容都初始化完毕了。ezwndParent被作为参数提交给WM_CREATE消息，并在期间将这个指针设置为窗口扩展
 	hwndParent = CreateWindow(EZWindowClass, TEXT(""), WinStyle, x, y, Width, Height, hParent, hMenu, GetModuleHandle(NULL), ezwndParent);
@@ -137,18 +156,21 @@ EZWND CreateEZWindowEx(EZWND ezParent, DWORD EZStyle, int x, int y, int Width, i
 	{
 		return (EZWND)0;
 	}
-	ZeroMemory(ezWnd, sizeof(EZWINDOW));
+
 	ezWnd->EZStyle = EZStyle;
 
 	if (EZStyle != 0L)
 	{
 		ezWnd->Extend = (pEZSE)malloc(sizeof(EZSE));
+
 		ZeroMemory(ezWnd->Extend, sizeof(EZSE));
 	}
+	else
+	{
+		ezWnd->Extend = NULL;//防野指针
+	}
 
-	//我将下面所有赋值为0的语句全部注释掉了，因为这是多余的操作
-
-	//ezWnd->TopWndExtend = NULL;
+	ezWnd->TopWndExtend = NULL;
 
 	ezWnd->x = x;
 	ezWnd->y = y;
@@ -158,22 +180,22 @@ EZWND CreateEZWindowEx(EZWND ezParent, DWORD EZStyle, int x, int y, int Width, i
 	ezWnd->px = ezParent->px + x + ezParent->ScrollX;
 	ezWnd->py = ezParent->py + y + ezParent->ScrollY;
 
-	//ezWnd->ScrollX = 0;
-	//ezWnd->ScrollY = 0;
+	ezWnd->ScrollX = 0;
+	ezWnd->ScrollY = 0;
 
-	//ezWnd->FirstChild = NULL;
-	//ezWnd->LastEZWnd = NULL;
-	//ezWnd->NextEZWnd = NULL;
+	ezWnd->FirstChild = NULL;
+	ezWnd->LastEZWnd = NULL;
+	ezWnd->NextEZWnd = NULL;
 
 	ezWnd->hParent = ezParent->hParent;
-	//ezWnd->IsTopWindow = FALSE;//并不是
+	ezWnd->IsTopWindow = FALSE;//并不是
 
 
-	//ezWnd->FocusState = 0;
+	ezWnd->FocusState = 0;
 	ezWnd->MouseMsgRecv = 1;
 	ezWnd->ShowState = 1;
 
-	//ezWnd->MouseOn = FALSE;
+	ezWnd->MouseOn = FALSE;
 
 	ezWnd->Update = 1;//刚开始，肯定没有更新过。
 
@@ -186,19 +208,22 @@ EZWND CreateEZWindowEx(EZWND ezParent, DWORD EZStyle, int x, int y, int Width, i
 	//在EZ父窗口最后追加这个新的子窗口。
 	EZAddChild(ezParent, ezWnd);
 
+	//ezWnd->DrawOnNC = 0;
 	fhdc = GetDC(hParent = ezParent->hParent);
 	ezWnd->hdc = GetMemDC(fhdc, Width, Height);
+	// ezWnd->hdcCopy = GetMemDC(fhdc, Width, Height);
 	ReleaseDC(hParent, fhdc);
 
+	ezWnd->bOpaque = 0;
 
-	//ezWnd->IsWinWnd = 0;
-	//ezWnd->hChild = 0;
-
-
-	//ezWnd->IsStyleWindow = FALSE;
+	ezWnd->IsWinWnd = 0;
+	ezWnd->hChild = 0;
 
 
-	//ezWnd->ezID = 0;
+	ezWnd->IsStyleWindow = FALSE;
+
+
+	ezWnd->ezID = 0;
 
 	EZSendMessage(ezWnd, EZWM_CREATE, 0, 0);//发送创建消息
 
@@ -384,10 +409,6 @@ BOOL DestroyEZWindow(EZWND ezWnd)
 	if (ezWnd->ezRootParent->TopWndExtend->CptMouseWindow == ezWnd)
 	{
 		ezWnd->ezRootParent->TopWndExtend->CptMouseWindow = NULL;
-	}
-	if (ezWnd->ezRootParent->TopWndExtend->CptKbdWindow == ezWnd)
-	{
-		ezWnd->ezRootParent->TopWndExtend->CptKbdWindow = NULL;
 	}
 
 
@@ -583,6 +604,7 @@ BOOL ScrollEZWindow(EZWND ezWnd, int x, int y, BOOL bAdd)//bAdd为TRUE，则累�
 		ezWnd->ScrollY = y;
 	}
 	EZResetChildPxPy(ezWnd);
+
 	EZRepaint(ezWnd, 0);
 	return 0;
 }
@@ -633,21 +655,6 @@ BOOL EZReleaseMouse(EZWND ezWnd)
 	return TRUE;
 }
 
-
-BOOL EZCaptureKeyboard(EZWND ezWnd)
-{
-	ezWnd->ezRootParent->TopWndExtend->CptKbdWindow = ezWnd;
-	return 0;
-}
-
-BOOL EZReleaseKeyboard(EZWND ezWnd)
-{
-	ezWnd->ezRootParent->TopWndExtend->CptKbdWindow = NULL;
-	return 0;
-}
-
-
-
 BOOL SetMouseMsgRecvMode(EZWND ezWnd, int Mode)
 {
 	ezWnd->MouseMsgRecv = Mode;
@@ -685,13 +692,29 @@ BOOL EZRedraw(EZWND ezWnd)//重绘到内存dc,不更新。
 	{
 		return FALSE;
 	}
+	RECT rect;
 
-	for (EZWND WndNow = ezWnd; WndNow; WndNow = WndNow->ezParent)//向上推，直到父窗口
+
+	EZWND WndNow = ezWnd;
+
+
+	//看看父窗口有没有ShowState为2的
+	while (WndNow)
 	{
-		if (WndNow->ShowState == 2)return 0;
+		if (WndNow->ShowState == 2)
+		{
+			return 0;
+		}
+		//向上推，直到父窗口
+		WndNow = WndNow->ezParent;
 	}
 
-	RECT rect = { ezWnd->px,ezWnd->py  ,ezWnd->px + ezWnd->Width,ezWnd->py + ezWnd->Height };
+	rect.left = ezWnd->px;
+	rect.right = ezWnd->px + ezWnd->Width;
+	rect.top = ezWnd->py;
+	rect.bottom = ezWnd->py + ezWnd->Height;
+
+
 
 	BroadcastProc(ezWnd, SEZWM_REDRAW, (WPARAM)NULL, (LPARAM)NULL);
 	RedrawBroadcast(ezWnd, 0, 0, ezWnd->px, ezWnd->py, rect);
@@ -773,6 +796,10 @@ BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT Rec
 
 BOOL EZUpdate(EZWND ezWnd, HDC hdc)//将DC更新到窗体，不重绘。第二个参数是DC，如不提供，函数将自动获取。
 {
+	//找到你的“祖宗”、
+
+	EZWND WndNow = ezWnd;
+
 	if (!IsEZWindow(ezWnd))
 	{
 		return FALSE;
@@ -837,20 +864,29 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 		return TRUE;
 	}
 
+	RECT rect;
 
+	EZWND WndNow = ezWnd;
 
-	for (EZWND WndNow = ezWnd; WndNow; WndNow = WndNow->ezParent)//向上推，直到父窗口
+	while (WndNow)
 	{
-		if (WndNow->ShowState == 2)return 0;
+		if (WndNow->ShowState == 2)
+		{
+			return 0;
+		}
+		//向上推，直到父窗口
+		WndNow = WndNow->ezParent;
 	}
 
-
-	RECT rect = { ezWnd->px,ezWnd->py  ,ezWnd->px + ezWnd->Width,ezWnd->py + ezWnd->Height };
+	rect.left = ezWnd->px;
+	rect.right = ezWnd->px + ezWnd->Width;
+	rect.top = ezWnd->py;
+	rect.bottom = ezWnd->py + ezWnd->Height;
 
 	BroadcastProc(ezWnd->ezRootParent, SEZWM_REDRAW, (WPARAM)NULL, (LPARAM)NULL);
 	BOOL bFound = 0;
 	RedrawBroadcast(ezWnd->ezRootParent, 0, 0, 0, 0, rect);
-
+	BroadcastProc(ezWnd->ezRootParent, SEZWM_COPYDC, (WPARAM)NULL, (LPARAM)NULL);
 
 	EZSendMessage(ezWnd->ezRootParent, EZWM_MAPDC, &rect, ezWnd);
 
@@ -861,12 +897,24 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 	}
 	else//没DC
 	{
-
+		/*if (ezWnd->ezRootParent->DrawOnNC)
+		{
+		hdc = GetWindowDC(ezWnd->hParent);
+		}
+		else
+		{*/
 		hdc = GetDC(ezWnd->hParent);
+		/*}
+		*/
 
-		StretchBlt(hdc, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
-			ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, SRCCOPY);
+		//
 
+	//	if (EZSendMessage(ezWnd, EZWM_MAPDC, hdc, MAKELPARAM(ezWnd->px - ezWnd->ScrollX, ezWnd->py - ezWnd->ScrollY)) == 0)
+		{
+			//BitBlt(hdc, ezWnd->px, ezWnd->py, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
+			StretchBlt(hdc, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
+				ezWnd->ezRootParent->hdc, ezWnd->px, ezWnd->py, ezWnd->Width, ezWnd->Height, SRCCOPY);
+		}
 
 		ReleaseDC(ezWnd->hParent, hdc);
 	}
@@ -876,7 +924,7 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 	{
 		//BitBlt(ezWnd->ezRootParent->TopWndExtend->hdcTop, ezWnd->px, ezWnd->py, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
 		StretchBlt(ezWnd->ezRootParent->TopWndExtend->hdcTop, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
-			ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, SRCCOPY);
+			ezWnd->ezRootParent->hdc, ezWnd->px, ezWnd->py, ezWnd->Width, ezWnd->Height, SRCCOPY);
 	}
 
 	EZSendMessage(ezWnd, EZWM_REDRAWFINISH, 0, 0);//自由映射时间到
@@ -884,6 +932,199 @@ BOOL EZRepaint(EZWND ezWnd, HDC hdc)
 }
 
 
+
+
+
+
+
+////与窗口绘制有关的函数
+//BOOL EZRedraw(EZWND ezWnd)//重绘到内存dc,不更新。
+//{
+//	//这里，我们需要先确定需要重绘的范围
+//
+//	/*
+//	在整个大窗口体系下
+//	任何和该窗口有范围重复的窗口
+//	全！部！需！要！重绘！！！！
+//
+//	所以，我们要向所有窗口，包括子窗口广播消息。任何有重复的窗口，全部需要重绘到内存
+//	然后进行叠加处理。
+//
+//	不需要重绘到Windows父窗口。
+//
+//	*/
+//
+//	if (!IsEZWindow(ezWnd))
+//	{
+//		return FALSE;
+//	}
+//	RECT rect;
+//
+//	int Countx = 0, County = 0;
+//
+//	EZWND WndNow = ezWnd;
+//
+//
+//	//只需要把这个窗口（不需要全屏BitBlt）,得到相对父窗口的位置
+//	while (!WndNow->IsTopWindow)
+//	{
+//		//向上推，直到父窗口
+//		Countx += WndNow->x + WndNow->ScrollX;
+//		County += WndNow->y + WndNow->ScrollY;
+//		WndNow = WndNow->ezParent;
+//
+//	}
+//
+//	rect.left = Countx;
+//	rect.right = Countx + ezWnd->Width;
+//	rect.top = County;
+//	rect.bottom = County + ezWnd->Height;
+//
+//
+//	//BroadcastProc(ezWnd->ezRootParent, SEZWM_REDRAW, (WPARAM)NULL, (LPARAM)NULL);
+//	//RedrawBroadcast(ezWnd->ezRootParent, 0, 0, 0, 0, rect);
+//	BroadcastProc(ezWnd, SEZWM_REDRAW, (WPARAM)NULL, (LPARAM)NULL);
+//	RedrawBroadcast(ezWnd, 0, 0, 0, 0, rect);
+//
+//	/*BitBlt(ezWnd->ezRootParent->TopWndExtend->hdcTop,
+//		Countx,
+//		County,
+//		ezWnd->Width, ezWnd->Height,
+//		ezWnd->ezRootParent->hdc,
+//		Countx,
+//		County, SRCCOPY);*/
+//
+//
+//
+//	BitBlt(ezWnd->ezRootParent->TopWndExtend->hdcTop,
+//				Countx - ezWnd->ScrollX,
+//				County - ezWnd->ScrollY,
+//				ezWnd->Width, ezWnd->Height,
+//				ezWnd->hdc,
+//				0,
+//				0, SRCCOPY);
+//
+//	//	BroadcastProc(ezWnd->ezRootParent, SEZWM_COPYDC, (WPARAM)NULL, (LPARAM)NULL);
+//
+//
+//	return TRUE;
+//}
+//
+//BOOL RedrawBroadcast(EZWND ezWnd, WPARAM wp, LPARAM lp, int cx, int cy, RECT RectSrc)
+//{
+//
+//	if (!IsEZWindow(ezWnd))
+//	{
+//		return FALSE;
+//	}
+//
+//	if (IsEZWindow(ezWnd->FirstChild))
+//	{
+//
+//		EZWND LastChild;
+//
+//		LastChild = (ezWnd)->FirstChild;
+//
+//		while (1)
+//		{
+//			//正序，所以，先处理自己。
+//			RECT RectDst, RectAns;
+//
+//			{
+//				RectDst.left = cx + LastChild->x;
+//				RectDst.right = RectDst.left + LastChild->Width;
+//				RectDst.top = cy + LastChild->y;
+//				RectDst.bottom = RectDst.top + LastChild->Height;
+//			}
+//
+//			if ((IntersectRect(&RectAns, &RectSrc, &RectDst) != 0) && (LastChild->ShowState != 2))
+//			{
+//				BroadcastProc(LastChild, SEZWM_REDRAW, wp, lp);//处理自己
+//
+//				RedrawBroadcast(LastChild, wp, lp, cx + LastChild->x + LastChild->ScrollX, cy + LastChild->y + LastChild->ScrollY, RectSrc);//给自己的子窗口发送该消息
+//
+//				BroadcastProc(LastChild, SEZWM_COPYDC, wp, lp);//处理自己
+//			}
+//
+//			if (!IsEZWindow(LastChild->NextEZWnd))//没有下一个
+//			{
+//				break;//没有下一个了
+//			}
+//
+//			LastChild = LastChild->NextEZWnd;//向下滚
+//
+//		}
+//
+//	}
+//	return TRUE;
+//}
+//
+//BOOL EZUpdate(EZWND ezWnd, HDC hdc)//将DC更新到窗体，不重绘。第二个参数是DC，如不提供，函数将自动获取。
+//{
+//	//找到你的“祖宗”、
+//
+//	int Countx = 0, County = 0;
+//
+//	EZWND WndNow = ezWnd;
+//
+//	if (!IsEZWindow(ezWnd))
+//	{
+//		return FALSE;
+//	}
+//
+//	//只需要把这个窗口（不需要全屏BitBlt）,得到相对父窗口的位置
+//	while (!WndNow->IsTopWindow)
+//	{
+//		//向上推，直到父窗口
+//		Countx += WndNow->x + WndNow->ScrollX;
+//		County += WndNow->y + WndNow->ScrollY;
+//		WndNow = WndNow->ezParent;
+//	}
+//
+//	////EZBroadcastToAllChild(ezWnd, TRUE, SEZWM_COPYDC, (WPARAM)NULL, (LPARAM)NULL);
+//
+//	/*
+//	if (!hdc)//没DC
+//	{
+//	HDC hdcg;
+//	hdcg = GetDC(EZGetTopParentWindow(ezWnd)->hParent);
+//	//BitBlt(hdcg, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->hdc, Countx, County, SRCCOPY);
+//	BitBlt(hdcg, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->TopWndExtend->hdcTop, Countx, County, SRCCOPY);
+//	ReleaseDC(EZGetTopParentWindow(ezWnd)->hParent, hdcg);
+//	}
+//	else
+//	{
+//	//BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->hdc, Countx, County, SRCCOPY);
+//	BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->TopWndExtend->hdcTop, Countx, County, SRCCOPY);
+//	}
+//
+//	*/
+//
+//
+//	if (!hdc)//没DC
+//	{
+//
+//		hdc = GetDC(EZGetTopParentWindow(ezWnd)->hParent);
+//		//BitBlt(hdcg, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->hdc, Countx, County, SRCCOPY);
+//		BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
+//		ReleaseDC(EZGetTopParentWindow(ezWnd)->hParent, hdc);
+//		hdc = NULL;
+//	}
+//	else
+//	{
+//		//BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->ezRootParent->hdc, Countx, County, SRCCOPY);
+//		BitBlt(hdc, Countx, County, ezWnd->Width, ezWnd->Height, ezWnd->hdc, 0, 0, SRCCOPY);
+//	}
+//
+//	//RECT rect;
+//	//rect.left = Countx;
+//	//rect.right = Countx + ezWnd->Width;
+//	//rect.top = County;
+//	//rect.bottom = County + ezWnd->Height;
+//
+//	//InvalidateRect(ezWnd->hParent, &rect, 0);
+//	return 0;
+//}
 
 
 //计时器函数
@@ -930,6 +1171,8 @@ BOOL KillEZTimer(EZWND ezWnd, int TimerID)
 
 
 
+
+
 //光标函数
 BOOL EZCreateCaret(EZWND ezWnd, HBITMAP hBitmap, int nWidth, int nHeight)
 {
@@ -971,7 +1214,6 @@ typedef struct tagDlgMaskHookExtend
 
 EZWND EZDialogBox(EZWND ezParent, int x, int y, int w, int h, DWORD Style, COLORREF MaskClr, EZWNDPROC ezWndProc)
 {
-	//TODO: 使用最新的消息 EZWM_COVERCHILD 来代替Mask窗口以提高性能
 	EZWND Mask;
 	EZWND Dialog;
 	BOOL bMask, bCenter;
@@ -1004,11 +1246,6 @@ EZWND EZDialogBox(EZWND ezParent, int x, int y, int w, int h, DWORD Style, COLOR
 
 		}
 		Dialog = CreateEZWindow(ezParent, x, y, w, h, ezWndProc);
-		/*if (ezParent->ezRootParent->TopWndExtend->FocusWindow)
-		{
-			ezParent->ezRootParent->TopWndExtend->FocusWindow = Dialog;
-			Dialog->FocusState = 1;
-		}*/
 		DlgMskHkExtend->Dialog = Dialog;
 		if (bMask)
 		{
@@ -1237,7 +1474,9 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	EZWND ezWnd = NULL;
+	TRACKMOUSEEVENT tme;
+
+	EZWND ezWnd;
 
 	if (message != WM_CREATE)
 	{
@@ -1247,7 +1486,10 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 			return DefWindowProc(hwnd, message, wParam, lParam);
 		}
 	}
-
+	else
+	{
+		ezWnd = NULL;
+	}
 	switch (message)
 	{
 	case WM_CREATE:
@@ -1264,6 +1506,7 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		ezWnd->hdc = GetMemDC(hdc, ezWnd->Width, ezWnd->Height);
 		// ezWnd->hdcCopy = GetMemDC(hdc, ezWnd->Width, ezWnd->Height);
 		ezWnd->TopWndExtend->hdcTop = GetMemDC(hdc, ezWnd->Width, ezWnd->Height);
+		ezWnd->bOpaque = 0;
 
 		ReleaseDC(hwnd, hdc);
 
@@ -1326,13 +1569,24 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	{
 		if (IsEZWindow(ezWnd->TopWndExtend->CptMouseWindow))
 		{
+			//从这个窗口向上滚，找到这个窗口的坐标
+			EZWND WndNow = ezWnd->TopWndExtend->CptMouseWindow;
+
+			int Countx = 0, County = 0;
+			//只需要把这个窗口（不需要全屏BitBlt）,得到相对父窗口的位置
+			while (!WndNow->IsTopWindow)
+			{
+				//向上推，直到父窗口
+				Countx += WndNow->x + WndNow->ScrollX;
+				County += WndNow->y + WndNow->ScrollY;
+				WndNow = WndNow->ezParent;
+			}
 			ezInsideWndProc(ezWnd->TopWndExtend->CptMouseWindow, EZWM_LBUTTONDOWN, wParam,
-				MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->px,
-					GET_Y_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->py));
+				MAKELPARAM(LOWORD(lParam) - Countx, HIWORD(lParam) - County));
 			return 0;
 		}
 		ezInsideWndProc(ezWnd, EZWM_LBUTTONDOWN, wParam,
-			MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->ScrollX, GET_Y_LPARAM(lParam) - ezWnd->ScrollY));
+			MAKELPARAM(LOWORD(lParam) - ezWnd->ScrollX, HIWORD(lParam) - ezWnd->ScrollY));
 		return 0;
 
 	}
@@ -1341,13 +1595,24 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	{
 		if (IsEZWindow(ezWnd->TopWndExtend->CptMouseWindow))
 		{
+			//从这个窗口向上滚，找到这个窗口的坐标
+			EZWND WndNow = ezWnd->TopWndExtend->CptMouseWindow;
+
+			int Countx = 0, County = 0;
+			//只需要把这个窗口（不需要全屏BitBlt）,得到相对父窗口的位置
+			while (!WndNow->IsTopWindow)
+			{
+				//向上推，直到父窗口
+				Countx += WndNow->x + WndNow->ScrollX;
+				County += WndNow->y + WndNow->ScrollY;
+				WndNow = WndNow->ezParent;
+			}
 			ezInsideWndProc(ezWnd->TopWndExtend->CptMouseWindow, EZWM_LBUTTONUP, wParam,
-				MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->px,
-					GET_Y_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->py));
+				MAKELPARAM(LOWORD(lParam) - Countx, HIWORD(lParam) - County));
 			return 0;
 		}
 		ezInsideWndProc(ezWnd, EZWM_LBUTTONUP, wParam,
-			MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->ScrollX, GET_Y_LPARAM(lParam) - ezWnd->ScrollY));
+			MAKELPARAM(LOWORD(lParam) - ezWnd->ScrollX, HIWORD(lParam) - ezWnd->ScrollY));
 		return 0;
 	}
 
@@ -1355,13 +1620,24 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	{
 		if (IsEZWindow(ezWnd->TopWndExtend->CptMouseWindow))
 		{
+			//从这个窗口向上滚，找到这个窗口的坐标
+			EZWND WndNow = ezWnd->TopWndExtend->CptMouseWindow;
+
+			int Countx = 0, County = 0;
+			//只需要把这个窗口（不需要全屏BitBlt）,得到相对父窗口的位置
+			while (!WndNow->IsTopWindow)
+			{
+				//向上推，直到父窗口
+				Countx += WndNow->x + WndNow->ScrollX;
+				County += WndNow->y + WndNow->ScrollY;
+				WndNow = WndNow->ezParent;
+			}
 			ezInsideWndProc(ezWnd->TopWndExtend->CptMouseWindow, EZWM_RBUTTONDOWN, wParam,
-				MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->px,
-					GET_Y_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->py));
+				MAKELPARAM(LOWORD(lParam) - Countx, HIWORD(lParam) - County));
 			return 0;
 		}
 		ezInsideWndProc(ezWnd, EZWM_RBUTTONDOWN, wParam,
-			MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->ScrollX, GET_Y_LPARAM(lParam) - ezWnd->ScrollY));
+			MAKELPARAM(LOWORD(lParam) - ezWnd->ScrollX, HIWORD(lParam) - ezWnd->ScrollY));
 		return 0;
 
 	}
@@ -1370,13 +1646,24 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	{
 		if (IsEZWindow(ezWnd->TopWndExtend->CptMouseWindow))
 		{
+			//从这个窗口向上滚，找到这个窗口的坐标
+			EZWND WndNow = ezWnd->TopWndExtend->CptMouseWindow;
+
+			int Countx = 0, County = 0;
+			//只需要把这个窗口（不需要全屏BitBlt）,得到相对父窗口的位置
+			while (!WndNow->IsTopWindow)
+			{
+				//向上推，直到父窗口
+				Countx += WndNow->x + WndNow->ScrollX;
+				County += WndNow->y + WndNow->ScrollY;
+				WndNow = WndNow->ezParent;
+			}
 			ezInsideWndProc(ezWnd->TopWndExtend->CptMouseWindow, EZWM_RBUTTONUP, wParam,
-				MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->px,
-					GET_Y_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->py));
+				MAKELPARAM(LOWORD(lParam) - Countx, HIWORD(lParam) - County));
 			return 0;
 		}
 		ezInsideWndProc(ezWnd, EZWM_RBUTTONUP, wParam,
-			MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->ScrollX, GET_Y_LPARAM(lParam) - ezWnd->ScrollY));
+			MAKELPARAM(LOWORD(lParam) - ezWnd->ScrollX, HIWORD(lParam) - ezWnd->ScrollY));
 		return 0;
 
 	}
@@ -1384,12 +1671,11 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 	case WM_MOUSEMOVE:
 	{
 		//老鼠在跑来跑去。
-		if (!ezWnd->TopWndExtend->MouseOnWnd)
+		if (ezWnd->MouseOn == FALSE)
 		{
 			//刚刚进来
 
 			//可以进行监测了。
-			TRACKMOUSEEVENT tme;
 			tme.cbSize = sizeof(TRACKMOUSEEVENT);
 			tme.dwFlags = TME_LEAVE;
 			tme.dwHoverTime = 0;
@@ -1398,13 +1684,24 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		}
 		if (IsEZWindow(ezWnd->TopWndExtend->CptMouseWindow))
 		{
+			//从这个窗口向上滚，找到这个窗口的坐标
+			EZWND WndNow = ezWnd->TopWndExtend->CptMouseWindow;
+
+			int Countx = 0, County = 0;
+			//只需要把这个窗口（不需要全屏BitBlt）,得到相对父窗口的位置
+			while (!WndNow->IsTopWindow)
+			{
+				//向上推，直到父窗口
+				Countx += WndNow->x + WndNow->ScrollX;
+				County += WndNow->y + WndNow->ScrollY;
+				WndNow = WndNow->ezParent;
+			}
 			ezInsideWndProc(ezWnd->TopWndExtend->CptMouseWindow, EZWM_MOUSEMOVE, wParam,
-				MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->px,
-					GET_Y_LPARAM(lParam) - ezWnd->TopWndExtend->CptMouseWindow->py));
+				MAKELPARAM(LOWORD(lParam) - Countx, HIWORD(lParam) - County));
 			return 0;
 		}
 		ezInsideWndProc(ezWnd, EZWM_MOUSEMOVE, wParam,
-			MAKELPARAM(GET_X_LPARAM(lParam) - ezWnd->ScrollX, GET_Y_LPARAM(lParam) - ezWnd->ScrollY));
+			MAKELPARAM(LOWORD(lParam) - ezWnd->ScrollX, HIWORD(lParam) - ezWnd->ScrollY));
 		return 0;
 
 	}
@@ -1415,17 +1712,22 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		//上面这个不行，因为这个函数还会重复调用ReleaseCapture.
 
 		//把上面这个函数里面的内容拷下来改一改就可以了
+
+
 		if (ezWnd->TopWndExtend->CptMouseWindow)
 		{
 			EZSendMessage(ezWnd->TopWndExtend->CptMouseWindow, EZWM_RELEASEMOUSE, 0, 0);
 			ezWnd->TopWndExtend->CptMouseWindow = NULL;
 
 		}
+
+
 		return 0;
 	}
 
 	case WM_MOUSELEAVE:
 	{
+
 		//呀，老鼠跑了~~~   广播一下，让每个子窗口看看是不是从自己那里溜出去的。
 		//先检查自己。
 		if (ezWnd->TopWndExtend->MouseOnWnd)
@@ -1434,6 +1736,13 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 			EZSendMessage(ezWnd->TopWndExtend->MouseOnWnd, EZWM_MOUSELEAVE, 0, 0);
 			ezWnd->TopWndExtend->MouseOnWnd = NULL;
 		}
+
+
+		//BroadcastProc(ezWnd, SEZWM_MOUSELEAVE, (WPARAM)NULL, (LPARAM)NULL);
+		//EZBroadcastToAllChild(ezWnd, TRUE, SEZWM_MOUSELEAVE, (WPARAM)NULL, (LPARAM)NULL);
+
+		//发送一个消息说明鼠标是整个从窗口出去了.....
+		//EZSendMessage(ezWnd, EZWM_MOUSELEAVE, (WPARAM)1, (LPARAM)NULL);
 		return 0;
 	}
 
@@ -1465,6 +1774,19 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_NCPAINT:
 	{
+		//if (ezWnd->DrawOnNC)
+		//{
+		//	hdc = GetWindowDC(hwnd);//GetDCEx(hwnd, (HRGN)wParam, DCX_WINDOW | DCX_INTERSECTRGN);
+		//	BitBlt(hdc, 0, 0, ezWnd->Width, ezWnd->Height, ezWnd->TopWndExtend->hdcTop, 0,0, SRCCOPY);
+
+		//	ReleaseDC(hwnd, hdc);
+		//	return 0;
+		//}
+		//else
+		//{
+		//	break;
+		//}
+
 		if (!EZSendMessage(ezWnd, EZWM_WINNCDRAW, wParam, lParam))
 		{
 			//为0，默认
@@ -1475,11 +1797,23 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 
 	case WM_PAINT:
 	{
+
 		//重绘区域无效啦！！！
+
+		/*if (ezWnd->DrawOnNC)
+		{
+
+		break;
+		}
+		else
+		{*/
 		hdc = BeginPaint(hwnd, &ps);
+
 
 		//	这里用无效矩形进行了优化
 		BitBlt(hdc, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top, ezWnd->TopWndExtend->hdcTop, ps.rcPaint.left, ps.rcPaint.top, SRCCOPY);
+
+
 		EndPaint(hwnd, &ps);
 
 		//好了，现在有效了。设置一下。
@@ -1506,7 +1840,10 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		{
 			break;
 		}
-		return iRet - 1;
+		else
+		{
+			return iRet - 1;
+		}
 	}
 
 	case WM_ACTIVATE:
@@ -1568,6 +1905,10 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		break;
 	}
 
+	case WM_SETFOCUS:
+		//不需要处理，有窗口接收到单击后会自行处理。
+		return 0;
+
 	case WM_KILLFOCUS:
 		//通知焦点窗口，失去焦点。
 		if (IsEZWindow(ezWnd->TopWndExtend->FocusWindow))
@@ -1578,42 +1919,30 @@ LRESULT CALLBACK EZParentWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 			ezWnd->ezRootParent->TopWndExtend->FocusWindow = NULL;
 
 			EZSendMessage(Buf, EZWM_KILLFOCUS, 0, 0);
+
 		}
 		return 0;
 
 	case WM_CHAR:
 	case WM_KEYDOWN:
 	case WM_KEYUP:
-	{
-		EZWND MsgToSend = NULL;
 		if (ezWnd->TopWndExtend->FocusWindow != NULL)
-		{
-			MsgToSend = ezWnd->TopWndExtend->FocusWindow;
-		}
-		if (ezWnd->TopWndExtend->CptKbdWindow != NULL)
-		{
-			MsgToSend = ezWnd->TopWndExtend->CptKbdWindow;
-		}
-
-		if (MsgToSend)
 		{
 			switch (message)
 			{
 			case WM_CHAR:
-				EZSendMessage(MsgToSend, EZWM_CHAR, wParam, lParam);
+				EZSendMessage(ezWnd->TopWndExtend->FocusWindow, EZWM_CHAR, wParam, lParam);
 				return 0;
 			case WM_KEYDOWN:
-				EZSendMessage(MsgToSend, EZWM_KEYDOWN, wParam, lParam);
+				EZSendMessage(ezWnd->TopWndExtend->FocusWindow, EZWM_KEYDOWN, wParam, lParam);
 				return 0;
 			case WM_KEYUP:
-				EZSendMessage(MsgToSend, EZWM_KEYUP, wParam, lParam);
+				EZSendMessage(ezWnd->TopWndExtend->FocusWindow, EZWM_KEYUP, wParam, lParam);
 				return 0;
 			}
+
 		}
-
-
-	}
-	return 0;
+		return 0;
 
 	}
 
@@ -1657,11 +1986,41 @@ int ezInsideWndProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lParam)
 			if ((ezChildLast->MouseMsgRecv != 2) && PtInEZWnd(ezChildLast, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)))
 			{
 				//可以了，在这个窗口
-				if (ezInsideWndProc(ezChildLast, message, wParam, MAKELPARAM(GET_X_LPARAM(lParam) - ezChildLast->x - ezChildLast->ScrollX, GET_Y_LPARAM(lParam) - ezChildLast->y - ezChildLast->ScrollY)) != TRANSPARENT)
+				if (ezInsideWndProc(ezChildLast, message, wParam, MAKELPARAM(GET_X_LPARAM(lParam) - ezChildLast->x - ezChildLast->ScrollX, GET_Y_LPARAM(lParam) - ezChildLast->y - ezChildLast->ScrollY)) == TRANSPARENT)
 				{
-					return 0;
+					//好吧，子窗口说他是透明的》。。。。。
+
+					//先发送鼠标到来
+					//更改这里的时候，别忘了把下面相同的一起改了~~~~~
+					if (ezWnd->MouseOn == FALSE && message == EZWM_MOUSEMOVE)
+					{
+						if (ezWnd->ezRootParent->TopWndExtend->MouseOnWnd)
+						{
+							ezWnd->ezRootParent->TopWndExtend->MouseOnWnd->MouseOn = FALSE;//标记一下。
+							EZSendMessage(ezWnd->ezRootParent->TopWndExtend->MouseOnWnd, EZWM_MOUSELEAVE, 0, 0);
+						}
+						ezWnd->ezRootParent->TopWndExtend->MouseOnWnd = ezWnd;
+
+						ezWnd->MouseOn = TRUE;//标记一下。
+						EZSendMessage(ezWnd, EZWM_MOUSECOME, (WPARAM)NULL, (LPARAM)NULL);//老鼠来了
+					}
+					else if (ezWnd->FocusState == 0 && message == EZWM_LBUTTONDOWN)//你没焦点，消息是左键
+					{
+						if (IsEZWindow(EZGetTopParentWindow(ezWnd)->TopWndExtend->FocusWindow))
+						{
+							EZGetTopParentWindow(ezWnd)->TopWndExtend->FocusWindow->FocusState = 0;//你没焦点了。
+							EZSendMessage(EZGetTopParentWindow(ezWnd)->TopWndExtend->FocusWindow, EZWM_KILLFOCUS, NULL, NULL);
+
+						}
+						ezWnd->FocusState = 1;
+
+						EZGetTopParentWindow(ezWnd)->TopWndExtend->FocusWindow = ezWnd;
+						EZSendMessage(ezWnd, EZWM_SETFOCUS, (WPARAM)NULL, (LPARAM)NULL);//你有焦点了！
+					}
+
+					return EZSendMessage(ezWnd, message, wParam, lParam);
 				}
-				//好吧，子窗口说他是透明的》。。。。。继续看会不会落在其他子窗口内
+				return 0;
 			}
 
 			ezChildLast = ezChildLast->LastEZWnd;
@@ -1766,6 +2125,8 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 
 	switch (Param)
 	{
+
+
 	case SEZWM_COPYDC:
 	{
 		EZSendMessage(ezWnd, EZWM_COVERCHILD, ezWnd->hdc, 0);
@@ -1796,74 +2157,112 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 
 		int X_PSX;
 		int Y_PSY;
+
+		RECT rectParent, rectPaint, rectIntersect;
+		
 		//判断是否是顶层窗口
-		if (ezWnd->IsTopWindow)
+		if (ezWnd->bOpaque == FALSE)
 		{
-			//画白布一块
-			PatBlt(ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, WHITENESS);
-			//PatBlt(ezWnd->hdcWC, 0, 0, ezWnd->Width, ezWnd->Height, WHITENESS);
-		}
-		else
-		{
-			X_PSX = ezWnd->x + ezWnd->ezParent->ScrollX;
-			Y_PSY = ezWnd->y + ezWnd->ezParent->ScrollY;
-			//复制上级窗口的相应部分。
-			BitBlt(ezWnd->hdc, 0, 0,
-				max(ezWnd->Width, ezWnd->ezParent->Width), max(ezWnd->Height, ezWnd->ezParent->Height),
-				ezWnd->ezParent->hdc,
-				X_PSX,
-				Y_PSY,
-				SRCCOPY);
-		}
-
-		if (ezWnd->Transparent)
-		{
-			EZSendMessage(ezWnd, EZWM_TRANSDRAW, (WPARAM)(ezWnd->hdc), (LPARAM)NULL);
-
-
-			if (ezWnd->Transparent != 255)//如果不是255，混合。是255，那么，别混合了！
+			if (ezWnd->IsTopWindow)
 			{
-				BLENDFUNCTION bf = { 0 };
-				/*bf.AlphaFormat = 0;
-				bf.BlendFlags = 0;
-				bf.BlendOp = AC_SRC_OVER;*/ // 这三个字段全是 0
-				bf.SourceConstantAlpha = 255 - ezWnd->Transparent;
+				//画白布一块
+				PatBlt(ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, WHITENESS);
+				//PatBlt(ezWnd->hdcWC, 0, 0, ezWnd->Width, ezWnd->Height, WHITENESS);
+			}
+			else
+			{
+				X_PSX = ezWnd->x + ezWnd->ezParent->ScrollX;
+				Y_PSY = ezWnd->y + ezWnd->ezParent->ScrollY;
+				//复制上级窗口的相应部分。
 
-				if (!ezWnd->IsTopWindow)
-				{
-					//这个蠢货函数，不允许超出边界。我们只能手动确保没有超出边界。
-					int ab_Width, ab_Height;
-					ab_Width = min((ezWnd->Width), (ezWnd->ezParent->Width - (X_PSX)));
-					ab_Height = min((ezWnd->Height), (ezWnd->ezParent->Height - (Y_PSY)));
 
-					AlphaBlend(ezWnd->hdc,
-						0,
-						0,
-						ab_Width,
-						ab_Height,
-						ezWnd->ezParent->hdc,
-						max(X_PSX, 0),
-						max(Y_PSY, 0),
-						ab_Width,
-						ab_Height,
-						bf);
-				}
-				else
-				{
-					//白色
-					HDC hParentdc;
-					HDC hdcWhite = GetMemDC(hParentdc = GetDC(ezWnd->hParent), ezWnd->Width, ezWnd->Height);
+				SetRect(&rectParent, 0, 0, ezWnd->ezParent->Width, ezWnd->ezParent->Height);
+				SetRect(&rectPaint, X_PSX, Y_PSY, X_PSX + ezWnd->Width, Y_PSY + ezWnd->Height);
 
-					PatBlt(hdcWhite, 0, 0, ezWnd->Width, ezWnd->Height, WHITENESS);
+				IntersectRect(&rectIntersect, &rectPaint, &rectParent);
 
-					AlphaBlend(ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, hdcWhite, 0, 0, ezWnd->Width, ezWnd->Height, bf);
+				BitBlt(ezWnd->hdc,
+					rectIntersect.left - X_PSX,
+					rectIntersect.top - Y_PSY,
+					rectIntersect.right - rectIntersect.left,
+					rectIntersect.bottom - rectIntersect.top,
+					ezWnd->ezParent->hdc,
+					rectIntersect.left,
+					rectIntersect.top,
+					SRCCOPY);
 
-					DeleteMemDC(hdcWhite);
-					ReleaseDC(ezWnd->hParent, hParentdc);
-				}
+				/*BitBlt(ezWnd->hdc, 0, 0,
+					max(ezWnd->Width, ezWnd->ezParent->Width - ezWnd->x), max(ezWnd->Height, ezWnd->ezParent->Height - ezWnd->y),
+					ezWnd->ezParent->hdc,
+					X_PSX,
+					Y_PSY,
+					SRCCOPY);*/
 			}
 		}
 
+
+		EZSendMessage(ezWnd, EZWM_TRANSDRAW, (WPARAM)(ezWnd->hdc), (LPARAM)NULL);
+
+
+		if (ezWnd->Transparent != 255)//如果不是255，混合。是255，那么，别混合了！
+		{
+			BLENDFUNCTION bf = { 0 };
+			/*bf.AlphaFormat = 0;
+			bf.BlendFlags = 0;
+			bf.BlendOp = AC_SRC_OVER;*/ // 这三个字段全是 0
+			bf.SourceConstantAlpha = 255 - ezWnd->Transparent;
+
+			if (!ezWnd->IsTopWindow)
+			{
+				//RECT rectParent, rectPaint, rectIntersect;
+				
+				//IntersectRect(&rectIntersect, &rectPaint, &rectParent);
+
+				AlphaBlend(ezWnd->hdc,
+					rectIntersect.left - X_PSX,
+					rectIntersect.top - Y_PSY,
+					rectIntersect.right - rectIntersect.left,
+					rectIntersect.bottom - rectIntersect.top,
+					ezWnd->ezParent->hdc,
+					rectIntersect.left,
+					rectIntersect.top,
+					rectIntersect.right - rectIntersect.left,
+					rectIntersect.bottom - rectIntersect.top,
+					bf);
+				//这个蠢货函数，不允许超出边界。我们只能手动确保没有超出边界。
+				/*int ab_Width, ab_Height;
+				ab_Width = min((ezWnd->Width), (ezWnd->ezParent->Width - (X_PSX)));
+				ab_Height = min((ezWnd->Height), (ezWnd->ezParent->Height - (Y_PSY)));
+
+
+				
+				AlphaBlend(ezWnd->hdc,
+					max(0, -X_PSX),
+					max(0, -Y_PSY),
+					ab_Width,
+					ab_Height,
+					ezWnd->ezParent->hdc,
+					max(X_PSX, 0),
+					max(Y_PSY, 0),
+					ab_Width,
+					ab_Height,
+					bf);*/
+
+			}
+			else
+			{
+				//白色
+				//HDC hParentdc;
+				HDC hdcWhite = GetMemDC(ezWnd->hdc, ezWnd->Width, ezWnd->Height);
+
+				PatBlt(hdcWhite, 0, 0, ezWnd->Width, ezWnd->Height, WHITENESS);
+
+				AlphaBlend(ezWnd->hdc, 0, 0, ezWnd->Width, ezWnd->Height, hdcWhite, 0, 0, ezWnd->Width, ezWnd->Height, bf);
+
+				DeleteMemDC(hdcWhite);
+				//ReleaseDC(ezWnd->hParent, hParentdc);
+			}
+		}
 
 		//混合绘制现在以不透明的方式在DC上，现在从父窗口复制以255-透明度复制到hdcWC
 
@@ -1888,6 +2287,16 @@ BOOL BroadcastProc(EZWND ezWnd, int Param, WPARAM wP, LPARAM lP)
 
 	}
 }
+
+//int EZSendMessage(EZWND ezWnd, int message, WPARAM wP, LPARAM lP)
+//{
+//	//if (IsEZWindow(ezWnd)/* && IsEZWindow((EZWND)(ezWnd->ezWndProc))*/)
+//	{
+//		//IsEZWindow函数可以通用的检查句柄是否有效
+//		return ezWnd->ezWndProc(ezWnd, message, wP, lP);
+//
+//	}
+//}
 
 int EZWndMessageLoop()
 {
@@ -1923,7 +2332,7 @@ HDC GetMemDC(HDC hdc, int cx, int cy)
 	HBITMAP hBitmap = CreateCompatibleBitmap(hdc, cx, cy);
 	HDC hdcMem = CreateCompatibleDC(hdc);
 	SelectObject(hdcMem, hBitmap);
-	//DeleteObject(hBitmap);
+	DeleteObject(hBitmap);
 	return hdcMem;
 }
 
@@ -2716,6 +3125,8 @@ EZWNDPROC EZStyle_DefaultProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lP
 			ezWnd->Extend->BackGroundColor = (COLORREF)wParam;
 			ezWnd->Extend->ForeGroundColor = (COLORREF)lParam;
 
+			EZRepaint(ezWnd, NULL);
+
 		}
 	}
 	return 0;
@@ -2946,29 +3357,13 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 		TEXTMETRIC tm;
 		GetTextMetrics(ezWnd->hdc, &tm);
 
-		TCHAR* PasswordText = 0;
-		BOOL IsPasswordEdit = (ezWnd->ezParent->ezParent->EZStyle & EZES_PASSWORD) != 0;
-		if (IsPasswordEdit)
-		{
-			PasswordText = malloc(sizeof(TCHAR) * (MAX_TEXT + 2));
-			for (int i = 0; i < MAX_TEXT; i++)
-			{
-				PasswordText[i] = L'●';
-			}
-
-			PasswordText[MAX_TEXT] = 0;
-			PasswordText[MAX_TEXT + 1] = 0;
-
-		}
-
 		for (iMove = 0; iMove <= iMaxLen;)
 		{
 
 			if (Text[iMove] == '\0')
 			{
 				//绘制当前行，并退出。
-
-				GetTextExtentPoint32(ezWnd->hdc, IsPasswordEdit ? PasswordText : (Text + LastMove), iMove - LastMove, &size);
+				GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
 				xCount = max(xCount, size.cx);
 				LineCount++;
@@ -2978,7 +3373,7 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 			else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
 			{
 				//windows换行标记，绘制当前行，重新开始。
-				GetTextExtentPoint32(ezWnd->hdc, IsPasswordEdit ? PasswordText : (Text + LastMove), iMove - LastMove, &size);
+				GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
 				xCount = max(xCount, size.cx);
 				LineCount++;
@@ -2990,7 +3385,7 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 			else if (Text[iMove] == '\n')
 			{
 				//Linux换行标记，绘制当前行。
-				GetTextExtentPoint32(ezWnd->hdc, IsPasswordEdit ? PasswordText : (Text + LastMove), iMove - LastMove, &size);
+				GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
 				yCount += tm.tmHeight;
 				xCount = max(xCount, size.cx);
 				LineCount++;
@@ -3000,11 +3395,6 @@ EZWNDPROC EZStyle_EditProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPara
 			iMove++;//放在for里面我怕我搞混....放到这里就不会了
 		}
 
-
-		if (IsPasswordEdit)
-		{
-			free(PasswordText);
-		}
 		//设置滚动		MoveEZWindow(ezWnd->Extend->hExtend[3], 0, 0, max(ezWnd->Extend->hExtend[0]->Width, xCount), max(ezWnd->Extend->hExtend[0]->Height, yCount), 0);
 
 
@@ -3097,270 +3487,216 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 	int iMove, LastMove;
 	int iMaxLen;
 	int xCount, yCount;
-	int CaretX = 0, CaretY = 0;
+	int CaretX, CaretY;
 	SIZE size;
 	TCHAR* Text;
 	TEXTMETRIC tm;
 	TCHAR TextBuffer[MAX_TEXT];
-
-	BOOL IsPasswordEdit;
-	TCHAR* PasswordText = 0;
 	switch (message)
 	{
 	case EZWM_CREATE:
 		return 0;
 	case EZWM_LBUTTONDOWN:
-		__try
+	{
+
+		int LineCount;
+		Text = ezWnd->ezParent->ezParent->Extend->Title;
+		iMaxLen = ezWnd->ezParent->ezParent->Extend->TitleLen;
+
+		LineCount = 0;
+		LastMove = 0;
+		xCount = yCount = 0;
+
+
+		BOOL IsFounded;
+		IsFounded = FALSE;
+		if (ezWnd->ezParent->ezParent->Extend->hFont)
 		{
+			SelectObject(ezWnd->hdc, ezWnd->ezParent->ezParent->Extend->hFont);
+		}
+		GetTextMetrics(ezWnd->hdc, &tm);
 
-			int LineCount;
-
-			Text = ezWnd->ezParent->ezParent->Extend->Title;
-
-			IsPasswordEdit = (ezWnd->ezParent->ezParent->EZStyle & EZES_PASSWORD) != 0;
-
-			iMaxLen = ezWnd->ezParent->ezParent->Extend->TitleLen;
-			if (IsPasswordEdit)
+		for (iMove = 0; iMove <= iMaxLen;)
+		{
+			if (Text[iMove] == '\0')
 			{
-				PasswordText = malloc(sizeof(TCHAR) * (iMaxLen + 2));
-				for (int i = 0; i < iMaxLen; i++)
+				//当前行，并退出。
+				//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
+				yCount += tm.tmHeight;
+				if (yCount >= GET_Y_LPARAM(lParam))
 				{
-					PasswordText[i] = L'●';
-				}
-
-				PasswordText[iMaxLen] = 0;
-				PasswordText[iMaxLen + 1] = 0;
-				Text = PasswordText;
-			}
-
-
-
-			LineCount = 0;
-			LastMove = 0;
-			xCount = yCount = 0;
-
-
-			BOOL IsFounded;
-			IsFounded = FALSE;
-			if (ezWnd->ezParent->ezParent->Extend->hFont)
-			{
-				SelectObject(ezWnd->hdc, ezWnd->ezParent->ezParent->Extend->hFont);
-			}
-			GetTextMetrics(ezWnd->hdc, &tm);
-
-			for (iMove = 0; iMove <= iMaxLen;)
-			{
-				if (Text[iMove] == '\0')
-				{
-					//当前行，并退出。
-					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
-					yCount += tm.tmHeight;
-					if (yCount >= GET_Y_LPARAM(lParam))
-					{
-						IsFounded = TRUE;
-						yCount -= tm.tmHeight;
-						break;
-					}
+					IsFounded = TRUE;
+					yCount -= tm.tmHeight;
 					break;
 				}
-				else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
+				break;
+			}
+			else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
+			{
+				//windows换行标记，重新开始。
+				//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
+				yCount += tm.tmHeight;
+				if (yCount >= GET_Y_LPARAM(lParam))
 				{
-					//windows换行标记，重新开始。
-					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
-					yCount += tm.tmHeight;
-					if (yCount >= GET_Y_LPARAM(lParam))
-					{
-						IsFounded = TRUE;
-						yCount -= tm.tmHeight;
-						break;
-					}
-					LineCount++;
-					LastMove = iMove + 2;
-					iMove++;
+					IsFounded = TRUE;
+					yCount -= tm.tmHeight;
+					break;
+				}
+				LineCount++;
+				LastMove = iMove + 2;
+				iMove++;
+
+			}
+			else if (Text[iMove] == '\n')
+			{
+				//Linux换行标记
+				//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
+				yCount += tm.tmHeight;
+				if (yCount >= GET_Y_LPARAM(lParam))
+				{
+					IsFounded = TRUE;
+					yCount -= tm.tmHeight;
+					break;
 
 				}
-				else if (Text[iMove] == '\n')
-				{
-					//Linux换行标记
-					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
-					yCount += tm.tmHeight;
-					if (yCount >= GET_Y_LPARAM(lParam))
-					{
-						IsFounded = TRUE;
-						yCount -= tm.tmHeight;
-						break;
+				LineCount++;
+				LastMove = iMove + 1;
+			}
+			iMove++;//放在for里面我怕我搞混....放到这里就不会了
+		}
 
-					}
-					LineCount++;
-					LastMove = iMove + 1;
+		if (IsFounded)
+		{
+			//就在当前行！
+
+			CaretY = yCount;
+			IsFounded = FALSE;
+			int LastLen, CurrLen;
+			LastLen = CurrLen = 0;
+			for (iMove = LastMove; iMove <= iMaxLen;)
+			{
+
+				if ((Text[iMove] == '\0') || (Text[iMove] == '\r' && Text[iMove + 1] == '\n') || (Text[iMove] == '\n'))
+				{
+					//没找到，在行末尾
+					ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
+					break;
 				}
+
+				LastLen = CurrLen;
+				//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
+				int CharWidth;
+				GetCharWidth32(ezWnd->hdc, Text[iMove], Text[iMove], &CharWidth);
+				//CurrLen = size.cx;
+				CurrLen += CharWidth;
+
+
+				//得到旧位置和新位置的平均位置
+				if (GET_X_LPARAM(lParam) <= (LastLen + CurrLen) / 2)
+				{
+					//插入符号在这个字符往前推一个,也就是在LastCurr的位置
+					IsFounded = TRUE;
+					ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
+					break;
+
+				}
+
 				iMove++;//放在for里面我怕我搞混....放到这里就不会了
 			}
 
 			if (IsFounded)
 			{
-				//就在当前行！
-
-				CaretY = yCount;
-				IsFounded = FALSE;
-				int LastLen, CurrLen;
-				LastLen = CurrLen = 0;
-				for (iMove = LastMove; iMove <= iMaxLen;)
-				{
-
-					if ((Text[iMove] == '\0') || (Text[iMove] == '\r' && Text[iMove + 1] == '\n') || (Text[iMove] == '\n'))
-					{
-						//没找到，在行末尾
-						ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
-						break;
-					}
-
-					LastLen = CurrLen;
-					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
-					int CharWidth;
-					GetCharWidth32(ezWnd->hdc, Text[iMove], Text[iMove], &CharWidth);
-					//CurrLen = size.cx;
-					CurrLen += CharWidth;
-
-
-					//得到旧位置和新位置的平均位置
-					if (GET_X_LPARAM(lParam) <= (LastLen + CurrLen) / 2)
-					{
-						//插入符号在这个字符往前推一个,也就是在LastCurr的位置
-						IsFounded = TRUE;
-						ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
-						break;
-
-					}
-
-					iMove++;//放在for里面我怕我搞混....放到这里就不会了
-				}
-
-				if (IsFounded)
-				{
-					CaretX = LastLen;
-				}
-				else
-				{
-					CaretX = CurrLen;
-				}
+				CaretX = LastLen;
 			}
 			else
 			{
-				//文档末尾
-				CaretY = yCount;
+				CaretX = CurrLen;
 			}
-
-			ezWnd->ezParent->ezParent->Extend->iExtend[0] = CaretX;
-
-			ezWnd->ezParent->ezParent->Extend->iExtend[1] = CaretY;
-
-			EZHideCaret(ezWnd);
-			EZSetCaretPos(ezWnd, ezWnd->ezParent->ezParent->Extend->iExtend[0], ezWnd->ezParent->ezParent->Extend->iExtend[1]);
-			EZRepaint(ezWnd->ezParent->ezParent, NULL);
-			EZShowCaret(ezWnd);
-
-
 		}
-		__finally
+		else
 		{
-			free(PasswordText);
+			//文档末尾
+			CaretY = yCount;
 		}
-		return 0;
+
+		ezWnd->ezParent->ezParent->Extend->iExtend[0] = CaretX;
+
+		ezWnd->ezParent->ezParent->Extend->iExtend[1] = CaretY;
+
+		EZHideCaret(ezWnd);
+		EZSetCaretPos(ezWnd, ezWnd->ezParent->ezParent->Extend->iExtend[0], ezWnd->ezParent->ezParent->Extend->iExtend[1]);
+		EZRepaint(ezWnd->ezParent->ezParent, NULL);
+		EZShowCaret(ezWnd);
+	}
+	return 0;
 	case EZWM_DRAW:
-		__try
+	{
+		EZHideCaret(ezWnd);
+		//开始绘制，循环检查，找到\r\n，或\n，掐行，输出。
+
+		Text = ezWnd->ezParent->ezParent->Extend->Title;
+		if (!Text)
 		{
-			EZHideCaret(ezWnd);
-			//开始绘制，循环检查，找到\r\n，或\n，掐行，输出。
-
-			Text = ezWnd->ezParent->ezParent->Extend->Title;
-			if (!Text)
-			{
-				return 0;
-			}
-			BOOL IsPasswordEdit = (ezWnd->ezParent->ezParent->EZStyle & EZES_PASSWORD) != 0;
-
-
-			iMaxLen = ezWnd->ezParent->ezParent->Extend->TitleLen;
-			if (IsPasswordEdit)
-			{
-				PasswordText = malloc(sizeof(TCHAR) * (iMaxLen + 2));
-				for (int i = 0; i < iMaxLen; i++)
-				{
-					PasswordText[i] = L'●';
-				}
-
-				PasswordText[iMaxLen] = 0;
-				PasswordText[iMaxLen + 1] = 0;
-
-			}
-
-			LastMove = 0;
-			xCount = yCount = 0;
-
-			if (ezWnd->ezParent->ezParent->Extend->hFont)
-			{
-				SelectObject(wParam, ezWnd->ezParent->ezParent->Extend->hFont);
-			}
-			SetBkMode(wParam, TRANSPARENT);
-			SetTextColor(wParam, ezWnd->ezParent->ezParent->Extend->ForeGroundColor);
-			GetTextMetrics(wParam, &tm);
-
-			for (iMove = 0; iMove <= iMaxLen;)
-			{
-
-				if (Text[iMove] == '\0')
-				{
-					//绘制当前行，并退出。
-					TextOut(wParam, 0, yCount, IsPasswordEdit ? PasswordText : (Text + LastMove), iMove - LastMove);
-
-					//GetTextExtentPoint32(wParam, Text + LastMove, iMove - LastMove, &size);
-
-					yCount += tm.tmHeight;
-					//xCount = max(xCount, size.cx);
-
-
-
-					break;
-				}
-				else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
-				{
-					//windows换行标记，绘制当前行，重新开始。
-					TextOut(wParam, 0, yCount, IsPasswordEdit ? PasswordText : (Text + LastMove), iMove - LastMove);
-
-					//GetTextExtentPoint32(wParam, Text + LastMove, iMove - LastMove, &size);
-					yCount += tm.tmHeight;
-					//xCount = max(xCount, size.cx);
-
-
-					LastMove = iMove + 2;
-					iMove++;
-
-				}
-				else if (Text[iMove] == '\n')
-				{
-					//Linux换行标记，绘制当前行。
-					TextOut(wParam, 0, yCount, IsPasswordEdit ? PasswordText : (Text + LastMove), iMove - LastMove);
-
-					//GetTextExtentPoint32(wParam, Text + LastMove, iMove - LastMove, &size);
-					yCount += tm.tmHeight;
-					//xCount = max(xCount, size.cx);
-
-
-					LastMove = iMove + 1;
-				}
-				iMove++;//放在for里面我怕我搞混....放到这里就不会了
-			}
-
-
-			EZShowCaret(ezWnd);
+			return 0;
 		}
-		__finally
+		iMaxLen = ezWnd->ezParent->ezParent->Extend->TitleLen;
+		LastMove = 0;
+		xCount = yCount = 0;
+
+		if (ezWnd->ezParent->ezParent->Extend->hFont)
 		{
-			free(PasswordText);
+			SelectObject(wParam, ezWnd->ezParent->ezParent->Extend->hFont);
 		}
-		//SetPixel(wParam, ezWnd->ezParent->ezParent->Extend->iExtend[0], ezWnd->ezParent->ezParent->Extend->iExtend[1], RGB(255, 0, 0));
-		return 0;
+		SetBkMode(wParam, TRANSPARENT);
+		SetTextColor(wParam, ezWnd->ezParent->ezParent->Extend->ForeGroundColor);
+		GetTextMetrics(wParam, &tm);
+		for (iMove = 0; iMove <= iMaxLen;)
+		{
+
+			if (Text[iMove] == '\0')
+			{
+				//绘制当前行，并退出。
+				TextOut(wParam, 0, yCount, Text + LastMove, iMove - LastMove);
+				//GetTextExtentPoint32(wParam, Text + LastMove, iMove - LastMove, &size);
+
+				yCount += tm.tmHeight;
+				//xCount = max(xCount, size.cx);
+
+
+
+				break;
+			}
+			else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
+			{
+				//windows换行标记，绘制当前行，重新开始。
+				TextOut(wParam, 0, yCount, Text + LastMove, iMove - LastMove);
+				//GetTextExtentPoint32(wParam, Text + LastMove, iMove - LastMove, &size);
+				yCount += tm.tmHeight;
+				//xCount = max(xCount, size.cx);
+
+
+				LastMove = iMove + 2;
+				iMove++;
+
+			}
+			else if (Text[iMove] == '\n')
+			{
+				//Linux换行标记，绘制当前行。
+				TextOut(wParam, 0, yCount, Text + LastMove, iMove - LastMove);
+				//GetTextExtentPoint32(wParam, Text + LastMove, iMove - LastMove, &size);
+				yCount += tm.tmHeight;
+				//xCount = max(xCount, size.cx);
+
+
+				LastMove = iMove + 1;
+			}
+			iMove++;//放在for里面我怕我搞混....放到这里就不会了
+		}
+
+	}
+	EZShowCaret(ezWnd);
+	//SetPixel(wParam, ezWnd->ezParent->ezParent->Extend->iExtend[0], ezWnd->ezParent->ezParent->Extend->iExtend[1], RGB(255, 0, 0));
+	return 0;
 
 	case EZWM_CHAR:
 
@@ -3474,311 +3810,109 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 	case EZWM_KEYDOWN:
 
 
-		__try
+		Text = ezWnd->ezParent->ezParent->Extend->Title;
+		iMaxLen = ezWnd->ezParent->ezParent->Extend->TitleLen;
+		LastMove = 0;
+		xCount = yCount = 0;
+		if (ezWnd->ezParent->ezParent->Extend->hFont)
 		{
-			Text = ezWnd->ezParent->ezParent->Extend->Title;
-			BOOL IsPasswordEdit = (ezWnd->ezParent->ezParent->EZStyle & EZES_PASSWORD) != 0;
+			SelectObject(ezWnd->hdc, ezWnd->ezParent->ezParent->Extend->hFont);
+		}
 
-			iMaxLen = ezWnd->ezParent->ezParent->Extend->TitleLen;
-			if (IsPasswordEdit)
+		GetTextMetrics(ezWnd->hdc, &tm);
+
+		if (wParam == 37 || wParam == 39)
+		{
+			if (wParam == 37)
 			{
-				PasswordText = malloc(sizeof(TCHAR) * (iMaxLen + 2));
-				for (int i = 0; i < iMaxLen; i++)
+				//左
+				//看看前面是不到头了，或是 '\n' 或 "\r\n"
+				if (ezWnd->ezParent->ezParent->Extend->iExtend[2] == 0)
 				{
-					PasswordText[i] = L'●';
+					//别动了，到头了，不需要任何操作
+					return 0;
 				}
 
-				PasswordText[iMaxLen] = 0;
-				PasswordText[iMaxLen + 1] = 0;
-				Text = PasswordText;
+				//是不是换行？
+				if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2] - 1] == '\n')
+				{
+					//是哪种换行？
+					if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2] - 2] == '\r')
+					{
+						ezWnd->ezParent->ezParent->Extend->iExtend[2]--;//额外-1
+					}
+				}
+				//无论是不是换行，都要-1.
+				ezWnd->ezParent->ezParent->Extend->iExtend[2]--;
+			}
+			else if (wParam == 39)
+			{
+				//右
+
+				//看看后面是不是到尾了，或是'\n' 或 "\r\n"
+				if (ezWnd->ezParent->ezParent->Extend->iExtend[2] == ezWnd->ezParent->ezParent->Extend->TitleLen)
+				{
+					//别动了，到尾了，不需要任何操作
+					return 0;
+				}
+				//是不是换行？
+				if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2]] == '\r')
+				{
+					if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2] + 1] == '\n')
+					{
+						ezWnd->ezParent->ezParent->Extend->iExtend[2]++;//额外+1
+					}
+				}
+				ezWnd->ezParent->ezParent->Extend->iExtend[2]++;
 			}
 
-
-			LastMove = 0;
-			xCount = yCount = 0;
-			if (ezWnd->ezParent->ezParent->Extend->hFont)
+			for (iMove = 0; iMove <= iMaxLen;)
 			{
-				SelectObject(ezWnd->hdc, ezWnd->ezParent->ezParent->Extend->hFont);
+				if (iMove == ezWnd->ezParent->ezParent->Extend->iExtend[2])
+				{
+
+					GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
+					//yCount += size.cy;
+
+					break;
+				}
+				if (Text[iMove] == '\0')
+				{
+					//绘制当前行，并退出。
+					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
+					yCount += tm.tmHeight;
+
+
+					break;
+				}
+				else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
+				{
+					//windows换行标记，绘制当前行，重新开始。
+					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
+					yCount += tm.tmHeight;
+
+					LastMove = iMove + 2;
+					iMove++;
+
+				}
+				else if (Text[iMove] == '\n')
+				{
+					//Linux换行标记，绘制当前行。
+					//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
+
+					LastMove = iMove + 1;
+					yCount += tm.tmHeight;
+				}
+				iMove++;//放在for里面我怕我搞混....放到这里就不会了
 			}
 
-			GetTextMetrics(ezWnd->hdc, &tm);
-
-			if (wParam == 37 || wParam == 39)
+			//if (ezWnd->FocusState == 1)
 			{
-				if (wParam == 37)
-				{
-					//左
-					//看看前面是不到头了，或是 '\n' 或 "\r\n"
-					if (ezWnd->ezParent->ezParent->Extend->iExtend[2] == 0)
-					{
-						//别动了，到头了，不需要任何操作
-						break;
-					}
-
-					//是不是换行？
-					if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2] - 1] == '\n')
-					{
-						//是哪种换行？
-						if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2] - 2] == '\r')
-						{
-							ezWnd->ezParent->ezParent->Extend->iExtend[2]--;//额外-1
-						}
-					}
-					//无论是不是换行，都要-1.
-					ezWnd->ezParent->ezParent->Extend->iExtend[2]--;
-				}
-				else if (wParam == 39)
-				{
-					//右
-
-					//看看后面是不是到尾了，或是'\n' 或 "\r\n"
-					if (ezWnd->ezParent->ezParent->Extend->iExtend[2] == ezWnd->ezParent->ezParent->Extend->TitleLen)
-					{
-						//别动了，到尾了，不需要任何操作
-						break;
-					}
-					//是不是换行？
-					if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2]] == '\r')
-					{
-						if (Text[ezWnd->ezParent->ezParent->Extend->iExtend[2] + 1] == '\n')
-						{
-							ezWnd->ezParent->ezParent->Extend->iExtend[2]++;//额外+1
-						}
-					}
-					ezWnd->ezParent->ezParent->Extend->iExtend[2]++;
-				}
-
-				for (iMove = 0; iMove <= iMaxLen;)
-				{
-					if (iMove == ezWnd->ezParent->ezParent->Extend->iExtend[2])
-					{
-
-						GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
-						//yCount += size.cy;
-
-						break;
-					}
-					if (Text[iMove] == '\0')
-					{
-						//绘制当前行，并退出。
-						//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
-						yCount += tm.tmHeight;
+				ezWnd->ezParent->ezParent->Extend->iExtend[0] = size.cx;
+				ezWnd->ezParent->ezParent->Extend->iExtend[1] = yCount;
 
 
-						break;
-					}
-					else if (Text[iMove] == '\r' && Text[iMove + 1] == '\n')
-					{
-						//windows换行标记，绘制当前行，重新开始。
-						//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
-						yCount += tm.tmHeight;
-
-						LastMove = iMove + 2;
-						iMove++;
-
-					}
-					else if (Text[iMove] == '\n')
-					{
-						//Linux换行标记，绘制当前行。
-						//GetTextExtentPoint32(ezWnd->hdc, Text + LastMove, iMove - LastMove, &size);
-
-						LastMove = iMove + 1;
-						yCount += tm.tmHeight;
-					}
-					iMove++;//放在for里面我怕我搞混....放到这里就不会了
-				}
-
-				//if (ezWnd->FocusState == 1)
-				{
-					ezWnd->ezParent->ezParent->Extend->iExtend[0] = size.cx;
-					ezWnd->ezParent->ezParent->Extend->iExtend[1] = yCount;
-
-
-					EZHideCaret(ezWnd);
-
-					if (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX < 0)
-					{
-						ezWnd->ezParent->ScrollX -= (ezWnd->ezParent->ezParent->Extend->iExtend[0]);
-					}
-					if (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY < 0)
-					{
-						ezWnd->ezParent->ScrollY -= (ezWnd->ezParent->ezParent->Extend->iExtend[1]);
-					}
-
-					if ((ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX > ezWnd->ezParent->Width) && wParam == 39)
-					{
-						ezWnd->ezParent->ScrollX -= (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX - ezWnd->ezParent->Width);
-						EZSendMessage(ezWnd->ezParent->ezParent->Extend->hExtend[2],
-							EZWM_SETSCROLLPOS,
-							ezWnd->ezParent->ezParent->Extend->hExtend[2]->Extend->iExtend[1] - (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX - ezWnd->ezParent->Width),
-							ezWnd->ezParent->ezParent->Extend->hExtend[2]->Extend->iExtend[2] - (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX - ezWnd->ezParent->Width));
-					}
-					if (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight > ezWnd->ezParent->Height)
-					{
-						ezWnd->ezParent->ScrollY -= (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight - ezWnd->ezParent->Height);
-						//设置滚动条
-						/*	EZSendMessage(ezWnd->ezParent->ezParent->Extend->hExtend[1], EZWM_SETSCROLLPOS, ezWnd->ezParent->ezParent->Extend->iExtend[1] - ezWnd->ezParent->ezParent->Extend->hExtend[0]->Height + tm.tmHeight,
-						ezWnd->ezParent->ezParent->Extend->iExtend[1] + tm.tmHeight);*/
-					}
-
-
-
-					EZSetCaretPos(ezWnd, ezWnd->ezParent->ezParent->Extend->iExtend[0], ezWnd->ezParent->ezParent->Extend->iExtend[1]);
-
-					EZRepaint(ezWnd->ezParent->ezParent, 0);
-					EZShowCaret(ezWnd);
-				}
-
-
-			}
-			else if (wParam == 38 || wParam == 40)
-			{
-				int iLineBeginCount;
-				int iLineCross;
-				iLineCross = 0;
-				iLineBeginCount = ezWnd->ezParent->ezParent->Extend->iExtend[2];
-
-				if (wParam == 38)
-				{
-					//有没有上一行？
-					//往前递归，跨过一个换行符，到达第二个换行符
-
-					//有种情况，那就是....这个就是换行符（现在在行尾。）需要我们手动检查并避免这种情况
-
-					if (Text[iLineBeginCount] == '\n')
-					{
-
-						if (Text[iLineBeginCount - 1] == '\r')
-						{
-							iLineBeginCount--;
-						}
-						iLineBeginCount--;
-					}
-
-					for (; iLineBeginCount > 0; iLineBeginCount--)
-					{
-						if (Text[iLineBeginCount] == '\n')
-						{
-							if (iLineCross == 1)
-							{
-								//两个齐了！现在Text[iLineBeginCount]是 '\n'，所以要加一
-								iLineBeginCount++;
-								iLineCross++;
-								break;
-							}
-
-							if (Text[iLineBeginCount - 1] == '\r')
-							{
-								iLineBeginCount--;
-							}
-							iLineCross++;
-						}
-					}
-					if (iLineCross == 0)
-					{
-						//没有上一行
-						break;
-					}
-					CaretY = ezWnd->ezParent->ezParent->Extend->iExtend[1] - tm.tmHeight;
-
-
-				}
-				else if (wParam == 40)
-				{
-					//有没有下一行？
-					//往后递归，跨过一个换行符，到达第二行行首
-					int LineCrossRec;
-					for (; iLineBeginCount < iMaxLen; iLineBeginCount++)
-					{
-						if (Text[iLineBeginCount] == '\n')
-						{
-							iLineBeginCount++;
-							iLineCross++;
-							break;
-
-						}
-						else if ((Text[iLineBeginCount] == '\r') && (Text[iLineBeginCount + 1] == '\n'))
-						{
-
-							iLineBeginCount += 2;
-							iLineCross++;
-							break;
-						}
-					}
-					if (iLineCross == 0)
-					{
-						//没有下一行
-						break;
-					}
-					CaretY = ezWnd->ezParent->ezParent->Extend->iExtend[1] + tm.tmHeight;
-
-				}
-
-				//在新行中，找到与现在位置最近的位置。
-
-				int iFindCount;
-
-				int LastLen, CurrLen;
-				LastLen = CurrLen = 0;
-
-
-
-
-				BOOL IsFounded;
-				IsFounded = FALSE;
-
-				for (iMove = iLineBeginCount; iMove <= iMaxLen;)
-				{
-
-					LastLen = CurrLen;
-					GetTextExtentPoint32(ezWnd->hdc, Text + iLineBeginCount, iMove - iLineBeginCount, &size);
-					CurrLen = size.cx;
-
-					//得到旧位置和新位置的平均位置
-					if (ezWnd->ezParent->ezParent->Extend->iExtend[0] <= (LastLen + CurrLen) / 2)
-					{
-						//插入符号在这个字符往前推一个,也就是在LastCurr的位置
-						IsFounded = TRUE;
-						//有一种情况是特殊的，那就是行首。在行首，两个值都为0.这样的话，iMove不应-1
-						if (iMove == iLineBeginCount)
-						{
-							ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
-							break;
-						}
-						ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove - 1;
-						break;
-
-					}
-
-					if ((Text[iMove] == '\0') || (Text[iMove] == '\r' && Text[iMove + 1] == '\n') || (Text[iMove] == '\n'))
-					{
-						//没找到，在行末尾
-						ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
-						break;
-					}
-
-
-					iMove++;//放在for里面我怕我搞混....放到这里就不会了
-				}
-
-				GetTextExtentPoint32(ezWnd->hdc, Text + iLineBeginCount, iMove - iLineBeginCount, &size);
-				CurrLen = size.cx;
-				if (IsFounded)
-				{
-					CaretX = LastLen;
-				}
-				else
-				{
-					CaretX = CurrLen;
-				}
-
-
-
-
-
-				ezWnd->ezParent->ezParent->Extend->iExtend[0] = CaretX;
-
-				ezWnd->ezParent->ezParent->Extend->iExtend[1] = CaretY;
+				EZHideCaret(ezWnd);
 
 				if (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX < 0)
 				{
@@ -3789,37 +3923,217 @@ EZWNDPROC EZStyle_Edit_InputChildProc(EZWND ezWnd, int message, WPARAM wParam, L
 					ezWnd->ezParent->ScrollY -= (ezWnd->ezParent->ezParent->Extend->iExtend[1]);
 				}
 
-
-				if (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX > ezWnd->ezParent->Width)
+				if ((ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX > ezWnd->ezParent->Width) && wParam == 39)
 				{
 					ezWnd->ezParent->ScrollX -= (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX - ezWnd->ezParent->Width);
+					EZSendMessage(ezWnd->ezParent->ezParent->Extend->hExtend[2],
+						EZWM_SETSCROLLPOS,
+						ezWnd->ezParent->ezParent->Extend->hExtend[2]->Extend->iExtend[1] - (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX - ezWnd->ezParent->Width),
+						ezWnd->ezParent->ezParent->Extend->hExtend[2]->Extend->iExtend[2] - (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX - ezWnd->ezParent->Width));
 				}
 				if (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight > ezWnd->ezParent->Height)
 				{
 					ezWnd->ezParent->ScrollY -= (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight - ezWnd->ezParent->Height);
 					//设置滚动条
-					/*EZSendMessage(ezWnd->ezParent->ezParent->Extend->hExtend[1], EZWM_SETSCROLLPOS, ezWnd->ezParent->ezParent->Extend->iExtend[1] - ezWnd->ezParent->ezParent->Extend->hExtend[0]->Height + tm.tmHeight,
-					ezWnd->ezParent->ezParent->Extend->iExtend[1]+ tm.tmHeight);*/
+					/*	EZSendMessage(ezWnd->ezParent->ezParent->Extend->hExtend[1], EZWM_SETSCROLLPOS, ezWnd->ezParent->ezParent->Extend->iExtend[1] - ezWnd->ezParent->ezParent->Extend->hExtend[0]->Height + tm.tmHeight,
+					ezWnd->ezParent->ezParent->Extend->iExtend[1] + tm.tmHeight);*/
 				}
 
-				//if (ezWnd->FocusState == 1)
-				{
-					//EZHideCaret(ezWnd);
-					EZSetCaretPos(ezWnd, ezWnd->ezParent->ezParent->Extend->iExtend[0], ezWnd->ezParent->ezParent->Extend->iExtend[1]);
-					//EZShowCaret(ezWnd);
-				}
-				EZRepaint(ezWnd->ezParent->ezParent, NULL);
 
 
+				EZSetCaretPos(ezWnd, ezWnd->ezParent->ezParent->Extend->iExtend[0], ezWnd->ezParent->ezParent->Extend->iExtend[1]);
 
+				EZRepaint(ezWnd->ezParent->ezParent, 0);
+				EZShowCaret(ezWnd);
 			}
 
 
 		}
-		__finally
+		else if (wParam == 38 || wParam == 40)
 		{
-			free(PasswordText);
+			int iLineBeginCount;
+			int iLineCross;
+			iLineCross = 0;
+			iLineBeginCount = ezWnd->ezParent->ezParent->Extend->iExtend[2];
+
+			if (wParam == 38)
+			{
+				//有没有上一行？
+				//往前递归，跨过一个换行符，到达第二个换行符
+
+				//有种情况，那就是....这个就是换行符（现在在行尾。）需要我们手动检查并避免这种情况
+
+				if (Text[iLineBeginCount] == '\n')
+				{
+
+					if (Text[iLineBeginCount - 1] == '\r')
+					{
+						iLineBeginCount--;
+					}
+					iLineBeginCount--;
+				}
+
+				for (; iLineBeginCount > 0; iLineBeginCount--)
+				{
+					if (Text[iLineBeginCount] == '\n')
+					{
+						if (iLineCross == 1)
+						{
+							//两个齐了！现在Text[iLineBeginCount]是 '\n'，所以要加一
+							iLineBeginCount++;
+							iLineCross++;
+							break;
+						}
+
+						if (Text[iLineBeginCount - 1] == '\r')
+						{
+							iLineBeginCount--;
+						}
+						iLineCross++;
+					}
+				}
+				if (iLineCross == 0)
+				{
+					//没有上一行
+					return 0;
+				}
+				CaretY = ezWnd->ezParent->ezParent->Extend->iExtend[1] - tm.tmHeight;
+
+
+			}
+			else if (wParam == 40)
+			{
+				//有没有下一行？
+				//往后递归，跨过一个换行符，到达第二行行首
+				int LineCrossRec;
+				for (; iLineBeginCount < iMaxLen; iLineBeginCount++)
+				{
+					if (Text[iLineBeginCount] == '\n')
+					{
+						iLineBeginCount++;
+						iLineCross++;
+						break;
+
+					}
+					else if ((Text[iLineBeginCount] == '\r') && (Text[iLineBeginCount + 1] == '\n'))
+					{
+
+						iLineBeginCount += 2;
+						iLineCross++;
+						break;
+					}
+				}
+				if (iLineCross == 0)
+				{
+					//没有下一行
+					return 0;
+				}
+				CaretY = ezWnd->ezParent->ezParent->Extend->iExtend[1] + tm.tmHeight;
+
+			}
+
+			//在新行中，找到与现在位置最近的位置。
+
+			int iFindCount;
+
+			int LastLen, CurrLen;
+			LastLen = CurrLen = 0;
+
+
+
+
+			BOOL IsFounded;
+			IsFounded = FALSE;
+
+			for (iMove = iLineBeginCount; iMove <= iMaxLen;)
+			{
+
+				LastLen = CurrLen;
+				GetTextExtentPoint32(ezWnd->hdc, Text + iLineBeginCount, iMove - iLineBeginCount, &size);
+				CurrLen = size.cx;
+
+				//得到旧位置和新位置的平均位置
+				if (ezWnd->ezParent->ezParent->Extend->iExtend[0] <= (LastLen + CurrLen) / 2)
+				{
+					//插入符号在这个字符往前推一个,也就是在LastCurr的位置
+					IsFounded = TRUE;
+					//有一种情况是特殊的，那就是行首。在行首，两个值都为0.这样的话，iMove不应-1
+					if (iMove == iLineBeginCount)
+					{
+						ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
+						break;
+					}
+					ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove - 1;
+					break;
+
+				}
+
+				if ((Text[iMove] == '\0') || (Text[iMove] == '\r' && Text[iMove + 1] == '\n') || (Text[iMove] == '\n'))
+				{
+					//没找到，在行末尾
+					ezWnd->ezParent->ezParent->Extend->iExtend[2] = iMove;
+					break;
+				}
+
+
+				iMove++;//放在for里面我怕我搞混....放到这里就不会了
+			}
+
+			GetTextExtentPoint32(ezWnd->hdc, Text + iLineBeginCount, iMove - iLineBeginCount, &size);
+			CurrLen = size.cx;
+			if (IsFounded)
+			{
+				CaretX = LastLen;
+			}
+			else
+			{
+				CaretX = CurrLen;
+			}
+
+
+
+
+
+			ezWnd->ezParent->ezParent->Extend->iExtend[0] = CaretX;
+
+			ezWnd->ezParent->ezParent->Extend->iExtend[1] = CaretY;
+
+			if (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX < 0)
+			{
+				ezWnd->ezParent->ScrollX -= (ezWnd->ezParent->ezParent->Extend->iExtend[0]);
+			}
+			if (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY < 0)
+			{
+				ezWnd->ezParent->ScrollY -= (ezWnd->ezParent->ezParent->Extend->iExtend[1]);
+			}
+
+
+			if (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX > ezWnd->ezParent->Width)
+			{
+				ezWnd->ezParent->ScrollX -= (ezWnd->ezParent->ezParent->Extend->iExtend[0] + ezWnd->ezParent->ScrollX - ezWnd->ezParent->Width);
+			}
+			if (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight > ezWnd->ezParent->Height)
+			{
+				ezWnd->ezParent->ScrollY -= (ezWnd->ezParent->ezParent->Extend->iExtend[1] + ezWnd->ezParent->ScrollY + tm.tmHeight - ezWnd->ezParent->Height);
+				//设置滚动条
+				/*EZSendMessage(ezWnd->ezParent->ezParent->Extend->hExtend[1], EZWM_SETSCROLLPOS, ezWnd->ezParent->ezParent->Extend->iExtend[1] - ezWnd->ezParent->ezParent->Extend->hExtend[0]->Height + tm.tmHeight,
+				ezWnd->ezParent->ezParent->Extend->iExtend[1]+ tm.tmHeight);*/
+			}
+
+			//if (ezWnd->FocusState == 1)
+			{
+				//EZHideCaret(ezWnd);
+				EZSetCaretPos(ezWnd, ezWnd->ezParent->ezParent->Extend->iExtend[0], ezWnd->ezParent->ezParent->Extend->iExtend[1]);
+				//EZShowCaret(ezWnd);
+			}
+			EZRepaint(ezWnd->ezParent->ezParent, NULL);
+
+
+
+
 		}
+
+
 		return 0;
 
 	case EZWM_SETFOCUS:
@@ -3963,11 +4277,11 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 
 			return EZHTCAPTION;
 		}
-		//if ((ezWnd->EZStyle & 0xff) == EZS_OVERLAPPED)
-		//{
+		if ((ezWnd->EZStyle & 0xff) == EZS_OVERLAPPED)
+		{
 			return EZHTCLIENT;
-		//}
-		//return 0;
+		}
+		return 0;
 	}
 
 	case EZWM_SIZE:
@@ -3996,7 +4310,7 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 		pMMInfo = lParam;
 
 
-		//AdjustWindowRect(&rect, GetWindowLong(ezWnd->hParent, GWL_STYLE), 0);
+		AdjustWindowRect(&rect, GetWindowLong(ezWnd->hParent, GWL_STYLE), 0);
 
 		pMMInfo->ptMaxPosition.x = rect.left;// -(xborder << 1);
 		pMMInfo->ptMaxPosition.y = rect.top;// -(yborder << 1);
@@ -4018,17 +4332,25 @@ EZWNDPROC EZStyle_OverlappedWndProc(EZWND ezWnd, int message, WPARAM wParam, LPA
 		if (wParam)
 		{
 
-			/*if (IsZoomed(ezWnd->hParent))
+			if (IsZoomed(ezWnd->hParent))
 			{
 				return 0;
 			}
-			else*/
+			else
 			{
+
 				NCCALCSIZE_PARAMS* NCCSParam;
 
 				NCCSParam = (NCCALCSIZE_PARAMS*)lParam;
 				//RECT rect = { 0};
+
 				AdjustWindowRect(&(NCCSParam->rgrc[0]), GetWindowLong(ezWnd->hParent, GWL_STYLE), 0);
+
+				NCCSParam->rgrc[0].left += 4;
+				NCCSParam->rgrc[0].top += 1;//在标题栏上面留出一些，这里先少加一些
+				NCCSParam->rgrc[0].right -= 4;
+				NCCSParam->rgrc[0].bottom -= 4;
+
 				return 0;
 			}
 
@@ -4217,7 +4539,7 @@ EZWNDPROC EZStyle_WndMaxProc(EZWND ezWnd, int message, WPARAM wParam, LPARAM lPa
 			}
 			else
 			{
-				ShowWindow(ezWnd->hParent, SW_SHOWMAXIMIZED);
+				ShowWindow(ezWnd->hParent, SW_MAXIMIZE);
 			}
 			pInfo->MouseHold = 0;
 			EZReleaseMouse(ezWnd);
