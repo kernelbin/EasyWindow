@@ -167,6 +167,10 @@
 #define EZWM_GETTEXT 801//获得文本,wParam缓冲区，lParam最大计数
 
 
+//完全自定义消息
+
+#define EZWM_USER 1000
+
 
 //内置消息
 #define SEZWM_COPYDC 2001//将存储DC复制到父窗口。
@@ -261,8 +265,6 @@
 #define EZES_SINGLELINE    MKDW(10000000,00000000,00000000,00000000)
 //                             -|-
 #define EZES_MULTILINE     MKDW(00000000,00000000,00000000,00000000)//默认
-//                              -|-
-#define EZES_PASSWORD      MKDW(01000000,00000000,00000000,00000000)//密码编辑框
 
 #pragma endregion
 
@@ -285,7 +287,7 @@
 #define GET_EXTEND(ezWnd,Extend) (((pEZSE)(ezWnd))->Extend)
 
 //抗锯齿
-#define STRETCH 4.0
+#define STRETCH 3.0
 
 #pragma endregion
 
@@ -302,7 +304,7 @@
 //*******************************************************************************************
 
 
-typedef struct tagEZWND * EZWND;//对EZWINDOW结构体的定义。EZWND是指向该结构的指针。
+typedef struct tagEZWND* EZWND;//对EZWINDOW结构体的定义。EZWND是指向该结构的指针。
 
 
 
@@ -346,7 +348,6 @@ typedef struct tagezTopWindowExtend
 	EZWND CptMouseWindow;//捕获了鼠标的
 	EZWND MouseOnWnd;//鼠标在上面的
 
-	EZWND CptKbdWindow;//捕获了键盘消息的
 
 	HDC hdcTop;//顶层窗口申请内存使用，其他窗口而言，这只是一个空的句柄。
 
@@ -397,6 +398,8 @@ typedef struct tagEZWND
 				 //有关绘制****************************
 	HDC hdc;//一个绘制空间。始终存在，直到窗口被销毁。窗口绘制就绘制在这个上面。
 	//HDC hdcCopy;//用于加速绘制，下一个窗口可以直接复制的DC。
+
+	BOOL bOpaque;//优化用，关闭父窗口拷贝。
 
 				//BOOL DrawOnNC;//是否覆盖非客户区绘制，换言之绘制的时候是否用GetWindowDC
 	BOOL Update;//更新区域，0为无需更新，1为发生了改变，需要更新。
@@ -529,8 +532,6 @@ BOOL EZResetChildPxPy(EZWND ezWnd);
 BOOL ScrollEZWindow(EZWND ezWnd, int x, int y, BOOL bAdd);
 BOOL EZCaptureMouse(EZWND ezWnd);
 BOOL EZReleaseMouse(EZWND ezWnd);
-BOOL EZCaptureKeyboard(EZWND ezWnd);
-BOOL EZReleaseKeyboard(EZWND ezWnd);
 BOOL SetMouseMsgRecvMode(EZWND ezWnd, int Mode);
 BOOL SetShowState(EZWND ezWnd, int State);
 BOOL EZRedraw(EZWND ezWnd);
